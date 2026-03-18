@@ -38,9 +38,9 @@ $simplify
 2. 用 `$issue2task` 分析 issue、阅读相关代码、澄清需求，并生成 `tasks/` 下的任务文件。
 3. 用 `$plantask` 读取待办任务，结合代码现状产出详细实现方案。
 4. 按方案实现并迭代。
-5. 用 `$checktask` 逐项核对验收标准，更新 checklist，通过后归档到 `tasks/done/`。
+5. 用 `$checktask` 逐项核对验收标准，更新 checklist，并在流程末尾自动对本次相关 diff 做一次语义不变的精简；全部通过后归档到 `tasks/done/`。
 6. 需要提交时用 `$ship` 提交并推送。
-7. 需要精简某次改动的逻辑时，用 `$simplify` 对 diff 做语义不变的重构。
+7. 没有 task，或需要单独精简某次 patch 时，用 `$simplify` 对 diff 做语义不变的重构。
 8. 需要发版时，用 `$ship vX.Y.Z` 或 `$ship vX.Y.Z-rcN`。
 
 ## Skills 一览
@@ -51,7 +51,7 @@ $simplify
 | `plantask` | `$plantask` | 基于任务文件和代码现状输出实现方案 |
 | `checktask` | `$checktask` | 验收任务、更新 checklist、归档已完成任务 |
 | `ship` | `$ship` | 提交并推送当前分支，可选创建 release tag |
-| `simplify` | `$simplify` | 在不改行为的前提下精简给定 diff |
+| `simplify` | `$simplify` | 供 `checktask` 内部复用，或在无 task 时单独精简给定 diff |
 
 ## Skill 说明
 
@@ -89,7 +89,7 @@ $plantask T05
 
 ### checktask
 
-逐项核对任务文件中的验收标准，更新通过项的 checkbox；全部通过时归档到 `tasks/done/`，然后自动对本次相关 diff 做一次语义不变的精简。
+逐项核对任务文件中的验收标准，更新通过项的 checkbox；在流程末尾最多自动对本次相关 diff 做一次语义不变的精简；全部通过时归档到 `tasks/done/`。
 
 常见用法：
 
@@ -98,7 +98,7 @@ $checktask
 $checktask T04
 ```
 
-它会优先做最小侵入验证，只在标准明确要求时运行测试或命令。遇到模糊标准时，应标记为需要人工确认，而不是猜测通过。验收步骤结束后，会自动串联一次 `simplify` 风格的本地精简，而不是只给出“建议下一步运行 `$simplify`”。
+它会优先做最小侵入验证，只在标准明确要求时运行测试或命令。遇到模糊标准时，应标记为需要人工确认，而不是猜测通过。验收步骤结束后，会在整个流程末尾最多自动调用一次 `simplify` 风格的本地精简，而不是重复调用或只给出建议。
 
 ### ship
 
@@ -116,7 +116,7 @@ $ship v1.0.0-rc1
 
 ### simplify
 
-针对给定 diff 做语义不变的精简重构，目标是降低嵌套、去重、改进局部命名、使用更惯用的写法，但不改变行为、不引入依赖、不改 API。
+针对给定 diff 做语义不变的精简重构，目标是降低嵌套、去重、改进局部命名、使用更惯用的写法，但不改变行为、不引入依赖、不改 API。它主要作为 `checktask` 的内部步骤存在；没有 task 时也可以单独使用。
 
 常见用法：
 
@@ -126,7 +126,7 @@ $simplify
 <paste diff here>
 ```
 
-如果没有直接给 diff，也可以让它基于当前 patch 进行精简。单独使用时，`simplify` 仍然是显式调用优先；但 `checktask` 完成验收后应自动执行这一类精简检查。
+如果没有直接给 diff，也可以让它基于当前 patch 进行精简。`checktask` 内部调用时，应直接复用已经确定的相关最小 diff，并且整个 `checktask` 流程里只调用一次；单独使用时，`simplify` 仍然是显式调用优先。
 
 ## 编写新 Skill
 
