@@ -1,4 +1,4 @@
-# Codex Skills
+# Codev Skills
 
 一组面向 Codex 的自定义 skills，用来整理需求、规划实现、验收任务、提交发版，以及对 diff 做语义不变的精简重构。
 
@@ -7,8 +7,8 @@
 仓库可以 clone 到任意目录，安装通过 `./setup` 完成：
 
 ```bash
-git clone git@github.com:wmzhai/codex-dev.git
-cd codex-dev
+git clone git@github.com:wmzhai/codev.git
+cd codev
 ./setup
 ```
 
@@ -16,15 +16,13 @@ cd codex-dev
 
 ```text
 ~/.codex/skills/
-├── codex-dev -> /path/to/your/clone
-├── issue2task -> codex-dev/issue2task
-├── plantask -> codex-dev/plantask
-├── checktask -> codex-dev/checktask
-├── simplify -> codex-dev/simplify
-└── ships -> codex-dev/ships
+├── codev -> /path/to/your/clone
+├── issue2task -> codev/issue2task
+├── plantask -> codev/plantask
+├── checktask -> codev/checktask
+├── simplify -> codev/simplify
+└── ships -> codev/ships
 ```
-
-如果检测到旧布局是“直接把整个仓库放进 `~/.codex/skills`”，`./setup` 会自动迁移并清理这套旧安装留下的 `.git`、说明文件、`.gitignore` 以及本项目旧 skill 目录；不会删除 `.system`、`gstack`、`gstack-*` 或其他无关条目。
 
 ## 调用方式
 
@@ -169,7 +167,7 @@ $simplify
 
 ## 测试安装脚本
 
-可以运行下面的 smoke test 验证 `./setup` 的全新安装、旧布局迁移、幂等性和冲突处理：
+可以运行下面的 smoke test 验证 `./setup` 的全新安装、幂等性和冲突处理：
 
 ```bash
 ./test/setup-smoke.sh

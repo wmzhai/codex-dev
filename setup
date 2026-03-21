@@ -1,53 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_NAME="codex-dev"
+PROJECT_NAME="codev"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 SKILLS_DIR="${HOME}/.codex/skills"
 MANAGED_SKILLS=(issue2task plantask checktask simplify ships)
-LEGACY_SKILLS=(issue2task plantask checktask simplify ship)
-LEGACY_ROOT_ITEMS=(.git .gitignore README.md)
 
 die() {
-  echo "codex-dev setup failed: $*" >&2
+  echo "codev setup failed: $*" >&2
   exit 1
-}
-
-is_legacy_skill_dir() {
-  local skill_name="$1"
-  local skill_dir="${SKILLS_DIR}/${skill_name}"
-  local skill_file="${skill_dir}/SKILL.md"
-
-  [ -d "$skill_dir" ] || return 1
-  [ ! -L "$skill_dir" ] || return 1
-  [ -f "$skill_file" ] || return 1
-
-  grep -Eq "^name:[[:space:]]*${skill_name}$" "$skill_file"
-}
-
-legacy_detected() {
-  local score=0
-  local skill_name
-
-  [ -e "${SKILLS_DIR}/.git" ] && score=$((score + 1))
-
-  for skill_name in "${LEGACY_SKILLS[@]}"; do
-    if is_legacy_skill_dir "$skill_name"; then
-      score=$((score + 1))
-    fi
-  done
-
-  [ "$score" -ge 2 ]
-}
-
-remove_path() {
-  local path="$1"
-
-  if [ -L "$path" ]; then
-    rm -f -- "$path"
-  elif [ -e "$path" ]; then
-    rm -rf -- "$path"
-  fi
 }
 
 ensure_symlink_or_absent() {
@@ -59,18 +20,6 @@ ensure_symlink_or_absent() {
 }
 
 mkdir -p "$SKILLS_DIR"
-
-if legacy_detected; then
-  echo "Detected legacy ~/.codex/skills layout. Cleaning old codex-dev entries..."
-
-  for item in "${LEGACY_ROOT_ITEMS[@]}"; do
-    remove_path "${SKILLS_DIR}/${item}"
-  done
-
-  for skill_name in "${LEGACY_SKILLS[@]}"; do
-    remove_path "${SKILLS_DIR}/${skill_name}"
-  done
-fi
 
 ensure_symlink_or_absent "${SKILLS_DIR}/${PROJECT_NAME}"
 
@@ -84,7 +33,7 @@ for skill_name in "${MANAGED_SKILLS[@]}"; do
   ln -snf "${PROJECT_NAME}/${skill_name}" "${SKILLS_DIR}/${skill_name}"
 done
 
-echo "codex-dev ready."
+echo "codev ready."
 echo "  repo: ${REPO_ROOT}"
 echo "  skills: ${SKILLS_DIR}"
 echo "  linked: ${MANAGED_SKILLS[*]}"

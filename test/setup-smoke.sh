@@ -30,19 +30,6 @@ assert_exists() {
   [ -e "$path" ] || [ -L "$path" ] || fail "${path} should exist"
 }
 
-write_legacy_skill() {
-  local skills_dir="$1"
-  local skill_name="$2"
-
-  mkdir -p "${skills_dir}/${skill_name}"
-  cat > "${skills_dir}/${skill_name}/SKILL.md" <<EOF
----
-name: ${skill_name}
-description: legacy fixture
----
-EOF
-}
-
 run_setup() {
   local home_dir="$1"
   HOME="$home_dir" "$SETUP_SCRIPT" >/dev/null
@@ -56,42 +43,16 @@ mkdir -p "$fresh_home"
 run_setup "$fresh_home"
 
 fresh_skills="${fresh_home}/.codex/skills"
-assert_symlink_target "${fresh_skills}/codex-dev" "${REPO_ROOT}"
+assert_symlink_target "${fresh_skills}/codev" "${REPO_ROOT}"
 for skill_name in "${MANAGED_SKILLS[@]}"; do
-  assert_symlink_target "${fresh_skills}/${skill_name}" "codex-dev/${skill_name}"
+  assert_symlink_target "${fresh_skills}/${skill_name}" "codev/${skill_name}"
 done
 assert_missing "${fresh_skills}/ship"
 
 run_setup "$fresh_home"
-assert_symlink_target "${fresh_skills}/codex-dev" "${REPO_ROOT}"
+assert_symlink_target "${fresh_skills}/codev" "${REPO_ROOT}"
 for skill_name in "${MANAGED_SKILLS[@]}"; do
-  assert_symlink_target "${fresh_skills}/${skill_name}" "codex-dev/${skill_name}"
-done
-
-legacy_home="${TMP_ROOT}/legacy-home"
-legacy_skills="${legacy_home}/.codex/skills"
-mkdir -p "${legacy_skills}/.git" "${legacy_skills}/.system"
-touch "${legacy_skills}/.gitignore" "${legacy_skills}/README.md"
-write_legacy_skill "$legacy_skills" "issue2task"
-write_legacy_skill "$legacy_skills" "plantask"
-write_legacy_skill "$legacy_skills" "checktask"
-write_legacy_skill "$legacy_skills" "simplify"
-write_legacy_skill "$legacy_skills" "ship"
-ln -s "/tmp/gstack" "${legacy_skills}/gstack"
-ln -s "/tmp/gstack-ship" "${legacy_skills}/gstack-ship"
-
-run_setup "$legacy_home"
-
-assert_missing "${legacy_skills}/.git"
-assert_missing "${legacy_skills}/.gitignore"
-assert_missing "${legacy_skills}/README.md"
-assert_missing "${legacy_skills}/ship"
-assert_exists "${legacy_skills}/.system"
-assert_symlink_target "${legacy_skills}/gstack" "/tmp/gstack"
-assert_symlink_target "${legacy_skills}/gstack-ship" "/tmp/gstack-ship"
-assert_symlink_target "${legacy_skills}/codex-dev" "${REPO_ROOT}"
-for skill_name in "${MANAGED_SKILLS[@]}"; do
-  assert_symlink_target "${legacy_skills}/${skill_name}" "codex-dev/${skill_name}"
+  assert_symlink_target "${fresh_skills}/${skill_name}" "codev/${skill_name}"
 done
 
 conflict_home="${TMP_ROOT}/conflict-home"
@@ -103,7 +64,7 @@ if HOME="$conflict_home" "$SETUP_SCRIPT" >/dev/null 2>&1; then
 fi
 
 assert_exists "${conflict_skills}/issue2task"
-assert_missing "${conflict_skills}/codex-dev"
+assert_missing "${conflict_skills}/codev"
 assert_missing "${conflict_skills}/ships"
 
 echo "setup smoke tests passed"
