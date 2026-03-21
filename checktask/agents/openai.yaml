@@ -1,4 +1,4 @@
 interface:
   display_name: "checktask"
   short_description: "验证任务并更新验收清单"
-  default_prompt: "使用 $checktask 验证 tasks/ 中的待办任务，更新已通过的 checklist；完成验收后自动对相关 diff 做一次语义不变的精简，并报告剩余缺口或归档结果。"
+  default_prompt: "使用 $checktask 验证 tasks/ 中的待办任务，更新已通过的 checklist；如果执行过程中实现已变化导致 task 文档过期，则以已验证的实际结果同步任务文档；完成验收后自动对相关 diff 做一次语义不变的精简，并报告剩余缺口或归档结果。"
