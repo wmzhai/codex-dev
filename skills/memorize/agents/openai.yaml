@@ -1,5 +1,5 @@
 interface:
-  display_name: "Memorize"
+  display_name: "memorize"
   short_description: "为新项目构建并持续刷新面向 Codex 的项目记忆体系"
   default_prompt: "Use $memorize to audit this repo and build or refresh its AGENTS.md and memory/ knowledge map."
 

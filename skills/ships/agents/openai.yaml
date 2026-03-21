@@ -1,6 +1,6 @@
 interface:
   display_name: "ships"
-  short_description: "提交并推送，可选创建发布标签"
+  short_description: "提交推送当前分支并可选创建 release 或 rc 标签"
   default_prompt: "使用 $ships 提交当前工作区、推送当前分支，并可选创建和推送 release 或 rc 标签。"
 
 policy:

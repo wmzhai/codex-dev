@@ -1,4 +1,4 @@
 interface:
   display_name: "issue2task"
-  short_description: "把 GitHub issue 转成澄清后的任务文件"
+  short_description: "把 GitHub issue 收敛成可执行任务文件"
   default_prompt: "使用 $issue2task 分析当前仓库的 GitHub issues，默认自行收敛需求范围，并在 tasks/ 下写入可直接交给后续步骤的有序任务文件。"
