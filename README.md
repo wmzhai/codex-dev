@@ -108,6 +108,8 @@ project/
 
 为新项目建立或为已有项目刷新面向 Codex 的记忆体系。它会系统分析项目结构，围绕根目录的 `AGENTS.md` 和 `memory/` 建立 Codex 的上手路径、问题路由、系统边界和更新落点；如果仓库里存在 `CLAUDE.md`，会把其中对 Codex 有价值的内容合并进 `AGENTS.md`，并把 `CLAUDE.md` 收敛成跳转语。
 
+`memorize` 默认使用简体中文生成或刷新相关项目文档，避免把 `AGENTS.md`、`memory/` 或收敛后的 `CLAUDE.md` 写成英文默认稿。
+
 常见用法：
 
 ```text

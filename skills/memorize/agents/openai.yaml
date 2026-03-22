@@ -1,7 +1,7 @@
 interface:
   display_name: "memorize"
   short_description: "为新项目构建并持续刷新面向 Codex 的项目记忆体系"
-  default_prompt: "Use $memorize to audit this repo and build or refresh its AGENTS.md and memory/ knowledge map."
+  default_prompt: "使用 $memorize 审查当前仓库，并以简体中文构建或刷新它的 AGENTS.md 与 memory/ 记忆体系。"
 
 policy:
   allow_implicit_invocation: true
