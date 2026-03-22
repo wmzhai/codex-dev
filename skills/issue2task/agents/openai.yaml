@@ -1,4 +1,4 @@
 interface:
   display_name: "issue2task"
   short_description: "把 issue 或需求描述收敛成可执行任务文件"
-  default_prompt: "使用 $issue2task 分析当前仓库的 GitHub issues，或直接根据用户附带的需求描述生成任务；默认自行收敛需求范围，按 tasks/ 与 tasks/done/ 中现有最大任务号顺延写入 tasks/，并在 issue 来源任务开头记录对应的 issue 编号。"
+  default_prompt: "使用 $issue2task 分析当前仓库的 GitHub issues，或直接根据用户附带的需求描述生成任务；无参数时默认选择当前仓库编号最小的 open issue，按 tasks/ 与 tasks/done/ 中现有最大任务号顺延生成任务，并在写入前先新建与首个 task 文件同名的新分支，再在该分支写入文件。"

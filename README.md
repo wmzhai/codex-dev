@@ -40,6 +40,7 @@ Codex skills 支持两种常见使用方式：
 
 ```text
 $memorize
+$issue2task
 $issue2task 42
 $issue2task 修复结算页在空购物车时的 500 报错，并补齐空状态
 $plantask T05
@@ -125,11 +126,12 @@ $memorize
 
 ### issue2task
 
-读取一个或多个 GitHub issue，或直接接收用户附带的一段任务描述，结合代码现状先自行收敛需求，再生成 `tasks/Txx-*.md`。任务号默认按 `tasks/` 和 `tasks/done/` 中现有最大编号顺延；如果任务来自 issue，会在任务开头记录 issue 编号。
+读取一个或多个 GitHub issue，或直接接收用户附带的一段任务描述，结合代码现状先自行收敛需求，再生成 `tasks/Txx-*.md`。任务号默认按 `tasks/` 和 `tasks/done/` 中现有最大编号顺延；如果任务来自 issue，会在任务开头记录 issue 编号；写入前会先新建一个分支，默认用首个新任务文件名作为分支名。
 
 常见用法：
 
 ```text
+$issue2task
 $issue2task 42
 $issue2task #42
 $issue2task --label backend
@@ -139,8 +141,9 @@ $issue2task 修复结算页在空购物车时的 500 报错，并补齐空状态
 产出通常包括：
 
 - `tasks/Txx-*.md`
+- 新建分支，默认分支名与首个新任务文件同名
 
-这个 skill 关注需求整理和任务拆分，不负责实现方案设计。`tasks/` 里不需要额外索引，任务文件名本身就是索引。默认会直接写出可交接的任务文件，只有阻塞性歧义才会中途提问；如果用户在 `$issue2task` 后面直接给了一段自然语言需求，就不会再去查 issue 列表。
+这个 skill 关注需求整理和任务拆分，不负责实现方案设计。`tasks/` 里不需要额外索引，任务文件名本身就是索引。默认会直接写出可交接的任务文件，只有阻塞性歧义才会中途提问；如果用户在 `$issue2task` 后面直接给了一段自然语言需求，就不会再去查 issue 列表；如果用户完全不带参数，则默认只处理当前仓库编号最小的 open issue，而不是批量处理全部 open issues。
 
 ### plantask
 
