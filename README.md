@@ -82,21 +82,25 @@ $memorize
 适合新功能、需要上游规划、设计审查、结构 review、浏览器 QA 和正式 ship。
 
 ```text
-$memorize
+main/master
+→ $memorize
 → $office-hours
 → $plan-ceo-review
 → （有 UI 且还没有 DESIGN.md 时）$design-consultation
 → （有 UI 时）$plan-design-review
 → $plan-eng-review
-→ $gstack2task 或 $issue2task
-→ $plantask
+→ $gstack2task 或 $issue2task   （这里开始切到某个 task 自己的分支）
+→ $plantask                     （后续都在这个 task 分支上）
 → 实现
+→ 普通 commit 或 $checkpoint   （先把当前实现收成 clean tree）
 → （有 UI 时）$design-review
 → $review
-→ （若 $review 改了代码，先验证并补一次普通 commit）
+→ （若 $review 改了代码，先验证并补一次普通 commit 或 $checkpoint）
 → $qa
 → $checktask
 → $ship
+→ PR merge 回 main
+→ 切回 main，同步主线
 ```
 
 ## 两套系统怎么分工
@@ -131,6 +135,21 @@ $memorize
 - `~/.gstack/projects/` 下的 design doc / handoff / test plan：用 `$gstack2task`
 - 两者不要混成一个入口
 
+### 每个步骤在哪个分支上做
+
+- `$memorize`、`$office-hours`、`$plan-ceo-review`、`$design-consultation`、`$plan-design-review`、`$plan-eng-review`
+  - 通常从 `main` 或 `master` 开始即可；这些步骤主要产出规划工件，不是 repo 内实现分支
+- `$issue2task`、`$gstack2task`
+  - 在当前 `HEAD` 上为每个 task 新建并切到该 task 自己的分支
+- `$plantask`
+  - 应在目标 task 自己的分支上运行
+  - 如果你还停在 `main/master`，它会先切过去再继续
+- 实现、普通 commit、`$checkpoint`、`$design-review`、`$review`、`$qa`、`$checktask`、`$ship`
+  - 都在当前 task 自己的分支上完成
+- `main/master`
+  - 只作为 planning 起点和最终 merge 终点
+  - 不要在 `main/master` 上直接做实现、`$design-review`、`$qa`、`$ship`
+
 ### 任务号和分支
 
 - 任务号只用纯数字：`T01`、`T02`、`T03`
@@ -143,6 +162,13 @@ $memorize
 - 默认在 `$issue2task` 或 `$gstack2task` 时切分支
 - 这两个 skill 会在写入 task 文件前，先切到该 task 自己的分支
 - 如果你在 `main` 或 `master` 上执行 `$plantask`，它会先切到目标 task 对应的分支再继续
+
+### 什么时候需要 `$checkpoint`
+
+- 在第一次实现完成、准备跑 `$design-review` 或 `$qa` 前，先做一次普通 commit 或 `$checkpoint`
+- 因为 `$design-review` 和 `$qa` 都要求 clean working tree
+- 如果 `$review` 改了代码，而你后面还要继续 `$qa`、`$checktask`、`$ship`，也先补一次普通 commit 或 `$checkpoint`
+- 如果你只是想把当前 task 分支临时推到远端，也可以直接用 `$checkpoint`
 
 ### 什么时候合并回 main
 
@@ -157,12 +183,12 @@ $memorize
 更合理的顺序是：
 
 ```text
-实现
+task 分支上实现
 → 普通 commit 或 $checkpoint
 → $design-review / $review / $qa
-→ 如果中间又产生新修改，继续补普通 commit
+→ 如果中间又产生新修改，继续补普通 commit 或 $checkpoint
 → $checktask
-→ $ship 或 $checkpoint
+→ $ship
 ```
 
 ### `$design-review` 和 `$qa` 的前提
@@ -175,46 +201,56 @@ $memorize
 
 - `$review` 会基于当前 diff 做结构审查
 - 它可能 auto-fix，但默认不会替你自动创建 commit
-- 如果它改了代码，先自己验证，再补一次普通 commit，然后再继续 `$qa`、`$checktask` 或 `$ship`
+- 如果它改了代码，先自己验证，再补一次普通 commit 或 `$checkpoint`，然后再继续 `$qa`、`$checktask` 或 `$ship`
 
 ## 常见流程
 
 ### 1. 需求已经在 GitHub issue 里
 
 ```text
-$memorize
-→ $issue2task 42
+main/master
+→ $memorize
+→ $issue2task 42          （切到该 task 分支）
 → $plantask Txx
 → 实现
+→ $checkpoint
 → $review
+→ （若 $review 改了代码，补一次普通 commit 或 $checkpoint）
 → $qa
 → $checktask
 → $ship
+→ PR merge 回 main
 ```
 
 ### 2. 已经先用 gstack 做过 planning
 
 ```text
-$office-hours
+main/master
+→ $office-hours
 → $plan-ceo-review
 → $plan-eng-review
-→ $gstack2task
+→ $gstack2task            （切到该 task 分支）
 → $plantask
 → 实现
+→ $checkpoint
 → $review
+→ （若 $review 改了代码，补一次普通 commit 或 $checkpoint）
 → $qa
 → $checktask
 → $ship
+→ PR merge 回 main
 ```
 
 ### 3. 老项目，只想要轻量任务流
 
 ```text
-$issue2task 修复结算页空购物车 500
+main/master
+→ $issue2task 修复结算页空购物车 500   （切到该 task 分支）
 → $plantask
 → 实现
-→ $checktask
 → $checkpoint
+→ $checktask
+→ 需要推远端时再 $checkpoint
 ```
 
 ## 常用命令
