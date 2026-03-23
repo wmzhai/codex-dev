@@ -106,6 +106,51 @@ $ships
   └─ may create/push tag
 ```
 
+#### 每一步怎么用
+
+1. 先站在你想作为基线的分支上，通常是最新的 `main`
+   - `issue2task` 会在当前 `HEAD` 上先新建并切到任务分支，再写 `tasks/`。
+   - 所以开始前最好先把主线同步到你认可的最新状态。
+
+2. 跑 `$memorize`
+   - 新项目、长时间没维护、目录结构刚改过时，先跑一次。
+   - 目标是把 `AGENTS.md` 和 `memory/` 刷到能支撑后续 task 化和实现。
+
+3. 跑 `$issue2task`
+   - 适用场景：需求已经在 GitHub issue 里，或者你手里已经有一段明确的自然语言需求。
+   - 常见调用：
+     - `$issue2task 42`
+     - `$issue2task 修复结算页空购物车时的 500，并补齐空状态`
+   - 结果：先切新分支，再写 `tasks/Txx-*.md`。一个输入源默认只生成一个任务；如果确实需要拆成多个任务，也还是只切一次新分支。
+
+4. 跑 `$plantask`
+   - 只在 task 内容已经稳定时使用。
+   - 它会把 `tasks/Txx-*.md` 压成可执行的实施方案，但这一步不改代码。
+   - 如果你还在讨论需求范围，不要过早跑 `plantask`。
+
+5. 实现 + 项目自己的测试 / 人工验证
+   - 这一步不靠 codev 规定具体命令，按项目已有测试方式走。
+   - 推荐先把 task 做到“可验证的一个完整状态”，再进入 `$checktask`，不要边写边验收。
+
+6. 跑 `$checktask`
+   - 使用时机：你认为 task 已经实现完成，准备按验收标准逐条关项。
+   - 它会验证 `tasks/Txx-*.md`、更新 checkbox、必要时按真实结果回写任务文案，把完成项归档到 `tasks/done/`，并同步 `memory/` 与本任务直接相关的局部 `docs/`。
+   - 它不是 repo 级 release 文档同步器；`README.md`、`CHANGELOG`、`VERSION` 这类不应指望它顺手兜底。
+
+7. 跑 `$ships`
+   - 适用场景：你只想做轻量 `commit + push`，或者再加一个版本 tag。
+   - 它会处理当前分支的全部已改动文件，不做选择性过滤。
+   - 它不会创建 PR，也不会把分支合并回 `main`。
+
+#### 纯 codev 的分支与 main 策略
+
+- 默认切分支时机：`$issue2task`。这个 skill 会在写入任何 task 文件之前先新建并切到任务分支。
+- 默认分支粒度：一个输入源一条任务分支；如果一个输入源拆成 `T12a` / `T12b` / `T12c`，也还是同一条新分支。
+- 默认实现位置：`$plantask`、实现、测试、`$checktask`、`$ships` 都继续在这条任务分支上完成。
+- `$ships` 只负责把当前分支提交并推到远端，不负责合并到 `main`。
+- 合并回 `main` 的时机：当前任务在分支上已经验收完，并且你自己的 review / PR 流程已经完成之后。纯 codev 不接管这一步，按你所在仓库自己的 git/平台流程合并。
+- 合并回 `main` 之后，推荐马上切回 `main` 并同步最新主线，再开始下一轮 `$issue2task`。不要在旧任务分支上继续派生下一轮任务。
+
 #### 适用场景
 
 - 老项目，没有 gstack 使用习惯
@@ -235,153 +280,99 @@ $memorize   (仅当结构、导航、约束真的变了)
 /retro
 ```
 
-#### 详细执行顺序与依赖链
+#### 每一步怎么用
 
-#### 1. 建立 repo 记忆层
+1. 先确定你要以哪条分支作为实现基线，通常是最新的 `main`
+   - gstack 的 planning skills 主要产出 `~/.gstack/projects/` 下的外部工件；真正把 repo 内执行单元落到当前仓库，是从 `$gstack2task` 或 `$issue2task` 开始。
+   - 这两个 task-entry skills 会在当前 `HEAD` 上先切新分支，所以如果你希望实现从 `main` 开始，就先把 `main` 同步好。
 
-先跑 `$memorize`。
+2. 跑 `$memorize`
+   - 作用和纯 codev 模式一样：先把 repo 内长期记忆层补齐。
+   - 后面的 `$gstack2task`、`$plantask`、`$checktask` 都会依赖这些 repo 事实。
 
-- 目标：让当前项目的 `AGENTS.md` 与 `memory/` 追上真实代码状态。
-- 产物：repo 内长期记忆层。
-- 为什么先做：后面的 `gstack2task`、`plantask`、`checktask` 都要依赖这层 repo 事实。
+3. 跑 `/office-hours`
+   - 适用场景：新功能、范围还没锁、需要先把问题定义讲清楚。
+   - 产物：`~/.gstack/projects/<slug>/*-design-*.md`
+   - 这一步写的是 feature 级 design doc，不是 repo 级 README。
 
-#### 2. 先做 feature 级问题定义
+4. 跑 `/plan-ceo-review`
+   - 用来先锁产品边界和 scope。
+   - 如果 scope 还不稳，不要急着 task 化；否则后面设计和工程方案都会返工。
 
-对新功能或范围还没锁定的变更，先跑 gstack `/office-hours`。
+5. UI 相关分支：先 `/design-consultation`，再 `/plan-design-review`
+   - 当项目还没有 `DESIGN.md` 且这次改动涉及 UI/UX 时，先跑 `/design-consultation` 生成 `DESIGN.md`，必要时也会更新 `CLAUDE.md`。
+   - 然后跑 `/plan-design-review`，让它按 `DESIGN.md` 校准交互、层级、响应式和视觉一致性。
+   - `plan-design-review` 是计划阶段的设计审查；skill 自己也明确要求，在实现完成后再跑 `/design-review` 做视觉 QA。
 
-- 产物：`~/.gstack/projects/<slug>/*-design-*.md`
-- 下游依赖：`/plan-ceo-review`、`/plan-eng-review`
-- 说明：这份 design doc 是“这个 feature 为什么存在、边界是什么”的源头，不是 repo 级长期文档。
+6. 跑 `/plan-eng-review`
+   - 这一步放在 CEO 和设计收敛之后。
+   - 产物：`~/.gstack/projects/<slug>/*-test-plan-*.md`
+   - 后面的 `/qa`、`/qa-only` 会优先读这份 test plan，而不是只靠 diff 猜要测什么。
 
-#### 3. 先锁 scope，再锁设计，再锁工程
+7. 跑 `$gstack2task` 或 `$issue2task`
+   - 这是默认的“切实现分支”时机。
+   - 如果输入已经沉淀在 `~/.gstack/projects/`：用 `$gstack2task`
+   - 如果输入还是 GitHub issue 或你手写需求：用 `$issue2task`
+   - 两者都会在写 `tasks/Txx-*.md` 之前先创建并切到新分支。
 
-这一段不要写反。
+8. 跑 `$plantask`
+   - 作用：把 repo 内 task 文档压成单任务实施方案。
+   - 使用时机：task 已稳定、准备真正开写代码时。
 
-1. `/plan-ceo-review`
-   - 输入：`/office-hours` 的 design doc
-   - 输出：更稳定的产品边界、scope 决策、review readiness 记录
-   - 为什么先做：如果 scope 还会被放大/收缩，后面的设计和工程规划都容易返工
+9. 进入实现与验证循环
+   - `/investigate`
+     - 用在 bug 根因不清楚时，先查原因，再修。
+   - `/design-review`
+     - 只在“已经有可运行页面”时使用。
+     - 如果当前在 feature branch 且没给 URL，它会自动进入 diff-aware mode，按 `git diff main...HEAD` 推断受影响页面。
+     - 如果当前在 `main/master` 且没给 URL，它会直接要求你提供 URL。
+     - 无论在哪条分支上，worktree 必须是干净的；它会为每个设计修复单独 commit，所以实操上最好先把当前实现 checkpoint commit 好，再跑 `/design-review`。
+   - `/review`
+     - 在 diff 已成形、准备进入发布前检查时跑。
+     - 它更偏结构风险、边界条件、trust boundary，不是视觉 QA。
+   - `/qa` / `/qa-only`
+     - 在页面已可运行、关键功能已落地时跑。
+     - 如果前面有 `/plan-eng-review` 产出的 test plan，这里会优先消费它。
 
-2. `/design-consultation`
-   - 只在“有 UI 且还没有 `DESIGN.md`”时进入这步
-   - 输出：repo 根目录 `DESIGN.md`
-   - 为什么在 `/plan-design-review` 前：`/plan-design-review` 的逻辑会先检查 `DESIGN.md`，没有它时只能退化为按通用设计原则审查；对新 UI 项目，这不是推荐主线
+10. 跑 `$checktask`
+   - 放在验证循环之后。
+   - 它负责按 task 文档收口，而不是替代 `/ship` 处理 PR 和 repo 级发布文档。
 
-3. `/plan-design-review`
-   - 输入：当前 plan + `DESIGN.md`（如果存在）
-   - 输出：被补齐过交互状态、层级、响应式和 AI slop 风险的 plan
-   - 说明：这是“计划内的设计审查”，不是上线后的视觉 QA
+11. 只在必要时再跑 `$memorize`
+   - 目录结构、共享规则、导航入口真的变了再刷新。
+   - 纯实现细节变化通常不需要机械重跑。
 
-4. `/plan-eng-review`
-   - 输入：design doc + 已经稳定下来的 plan
-   - 输出：工程审查结果 + `~/.gstack/projects/<slug>/*-test-plan-*.md`
-   - 为什么放在最后：它产出的 test plan 应该覆盖已经过 CEO 和设计收敛后的最终 plan；否则 `/qa` 测的就不是最终版本
+12. 跑 `/ship`
+   - 这是协同工作流里的正式发布入口。
+   - 它会检查 review readiness、把最新 base 分支合到当前 feature branch、重新跑测试、推送分支并创建 PR，然后自动接 `/document-release`。
+   - 如果你只想做轻量 `commit/push/tag`，才退回用 `$ships`。
 
-如果是纯后端或无 UI 范围的变更，可以跳过 `/design-consultation` 和 `/plan-design-review`，直接在 `/plan-ceo-review` 之后进入 `/plan-eng-review`。
+#### 协同模式的分支与 main 策略
 
-#### 4. 把上游规划压成 repo 内 task
+- 默认切分支时机：`$gstack2task` 或 `$issue2task`。这两个 skill 会在写 task 文件之前先新建并切到任务分支。
+- 默认实现位置：从 task 化开始，到 `$plantask`、实现、`/design-review`、`/review`、`/qa`、`$checktask`、`/ship`，都留在这条 feature branch 上完成。
+- `/design-review` 最适合在 feature branch 上跑：
+  - 不给 URL 时可以用 diff-aware mode。
+  - 它会为每个修复单独 commit，所以不应在脏工作区里跑。
+  - 技术上在 `main` 上给 URL 也能继续，但不推荐，因为这些原子修复 commit 会直接落在主线。
+- `/ship` 必须从 feature branch 运行；如果你站在 base branch / 默认分支上，它会直接 abort。
+- `/ship` 在发布前会先把最新的 base branch merge 到当前 feature branch 再测试。这一步是“把主线更新合进功能分支”，不是“把功能分支合回主线”。
+- `/ship` 会 push 当前分支并创建 PR，但不会自己完成最终的 branch merge。真正合并到 `main` 的时机，是 PR 审核通过、按仓库既有规则落地的时候。
+- 分支已经合进 `main` 之后，再切回 `main` 同步最新主线，然后开始下一轮 planning / task 化。不要在已经 ship 完的旧 feature branch 上继续叠下一个需求。
 
-这一步由 codev 接手。
+#### 设计相关两个 skill 的使用边界
 
-- 如果输入源是 GitHub issue 或用户直接需求：`$issue2task`
-- 如果输入源是 `~/.gstack/projects/` 下的 design doc、test plan、handoff：`$gstack2task`
-
-两个 skill 都会：
-
-- 写 `tasks/Txx-*.md`
-- 按当前最大编号顺延
-- 在写 task 前先切到一个新分支
-
-推荐等 plan reviews 稳定后再跑 task 化，不要在上游 scope 还在变时过早写 task。
-
-#### 5. 做单任务实现规划
-
-跑 `$plantask`。
-
-- 输入：repo 内 `tasks/Txx-*.md`
-- 输出：单个 task 的实现顺序、文件落点、验证方案
-- 说明：`plantask` 是“把 task 变成可写代码的实施方案”，不是再做一轮产品讨论
-
-#### 6. 实现期的分支技能
-
-实现阶段不是一条直线，有几个常见分支：
-
-- `/investigate`
-  - 用在 bug 根因不清时
-  - 先查根因，再决定修法
+- `/plan-design-review`
+  - 用在实现前。
+  - 输入是 plan、`DESIGN.md`、`CLAUDE.md` 等文档和上下文。
+  - 不要求你先有可运行 URL。
+  - 目标是把设计方案补到足够完整，避免实现后大返工。
 
 - `/design-review`
-  - 只在“已经有可运行 UI，要做上线前视觉 QA”时使用
-  - 它和 `/plan-design-review` 不是一回事：前者是 live site 审查，后者是 plan mode 审查
-
-- `/review`
-  - 结构性代码审查
-  - 适合在 diff 已经成形后跑一遍，提前暴露 race condition、边界条件、trust boundary 等问题
-
-- `/qa` / `/qa-only`
-  - 浏览器和交互验证
-  - 如果前面跑过 `/plan-eng-review`，这里会优先消费 `~/.gstack/projects/` 下的 test plan
-
-#### 7. 推荐的验证顺序
-
-默认推荐这样排：
-
-1. `/design-review`，仅在 UI-heavy 分支上
-2. `/review`
-3. `/qa` 或 `/qa-only`
-
-但这三者是可回环的，不是一次性线性结束：
-
-- `/design-review` 会提交设计修复 commit
-- `/qa` 也可能提交 bug fix 和 regression test commit
-- 任何会改代码的验证技能，都可能让前面的审查结果变旧
-
-所以正确做法是：
-
-- 把它们当成一个“验证循环”
-- 分支稳定后再进入 `$checktask`
-- 最终由 `/ship` 再做一次发布前 fresh gate
-
-#### 8. 关 task，而不是顺手接管整个 release
-
-跑 `$checktask`。
-
-- 目标：逐条验收 `tasks/`，更新 checkbox，归档到 `tasks/done/`
-- 它会顺带做：
-  - 一次 `simplify` 风格的局部语义不变精简
-  - `memory/` 更新
-  - 与本 task 直接相关的局部 `docs/` 更新
-- 它不会默认接管：
-  - `README.md`
-  - `CHANGELOG`
-  - `VERSION`
-  - `CLAUDE.md`
-  - `CONTRIBUTING.md`
-  - `TODOS`
-
-这些 repo 级文档默认留给 gstack `/document-release`。
-
-#### 9. 只在真的需要时再刷新记忆
-
-如果 task 完成后，repo 结构、约束、导航或落点发生了真实变化，再跑一次 `$memorize`。不要把它当成每次结束都机械追加的一步。
-
-#### 10. 正式发布走 gstack，轻量提交才走 codev
-
-默认发布主线：
-
-1. `/ship`
-2. 自动触发 `/document-release`
-3. `/retro`
-
-这条链会处理：
-
-- review readiness gate
-- fresh test verification
-- PR 创建
-- repo 级文档同步
-- 发布后的回顾
-
-只有在你明确只想做轻量 `commit/push/tag`、不需要 PR、review gate、QA 串联或 repo 级文档同步时，才用 `$ships`。
+  - 用在实现后。
+  - 输入是正在运行的页面，以及当前 feature branch 的真实 UI。
+  - 要求 clean working tree；如果在 `main/master` 上还必须提供 URL。
+  - 目标是视觉 QA + 原子修复 commit，不适合在半成品状态下过早运行。
 
 #### 协同模式下最常见的三种实际走法
 
