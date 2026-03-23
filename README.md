@@ -6,6 +6,7 @@
 - 任务实施前规划
 - 任务验收与归档
 - `AGENTS.md` 与 `memory/` 维护
+- 提交前语义不变精简
 - 轻量 checkpoint 提交
 
 它可以单独使用，也可以和 `gstack` 配合。
@@ -66,10 +67,11 @@ main/master
 → $gstack2task 或 $issue2task   （这里开始切到某个 task 自己的分支）
 → $plantask                     （后续都在这个 task 分支上）
 → 实现
-→ 普通 commit 或 $checkpoint   （先把当前实现收成 clean tree）
+→ $simplify                     （先做语义不变精简，收窄当前 patch）
+→ 普通 commit 或 $checkpoint   （把精简后的实现收成 clean tree）
 → （有 UI 时）$design-review
 → $review
-→ （若 $review 改了代码，先验证并补一次普通 commit 或 $checkpoint）
+→ （若 $review 改了代码，先验证；必要时再补一次 $simplify，然后补普通 commit 或 $checkpoint）
 → $qa
 → $checktask
 → $ship
@@ -84,6 +86,7 @@ main/master
 - `$issue2task`：GitHub issue 或直接需求转 task
 - `$gstack2task`：把 `~/.gstack/projects/` 下的 gstack 工件转 task
 - `$plantask`：把 task 压成可执行实施方案
+- `$simplify`：在提交前或 `checktask` 内部做语义不变精简
 - `$checktask`：按验收标准收口、归档、同步 `memory/`
 - `$memorize`：维护 `AGENTS.md` 和 `memory/`
 - `$checkpoint`：轻量 `commit + push`
@@ -118,7 +121,7 @@ main/master
 - `$plantask`
   - 应在目标 task 自己的分支上运行
   - 如果你还停在 `main/master`，它会先切过去再继续
-- 实现、普通 commit、`$checkpoint`、`$design-review`、`$review`、`$qa`、`$checktask`、`$ship`
+- 实现、`$simplify`、普通 commit、`$checkpoint`、`$design-review`、`$review`、`$qa`、`$checktask`、`$ship`
   - 都在当前 task 自己的分支上完成
 - `main/master`
   - 只作为 planning 起点和最终 merge 终点
@@ -139,9 +142,9 @@ main/master
 
 ### 什么时候需要 `$checkpoint`
 
-- 在第一次实现完成、准备跑 `$design-review` 或 `$qa` 前，先做一次普通 commit 或 `$checkpoint`
+- 在第一次实现完成、准备跑 `$design-review` 或 `$qa` 前，推荐先跑一次 `$simplify`，再做普通 commit 或 `$checkpoint`
 - 因为 `$design-review` 和 `$qa` 都要求 clean working tree
-- 如果 `$review` 改了代码，而你后面还要继续 `$qa`、`$checktask`、`$ship`，也先补一次普通 commit 或 `$checkpoint`
+- 如果 `$review` 改了代码，而你后面还要继续 `$qa`、`$checktask`、`$ship`，先验证；必要时再补一次 `$simplify`，然后做普通 commit 或 `$checkpoint`
 - 如果你只是想把当前 task 分支临时推到远端，也可以直接用 `$checkpoint`
 
 ### 什么时候合并回 main
@@ -158,9 +161,10 @@ main/master
 
 ```text
 task 分支上实现
+→ $simplify
 → 普通 commit 或 $checkpoint
 → $design-review / $review / $qa
-→ 如果中间又产生新修改，继续补普通 commit 或 $checkpoint
+→ 如果中间又产生新修改，必要时继续补 $simplify，再补普通 commit 或 $checkpoint
 → $checktask
 → $ship
 ```
@@ -175,7 +179,7 @@ task 分支上实现
 
 - `$review` 会基于当前 diff 做结构审查
 - 它可能 auto-fix，但默认不会替你自动创建 commit
-- 如果它改了代码，先自己验证，再补一次普通 commit 或 `$checkpoint`，然后再继续 `$qa`、`$checktask` 或 `$ship`
+- 如果它改了代码，先自己验证；必要时再补一次 `$simplify`，然后补普通 commit 或 `$checkpoint`，再继续 `$qa`、`$checktask` 或 `$ship`
 
 ## 常见流程
 
@@ -187,9 +191,10 @@ main/master
 → $issue2task 42          （切到该 task 分支）
 → $plantask Txx
 → 实现
+→ $simplify
 → $checkpoint
 → $review
-→ （若 $review 改了代码，补一次普通 commit 或 $checkpoint）
+→ （若 $review 改了代码，必要时补一次 $simplify，再补普通 commit 或 $checkpoint）
 → $qa
 → $checktask
 → $ship
@@ -206,9 +211,10 @@ main/master
 → $gstack2task            （切到该 task 分支）
 → $plantask
 → 实现
+→ $simplify
 → $checkpoint
 → $review
-→ （若 $review 改了代码，补一次普通 commit 或 $checkpoint）
+→ （若 $review 改了代码，必要时补一次 $simplify，再补普通 commit 或 $checkpoint）
 → $qa
 → $checktask
 → $ship
@@ -238,6 +244,7 @@ $gstack2task
 $gstack2task ~/.gstack/projects/my-project/xxx-implementation-plan-20260322-105643.md
 $plantask
 $plantask T05
+$simplify
 $checktask
 $checkpoint
 ```
@@ -250,9 +257,9 @@ $checkpoint
 | `$issue2task` | 从 issue 或直接需求生成 `tasks/` |
 | `$gstack2task` | 从 gstack 工件生成 `tasks/` |
 | `$plantask` | 输出某个 task 的实施方案 |
+| `$simplify` | 语义不变精简 diff，常用于提交前收窄 patch |
 | `$checktask` | 验收 task、更新 checklist、归档到 `tasks/done/` |
 | `$checkpoint` | 轻量 `commit + push` |
-| `$simplify` | 语义不变精简 diff |
 
 ## 下游项目建议目录
 

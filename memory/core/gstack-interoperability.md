@@ -22,6 +22,7 @@
 - `checktask` 默认只更新 `memory/` 和任务直接相关的局部 `docs/`，不要顺手改 repo 级文档。
 - repo 级文档漂移默认交给 gstack `/document-release`。
 - 需要 PR、review gate、覆盖率审计或自动文档同步时，优先 gstack `/ship`。
+- 在 task 分支准备第一次提交或 `checkpoint` 前，可以先用 `simplify` 收窄当前 patch，再把工作区收成 clean tree。
 - 只有明确需要轻量 `commit/push` 时，才用 codev `checkpoint`。
 
 ## 推荐组合流程
@@ -29,9 +30,11 @@
 2. `gstack2task` 把上游工件落成 `tasks/`
 3. `plantask`
 4. 实现
-5. gstack `/review`、`/qa`
-6. `checktask`
-7. gstack `/ship`、`/document-release`
+5. `simplify` 收窄当前 patch
+6. 普通 commit 或 `checkpoint`，先把工作区收成 clean tree
+7. gstack `/review`、`/qa`
+8. `checktask`
+9. gstack `/ship`、`/document-release`
 
 ## 何时不用 gstack2task
 - 需求本来就在 GitHub issue 里，直接用 `issue2task`

@@ -11,10 +11,11 @@
 1. gstack `/office-hours`、`/plan-ceo-review`、`/plan-eng-review` 先把上游设计、交接和测试计划写到 `~/.gstack/projects/`
 2. GitHub issue 或直接需求走 `issue2task`；gstack 工件走 `gstack2task`
 3. `plantask` 围绕 repo 内 `tasks/` 输出可执行实现方案
-4. 实现后优先用 gstack `/review`、`/qa` 做结构和浏览器验证
-5. `checktask` 负责关 task、更新 `memory/` 和任务直接相关的局部 `docs/`
-6. 需要 PR、release gate 或 repo 级文档同步时，优先用 gstack `/ship` 和 `/document-release`
-7. 只有明确需要轻量 `commit/push` 时，才用 `checkpoint`
+4. 实现后可先用 `simplify` 做语义不变精简，再在需要 clean tree 时做普通 commit 或 `checkpoint`
+5. 然后优先用 gstack `/review`、`/qa` 做结构和浏览器验证
+6. `checktask` 负责关 task、更新 `memory/` 和任务直接相关的局部 `docs/`
+7. 需要 PR、release gate 或 repo 级文档同步时，优先用 gstack `/ship` 和 `/document-release`
+8. `checkpoint` 只保留给显式的轻量 `commit/push` 场景
 
 ## 新增 skill
 1. 创建 skill 目录和 `SKILL.md`
