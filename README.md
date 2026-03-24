@@ -31,6 +31,6 @@ cd ~/codev
 
 ## 3. 详细文档
 
-- [半自动开发流程](docs/semi-auto-workflow.md)
-- [人工深度参与流程](docs/manual-workflow.md)
+- [自动流程](docs/auto-workflow.md)
+- [工作流程](docs/workflow.md)
 - [Skill 详细手册](docs/skill-reference.md)

@@ -1,4 +1,4 @@
-# 人工深度参与流程
+# 工作流程
 
 这份文档讲的是另一条路：不是把流程交给 `autodev` / `automerge` 自动收口，而是让人类在每个关键步骤都深度参与、显式判断、显式推进。
 
@@ -13,33 +13,9 @@
 - 任务跨度大、变数多，人在中途经常要改 scope、改方案、改优先级。
 - 你需要把规划、设计、工程、验证、发布分成明确的阶段门禁。
 
-## 高层链路
-
-```text
-$memorize
--> $office-hours
--> $plan-ceo-review
--> $design-consultation
--> $plan-design-review
--> $plan-eng-review
--> $gstack2task 或 $issue2task
--> 审核 task plan
--> $taskdev
--> $simplify
--> 普通 commit 或 $checkpoint
--> $design-review
--> $review
--> $qa
--> $checktask
--> $ship
--> （可选）$document-release
--> $land-and-deploy
--> $retro
-```
+## 详细流程图
 
 不是每次都必须跑完整条链，但如果你选择人工路径，默认思维方式应该是：每个阶段都由人类决定是否通过，而不是默认自动往前冲。
-
-## 详细流程图
 
 ```text
 ┌──────────────────────────── main/master ────────────────────────────┐
@@ -317,5 +293,5 @@ $memorize
 
 ## 推荐读法
 
-- 想要更省人工、更安全地自动推进：看 [半自动开发流程](semi-auto-workflow.md)。
+- 想要更省人工、更安全地自动推进：看 [自动流程](auto-workflow.md)。
 - 想查每个 skill 的内部流程、产物和前置状态：看 [Skill 详细手册](skill-reference.md)。

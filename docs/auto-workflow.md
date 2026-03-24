@@ -1,4 +1,4 @@
-# 半自动开发流程
+# 自动流程
 
 这份文档只讲一件事：当仓库同时接入 `codev` 和 `gstack` 时，如何把 `autoplan + autodev + automerge` 串成一条更安全、更省人工的半自动开发路径。
 
@@ -212,5 +212,5 @@ $office-hours
 ## 推荐读法
 
 - 想知道整条半自动路径怎么串：继续读这份文档即可。
-- 想知道手动路径怎么跑：看 [人工深度参与流程](manual-workflow.md)。
+- 想知道手动路径怎么跑：看 [工作流程](workflow.md)。
 - 想知道每个 skill 的内部流程、产物和前置状态：看 [Skill 详细手册](skill-reference.md)。

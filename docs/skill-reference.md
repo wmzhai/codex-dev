@@ -10,8 +10,8 @@
 
 如果你还没确定该走哪条路径，先读：
 
-- [半自动开发流程](semi-auto-workflow.md)
-- [人工深度参与流程](manual-workflow.md)
+- [自动流程](auto-workflow.md)
+- [工作流程](workflow.md)
 
 ## 说明
 
