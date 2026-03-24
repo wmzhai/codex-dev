@@ -1,6 +1,6 @@
 ---
 name: gstack2task
-description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件读取设计、交接和测试计划，结合现有代码生成 `tasks/` 下可直接执行的任务计划文件。适用于上游已经跑过 gstack `/office-hours`、`/plan-*`，现在需要把这些工件和 repo 实现现状一起压成 repo 内执行单元的场景。
+description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件读取设计、交接和测试计划，结合现有代码生成 `tasks/` 下可直接执行的任务计划文件。适用于上游已经跑过 gstack `$office-hours`、`$plan-*`，现在需要把这些工件和 repo 实现现状一起压成 repo 内执行单元的场景。
 ---
 
 # Gstack2Task

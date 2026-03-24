@@ -25,7 +25,7 @@ cd ~/codev
 
 ## 2. 高层摘要
 
-- 半自动路径：`/office-hours -> /autoplan -> $gstack2task/$issue2task -> 审核 task plan -> $autodev -> 人工确认 -> $automerge`
+- 半自动路径：`$office-hours -> $autoplan -> $gstack2task/$issue2task -> 审核 task plan -> $autodev -> 人工确认 -> $automerge`
 - 人工路径：按规划、任务、实现、验证、发布逐步运行各个 skill，由人类在关键节点做深度判断。
 - repo 内的 `tasks/` 是 codev 的执行单元；任务文件本身同时承载需求、实现计划与验收基线；`~/.gstack/projects/` 是 gstack 的上游工件目录。
 

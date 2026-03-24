@@ -1,4 +1,4 @@
 interface:
   display_name: "checktask"
   short_description: "验收任务、同步 memory 与任务相关文档并归档已完成项到 tasks/done/"
-  default_prompt: "使用 $checktask 验证 tasks/ 中的待办任务；触发后立即用中文与用户交流，整个过程中的验收结论、缺口说明和归档结果默认都用中文；更新已通过的 checklist；如果执行过程中实现已变化导致 task 文档过期，则以已验证的实际结果同步任务文档；完成验收后自动对相关 diff 做一次语义不变的精简，并按最新已验证内容更新 memory/ 与任务直接相关的 docs/，如发现 repo 级文档漂移则明确提示后续交给 gstack /document-release，再报告剩余缺口或归档结果。"
+  default_prompt: "使用 $checktask 验证 tasks/ 中的待办任务；触发后立即用中文与用户交流，整个过程中的验收结论、缺口说明和归档结果默认都用中文；更新已通过的 checklist；如果执行过程中实现已变化导致 task 文档过期，则以已验证的实际结果同步任务文档；完成验收后自动对相关 diff 做一次语义不变的精简，并按最新已验证内容更新 memory/ 与任务直接相关的 docs/，如发现 repo 级文档漂移则明确提示后续交给 gstack $document-release，再报告剩余缺口或归档结果。"

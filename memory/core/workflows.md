@@ -8,13 +8,13 @@
 5. 用 `rg` 定位源码或脚本，再开始改动
 
 ## 与 gstack 配合
-1. gstack `/office-hours`、`/plan-ceo-review`、`/plan-eng-review` 先把上游设计、交接和测试计划写到 `~/.gstack/projects/`
+1. gstack `$office-hours`、`$plan-ceo-review`、`$plan-eng-review` 先把上游设计、交接和测试计划写到 `~/.gstack/projects/`
 2. GitHub issue 或直接需求走 `issue2task`；gstack 工件走 `gstack2task`
 3. `issue2task` 与 `gstack2task` 都要结合代码直接写出带实现计划的 `tasks/Txx-*.md`
 4. 用户先审核 task 文件中的 plan，再决定进入 `autodev` 或手动实现
 5. 默认更安全的 task 闭环是 `autodev`：它会先校准 task 内已有 plan，再在 task 分支上推进实现、审查、测试、分支部署，并持续更新对应 `tasks/Txx-*.md`
 6. 用户确认分支部署结果后，用 `automerge` 完成主干合并、版本号、正式发布和任务归档
-7. 如果不用 `autodev` / `automerge`，手动路径仍可继续使用 `simplify`、`checkpoint`、gstack `/review`、`/qa`、`/ship` 与 `/document-release`
+7. 如果不用 `autodev` / `automerge`，手动路径仍可继续使用 `simplify`、`checkpoint`、gstack `$review`、`$qa`、`$ship`、`$document-release` 与 `$land-and-deploy`
 8. `checktask` 仍负责手动验收、更新 `memory/` 和任务直接相关的局部 `docs/`
 9. `checkpoint` 只保留给显式的轻量 `commit/push` 场景
 

@@ -20,7 +20,7 @@
 - `checktask`、`simplify` 围绕 repo 内部任务流工作。
 - `autodev` 负责在 task 分支上自动推进规划、实现、验证、分支部署与 task 文档持续维护，但不 merge 主分支，也不打版本号。
 - `automerge` 负责在用户确认后，把已验证的任务分支合并到 `main/master`，处理版本号、正式发布与任务归档。
-- `checkpoint` 是轻量 `commit/push` fallback；需要 PR、review gate、QA 串联或全局文档同步时，优先使用 gstack `/ship` 与 `/document-release`。
+- `checkpoint` 是轻量 `commit/push` fallback；需要 PR、review gate、QA 串联或全局文档同步时，优先使用 gstack `$ship` 与 `$document-release`。
 
 ## 维护规则
 - 新增或修改 skill 时，先改 `SKILL.md`，再同步 `agents/openai.yaml`，最后回看 `README.md`、`setup` 和 `test/setup-smoke.sh` 是否需要更新。

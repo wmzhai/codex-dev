@@ -20,7 +20,7 @@
 - `~/.gstack/projects/`：gstack 产出的 design doc、implementation handoff、test plan、review state 等上游工件。本仓库不拥有这些文件，只通过 `gstack2task` 消费它们。
 - `tasks/`：repo 内可执行工作单元，属于 codev 的主落点。
 - `AGENTS.md` 与 `memory/`：repo 内面向 Codex 的长期记忆层。
-- repo 级人类文档如 `README.md`、`CHANGELOG`、`CLAUDE.md`、`CONTRIBUTING.md`、`TODOS`：如果项目同时使用 gstack，优先由 gstack `/document-release` 维护。
+- repo 级人类文档如 `README.md`、`CHANGELOG`、`CLAUDE.md`、`CONTRIBUTING.md`、`TODOS`：如果项目同时使用 gstack，优先由 gstack `$document-release` 维护。
 
 ## 维护边界
 - `SKILL.md` 是每个 skill 的主说明和工作流。

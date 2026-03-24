@@ -17,27 +17,113 @@
 
 ```text
 $memorize
--> /office-hours
--> /plan-ceo-review
--> /design-consultation
--> /plan-design-review
--> /plan-eng-review
+-> $office-hours
+-> $plan-ceo-review
+-> $design-consultation
+-> $plan-design-review
+-> $plan-eng-review
 -> $gstack2task 或 $issue2task
 -> 审核 task plan
 -> 实现
 -> $simplify
 -> 普通 commit 或 $checkpoint
--> /design-review
--> /review
--> /qa
+-> $design-review
+-> $review
+-> $qa
 -> $checktask
--> /ship
--> /land-and-deploy
--> /document-release
--> /retro
+-> $ship
+-> （可选）$document-release
+-> $land-and-deploy
+-> $retro
 ```
 
 不是每次都必须跑完整条链，但如果你选择人工路径，默认思维方式应该是：每个阶段都由人类决定是否通过，而不是默认自动往前冲。
+
+## 详细流程图
+
+```text
+┌──────────────────────────── main/master ────────────────────────────┐
+│                                                                     │
+│  $memorize                                                          │
+│    └─► AGENTS.md + memory/ (repo 内)                                │
+│                                                                     │
+│  $office-hours                                                      │
+│    └─► ~/.gstack/projects/{slug}/*-design-*.md                      │
+│         设计文档                                                    │
+│                                                                     │
+│  $plan-ceo-review   ←── 读 design doc                               │
+│    └─► ~/.gstack/projects/{slug}/ceo-plans/*.md                     │
+│         CEO 计划                                                    │
+│                                                                     │
+│  $design-consultation ←── 有 UI 且无 DESIGN.md 时                   │
+│    └─► DESIGN.md (repo 根目录)                                      │
+│         设计系统：字体 / 色彩 / 间距 / 动效                          │
+│                                                                     │
+│  $plan-design-review ←── 读 DESIGN.md                               │
+│    └─► 设计完整度评分 0-10                                          │
+│         修补后的 plan 文件                                           │
+│                                                                     │
+│  $plan-eng-review   ←── 读 design doc + DESIGN.md                   │
+│    └─► 架构图 + ~/.gstack/projects/{slug}/*-test-plan-*.md          │
+│                                                                     │
+└─────────────────────────────┬───────────────────────────────────────┘
+                              │ 此处切入 task 分支
+                              ▼
+┌──────── task 分支 (每个 task 一条独立分支) ──────────────────────────┐
+│                                                                     │
+│  $gstack2task 或 $issue2task                                        │
+│    └─► tasks/T{nn}-{slug}.md + 新建并切到 task 分支                 │
+│         任务文件内同时包含需求、Implementation Plan、Validation Plan │
+│                                                                     │
+│  人工审核 task plan                                                 │
+│    └─► 确认任务边界、实现路径、验证链                               │
+│         不接受就回到 task 文件继续收敛                               │
+│                                                                     │
+│  （中到大改动时）$plan-eng-review 或 $autoplan                       │
+│    └─► 对当前 task 分支补齐 review；scope 漂移后可重跑               │
+│                                                                     │
+│  实现代码                                                            │
+│    │                                                                 │
+│    ▼                                                                 │
+│  $simplify ─── 语义不变精简，收窄 patch                              │
+│    │                                                                 │
+│    ▼                                                                 │
+│  普通 commit 或 $checkpoint ─── 提交 clean tree                     │
+│    │                                                                 │
+│    ▼                                                                 │
+│  （有 UI 时）$design-review ─── 视觉 QA + 原子 fix commits          │
+│    │                                                                 │
+│    ▼                                                                 │
+│  $review ─── 结构性 code review，可能 auto-fix                      │
+│    │ (若改了代码 → 验证 → 必要时补 $simplify → 补 commit)           │
+│    ▼                                                                 │
+│  $qa ─── 打开真实浏览器测试用户流程                                  │
+│    │                                                                 │
+│    ▼                                                                 │
+│  $checktask ─── 逐项验收 → 归档到 tasks/done/ → 同步 memory/       │
+│    │                                                                 │
+│    ▼                                                                 │
+│  $ship ─── 测试 + 覆盖率 + review + 版本号 + CHANGELOG + PR         │
+│                                                                     │
+└─────────────────────────────┬───────────────────────────────────────┘
+                              │
+                              ▼
+┌───────── 合并与部署 ─────────────────────────────────────────────────┐
+│                                                                     │
+│  $land-and-deploy                                                   │
+│    ├─► 预合并就绪门禁 (CI 绿 + review approved)                     │
+│    ├─► gh pr merge (squash / rebase / merge)                        │
+│    ├─► 等 CI + 部署完成                                              │
+│    └─► $canary 自动验证生产健康度                                    │
+│                                                                     │
+│  $document-release (可选，通常接在 $ship 后)                        │
+│    └─► 同步 README / ARCHITECTURE / CONTRIBUTING / CHANGELOG        │
+│                                                                     │
+│  $retro (可选，每周)                                                │
+│    └─► 工程复盘报告 (commit 分析 + 代码质量 + 工作模式)             │
+│                                                                     │
+└──────────────────────────────────────────────────────────────────────┘
+```
 
 ## 阶段总览
 
@@ -48,9 +134,9 @@ $memorize
 | 任务生成 | 决定 task 如何拆分，并让 task 自带可执行 plan | `$gstack2task` / `$issue2task` | `tasks/` 中有可执行任务、实现计划和对应分支 |
 | plan 审核 | 决定是否接受当前 task 的实现路径 | 人工审核 task 文件 | 可执行方案明确 |
 | 实现与收口 | 亲自控制代码演进、精简和提交节奏 | 实现 + `$simplify` + commit / `$checkpoint` | 当前 task 分支形成稳定 patch |
-| 设计 / 代码 / 浏览器验证 | 逐步判断是否需要继续改 | `/design-review`、`/review`、`/qa` | 验证结果明确，必要修复已完成 |
+| 设计 / 代码 / 浏览器验证 | 逐步判断是否需要继续改 | `$design-review`、`$review`、`$qa` | 验证结果明确，必要修复已完成 |
 | 验收 | 人工确认验收标准是否真的通过 | `$checktask` | task 文档更新完毕并归档或保留缺口 |
-| 发布 | 人工控制版本号、PR、合并、部署和文档同步 | `/ship`、`/land-and-deploy`、`/document-release` | 主干、部署、文档都收口完毕 |
+| 发布 | 人工控制版本号、PR、合并、部署和文档同步 | `$ship`、`$document-release`、`$land-and-deploy` | 主干、部署、文档都收口完毕 |
 
 ## 阶段 1：先把仓库记忆整理好
 
@@ -68,7 +154,7 @@ $memorize
 
 这条路径里，上游规划不交给一个总编排器，而是逐步推进。
 
-### 2.1 `/office-hours`
+### 2.1 `$office-hours`
 
 人类在这里的职责不是回答实现细节，而是把问题本身讲清楚：
 
@@ -77,7 +163,7 @@ $memorize
 - 目标用户是谁
 - 还有哪些备选方案
 
-### 2.2 `/plan-ceo-review`
+### 2.2 `$plan-ceo-review`
 
 人在这里主要判断：
 
@@ -85,11 +171,11 @@ $memorize
 - 哪些东西应该砍掉
 - 这个方向是不是值得做
 
-### 2.3 `/design-consultation` / `/plan-design-review`
+### 2.3 `$design-consultation` / `$plan-design-review`
 
 只要任务有明显 UI 或设计系统影响，人就应该在这里做显式设计判断，而不是把“到时候再 polish”留给实现后。
 
-### 2.4 `/plan-eng-review`
+### 2.4 `$plan-eng-review`
 
 这是人工路径里最关键的工程门禁之一。人在这里要确认：
 
@@ -120,7 +206,7 @@ $memorize
 
 - 审核实现方向是不是你真正想要的
 - 纠正过度设计或漏掉的边界
-- 决定是否要继续补跑 `/plan-eng-review` 或 `/autoplan`
+- 决定是否要继续补跑 `$plan-eng-review` 或 `$autoplan`
 
 如果你不接受这个方案，就不应该进入编码。
 
@@ -143,11 +229,11 @@ $memorize
 
 ## 阶段 6：设计、代码、浏览器验证逐步过门禁
 
-### `/design-review`
+### `$design-review`
 
 只有在 task 涉及用户可见 UI 时才需要。人工路径里，你通常会在这里亲自看截图、看修复方向、看视觉质量，而不是默认自动接受所有修补。
 
-### `/review`
+### `$review`
 
 这是结构性代码审查。人在这里最重要的职责是区分：
 
@@ -155,7 +241,7 @@ $memorize
 - 可以接受的实现取舍
 - 是否需要扩大修正范围
 
-### `/qa`
+### `$qa`
 
 这里是用户流程验证门禁。人工路径里，人类通常会更积极地决定：
 
@@ -177,7 +263,7 @@ $memorize
 
 ## 阶段 8：正式发布仍然是独立门禁
 
-### `/ship`
+### `$ship`
 
 人在这里需要关注：
 
@@ -185,7 +271,7 @@ $memorize
 - review readiness 是否够新
 - 版本号、CHANGELOG、测试和 PR 是否匹配当前 diff
 
-### `/land-and-deploy`
+### `$land-and-deploy`
 
 人在这里决定是否真正 land 到主干，并在部署验证阶段判断：
 
@@ -193,13 +279,13 @@ $memorize
 - 部署后的结果是否健康
 - 需要不要回滚或继续观察
 
-### `/document-release`
+### `$document-release`
 
-这一步不是“顺手补文档”，而是确保 repo 级文档真的和 shipped changes 同步。
+这一步不是“顺手补文档”，而是确保 repo 级文档真的和 shipped changes 同步。它通常接在 `$ship` 后，也可以按仓库发布方式放在 `$land-and-deploy` 前后补齐。
 
 ## 阶段 9：复盘是可选，但对长期流程很有价值
 
-`/retro` 不属于单个 feature 的强制步骤，但如果团队在意流程质量，它能帮助人类复盘：
+`$retro` 不属于单个 feature 的强制步骤，但如果团队在意流程质量，它能帮助人类复盘：
 
 - 本周到底交付了什么
 - 哪些步骤最耗时间
@@ -210,7 +296,7 @@ $memorize
 - `main/master` 更适合作为初始化与上游规划的起点。
 - `gstack2task` / `issue2task` 会把执行切入 task 分支，并在 task 文件中写入初版实现计划。
 - 审核 task plan、实现、`simplify`、`checkpoint`、`design-review`、`review`、`qa`、`checktask`、`ship` 都应围绕当前 task 分支推进。
-- `/land-and-deploy` 是进入主干的门禁，不应提前被偷偷替代。
+- `$land-and-deploy` 是进入主干的门禁，不应提前被偷偷替代。
 - `design-review` 和 `qa` 需要 clean working tree；所以在它们之前，人必须先把手头改动收成稳定状态。
 
 ## 为什么这条路更适合高控制度团队

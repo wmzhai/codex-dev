@@ -31,8 +31,8 @@
 ## 高层链路
 
 ```text
-/office-hours
--> /autoplan
+$office-hours
+-> $autoplan
 -> $gstack2task 或 $issue2task
 -> 审核 task plan
 -> $autodev
@@ -40,7 +40,7 @@
 -> $automerge
 ```
 
-如果需求已经明确、设计文档已经存在，可以跳过 `/office-hours`。如果任务来源不是 gstack 工件，而是 GitHub issue 或直接需求，则走 `$issue2task`。
+如果需求已经明确、设计文档已经存在，可以跳过 `$office-hours`。如果任务来源不是 gstack 工件，而是 GitHub issue 或直接需求，则走 `$issue2task`。
 
 ## 阶段总览
 
@@ -55,9 +55,9 @@
 
 ## 阶段 1：上游规划
 
-### 1.1 `/office-hours`
+### 1.1 `$office-hours`
 
-当问题还没有被压成一个足够好的 feature design 时，先用 `/office-hours`。它的任务不是写 task，而是逼出：
+当问题还没有被压成一个足够好的 feature design 时，先用 `$office-hours`。它的任务不是写 task，而是逼出：
 
 - 问题定义
 - 假设与前提
@@ -66,9 +66,9 @@
 
 这一阶段的主产物在 `~/.gstack/projects/{slug}/` 下，是后面 review 和 task 生成的上游 source of truth。
 
-### 1.2 `/autoplan`
+### 1.2 `$autoplan`
 
-`/autoplan` 是上游 review 的自动串联器。它顺序调用 CEO、Design、Eng review，把中间能自动决策的部分直接处理掉，只在高价值判断上停下来。
+`$autoplan` 是上游 review 的自动串联器。它顺序调用 CEO、Design、Eng review，把中间能自动决策的部分直接处理掉，只在高价值判断上停下来。
 
 在半自动路径里，它的作用不是替代人工思考，而是把：
 
@@ -179,7 +179,7 @@
 - 走正式发布路径
 - 归档任务到 `tasks/done/`
 
-如果仓库原本已经依赖 gstack 的 `/ship`、`/land-and-deploy`、`/document-release`，`automerge` 可以复用这些能力；但用户只需要记住一点：
+如果仓库原本已经依赖 gstack 的 `$ship`、`$land-and-deploy`、`$document-release`，`automerge` 可以复用这些能力；但用户只需要记住一点：
 
 `autodev` 负责“在分支上做到可确认”，`automerge` 负责“确认后收口到主干”。
 
@@ -187,7 +187,7 @@
 
 半自动不等于无人值守。默认的人类停点只有几类：
 
-- `/autoplan` 遇到真正需要人拍板的 taste / scope 决策
+- `$autoplan` 遇到真正需要人拍板的 taste / scope 决策
 - 用户审核 task plan
 - `$autodev` 遇到硬阻塞：
   - 缺权限
