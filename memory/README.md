@@ -6,7 +6,7 @@
 1. `AGENTS.md`
 2. `memory/core/symptom-routing.md`
 3. `memory/core/gstack-interoperability.md`
-4. 对应的 skill 目录：`skills/memorize/`、`skills/issue2task/`、`skills/gstack2task/`、`skills/checktask/`、`skills/simplify/`、`skills/checkpoint/`
+4. 对应的 skill 目录：`skills/memorize/`、`skills/issue2task/`、`skills/gstack2task/`、`skills/taskdev/`、`skills/checktask/`、`skills/simplify/`、`skills/checkpoint/`
 
 ## 冷路径
 - 仓库结构边界：`memory/core/system-map.md`

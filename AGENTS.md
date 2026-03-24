@@ -17,8 +17,9 @@
 - `memorize` 负责为项目建立或刷新 `AGENTS.md` 与 `memory/` 记忆体系，同时保留宿主代理或 gstack 需要继续留在 `CLAUDE.md` 的兼容块。
 - `issue2task` 保留 GitHub issue 或直接需求到 `tasks/` 的路径，不消费 gstack 工件，并直接产出可执行 plan。
 - `gstack2task` 负责把 `~/.gstack/projects/` 下的 gstack 工件收敛成带实现计划的 `tasks/`。
+- `taskdev` 负责从 `tasks/` 中选择目标 plan，在 task 分支上按已审核 `Implementation Plan` 实施代码并做最小本地验证，但不接管 QA、部署、归档和发布。
 - `checktask`、`simplify` 围绕 repo 内部任务流工作。
-- `autodev` 负责在 task 分支上自动推进规划、实现、验证、分支部署与 task 文档持续维护，但不 merge 主分支，也不打版本号。
+- `autodev` 负责自动推进包含 `taskdev` 在内的 task 分支闭环：实现、验证、分支部署与 task 文档持续维护，但不 merge 主分支，也不打版本号。
 - `automerge` 负责在用户确认后，把已验证的任务分支合并到 `main/master`，处理版本号、正式发布与任务归档。
 - `checkpoint` 是轻量 `commit/push` fallback；需要 PR、review gate、QA 串联或全局文档同步时，优先使用 gstack `$ship` 与 `$document-release`。
 

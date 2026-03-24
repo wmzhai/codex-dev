@@ -1,4 +1,4 @@
 interface:
   display_name: "issue2task"
   short_description: "把 issue 或需求描述结合代码收敛成带实现计划的任务文件"
-  default_prompt: "使用 $issue2task 分析当前仓库的 GitHub issues，或直接根据用户附带的需求描述生成任务；触发后立即用中文与用户交流，整个过程中的需求判断、阻塞说明和结果汇报默认都用中文；无参数时默认选择当前仓库编号最小的 open issue；必须结合现有代码输出带 `Related Code`、`Implementation Plan` 和 `Validation Plan` 的 tasks/Txx-*.md，使用户审核 task plan 后即可直接进入实现；如果拆成多个 task，则使用连续整数任务号，并为每个 task 分别新建与该 task 文件同名的新分支，再在各自分支写入文件。"
+  default_prompt: "使用 $issue2task 分析当前仓库的 GitHub issues，或直接根据用户附带的需求描述生成任务；触发后立即用中文与用户交流，整个过程中的需求判断、阻塞说明和结果汇报默认都用中文；无参数时默认选择当前仓库编号最小的 open issue；必须结合现有代码输出带 `Related Code`、`Implementation Plan` 和 `Validation Plan` 的 tasks/Txx-*.md，使用户审核 task plan 后即可直接交给 $taskdev 或 $autodev；如果拆成多个 task，则使用连续整数任务号，并为每个 task 分别新建与该 task 文件同名的新分支，再在各自分支写入文件。"

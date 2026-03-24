@@ -1,4 +1,4 @@
 interface:
   display_name: "autodev"
-  short_description: "在 task 分支上自动完成规划、实现、验证、分支部署和任务文档持续维护，但不 merge 主干也不打版本号"
-  default_prompt: "使用 $autodev 在已有 task 分支上自动推进单个任务：触发后立即用中文与用户交流，默认选择 tasks/ 中最小编号待办任务或用户指定任务，必要时先切到与任务文件同名的分支；优先读取 task 中已有的 `Implementation Plan` 与 `Validation Plan`，如果这些计划和代码现状漂移，先在 task 文档里校准后再编码；在执行过程中持续详细更新对应 task 文档，完成实现、精简、提交、审查、测试、分支部署与部署后验证，只在硬阻塞时停下来询问；收尾停在“已部署待人工确认”，不要 merge 到 main/master，不要打版本号，并提示后续使用 $automerge。"
+  short_description: "在 task 分支上自动完成内含 $taskdev 的实现、验证、分支部署和任务文档持续维护，但不 merge 主干也不打版本号"
+  default_prompt: "使用 $autodev 在已有 task 分支上自动推进单个任务：触发后立即用中文与用户交流，默认选择 tasks/ 中最小编号待办任务或用户指定任务，必要时先切到与任务文件同名的分支；内含 $taskdev 的任务选择、plan 校准和编码阶段，优先读取 task 中已有的 `Implementation Plan` 与 `Validation Plan`，如果这些计划和代码现状漂移，先在 task 文档里校准后再编码；在执行过程中持续详细更新对应 task 文档，完成实现、精简、提交、审查、测试、分支部署与部署后验证，只在硬阻塞时停下来询问；收尾停在“已部署待人工确认”，不要 merge 到 main/master，不要打版本号，并提示后续使用 $automerge。"

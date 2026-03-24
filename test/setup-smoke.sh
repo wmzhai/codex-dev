@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SETUP_SCRIPT="${REPO_ROOT}/setup"
-MANAGED_SKILLS=(memorize issue2task gstack2task autodev automerge checktask simplify checkpoint)
+MANAGED_SKILLS=(memorize issue2task gstack2task taskdev autodev automerge checktask simplify checkpoint)
 
 fail() {
   echo "FAIL: $*" >&2

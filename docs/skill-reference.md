@@ -245,11 +245,11 @@ Execution flow:
 
 Produces / writes: 一个或多个 `tasks/T{nn}-{slug}.md`；对应的新分支。
 
-Success output: repo 内可执行的 task 文件，已经包含需求边界、相关代码、实现计划和验证计划，用户审核后即可直接执行。
+Success output: repo 内可执行的 task 文件，已经包含需求边界、相关代码、实现计划和验证计划，用户审核后即可直接交给 `$taskdev` 或 `$autodev`。
 
 Stops / failure modes: 需要 issue 但 `gh` 不可用，或存在无法安全假设的关键需求歧义。
 
-Next recommended steps: 先审核 task plan；认可后走手动实现链或直接进入 `$autodev`。
+Next recommended steps: 先审核 task plan；认可后走 `$taskdev` 或直接进入 `$autodev`。
 
 ## `$gstack2task`
 
@@ -276,15 +276,46 @@ Execution flow:
 
 Produces / writes: 一个或多个 `tasks/T{nn}-{slug}.md`；对应的新分支。
 
-Success output: repo 内 task 已建立，既保留了上游规划中的关键边界和测试重点，也把实现落点压成了可直接执行的 plan。
+Success output: repo 内 task 已建立，既保留了上游规划中的关键边界和测试重点，也把实现落点压成了可直接交给 `$taskdev` 或 `$autodev` 的 plan。
 
 Stops / failure modes: project slug 无法定位、工件冲突严重、或 `~/.gstack/projects/` 不存在。
 
-Next recommended steps: 先审核 task plan；认可后走手动实现链或直接进入 `$autodev`。
+Next recommended steps: 先审核 task plan；认可后走 `$taskdev` 或直接进入 `$autodev`。
+
+## `$taskdev`
+
+Purpose: 在 task 分支上把已审核的 task plan 落成代码，并同步最小必要的本地验证与 task 文档。
+
+Typical trigger: `issue2task` 或 `gstack2task` 已经产出 task plan，用户已经审核通过，准备先完成编码，但暂时不想自动接管完整 QA、部署和发布。
+
+Inputs / source of truth: `tasks/T{nn}-{slug}.md`、当前代码、task 分支。
+
+Preconditions: 必须存在待办 task；如果指定 task，则对应文件必须存在；前置依赖任务已完成。
+
+Git / branch state: 可从 `main/master` 或其它干净分支启动；它会切到 task 分支、改代码并更新 task 文档，但默认不 commit、不 push。
+
+Reads prior outputs: task 文件中的 `Implementation Plan` / `Validation Plan`、相关代码、依赖任务状态。
+
+Execution flow:
+1. 选择用户指定任务或 `tasks/` 中最小编号待办任务。
+2. 切到对应 task 分支；必要时基于当前 `HEAD` 新建该分支。
+3. 读取 task 文件并检查依赖任务。
+4. 先校准 task 中已有的 `Implementation Plan` / `Validation Plan`，必要时写回 task 文档。
+5. 分阶段实现代码。
+6. 跑最小必要的本地验证，不默认接管完整 QA / deploy。
+7. 把实际实现路径、验证结果和剩余缺口同步回 task 文档。
+
+Produces / writes: 工作区代码变更；更新后的 `tasks/T{nn}-{slug}.md`。
+
+Success output: 当前 task 已按 plan 完成主要代码实现，并留下可继续进入 `$simplify`、`$checkpoint`、`$review`、`$qa` 等下游门禁的 task 分支状态。
+
+Stops / failure modes: task 依赖未完成、分支无法安全切换、task plan 与代码现状冲突严重、或最小必要验证暴露出无法安全默认选择的实现路径。
+
+Next recommended steps: `$simplify`、`$checkpoint`、`$design-review`、`$review`、`$qa`；如果想自动继续跑到“已部署待人工确认”，直接改用 `$autodev`。
 
 ## `$autodev`
 
-Purpose: 在已有 task 分支上自动完成单个 task 的 plan 校准、实现、验证、分支部署和 task 文档持续维护。
+Purpose: 在已有 task 分支上自动完成单个 task 的 `$taskdev`、验证、分支部署和 task 文档持续维护。
 
 Typical trigger: 当前 task 后面的 downstream 流程已经比较固定，希望自动推进到“已部署待人工确认”。
 
@@ -300,7 +331,7 @@ Execution flow:
 1. 选择 task，必要时切到 task 分支。
 2. 检查依赖任务和分支部署前提。
 3. 初始化 task 文档中的执行记录区。
-4. 先读取并校准 task 中已有的 `Implementation Plan` / `Validation Plan`，必要时写回 task 文档。
+4. 内含 `$taskdev` 的任务选择、plan 校准和编码阶段。
 5. 分阶段实现、精简、提交、验证。
 6. 视情况复用 `simplify`、`checkpoint`、`design-review`、`review`、`qa`。
 7. 部署当前分支并做部署后验证。
@@ -647,6 +678,7 @@ Next recommended steps: 根据复盘结果调整流程、task 拆分、测试策
 - `$autoplan` 复用 `$plan-ceo-review`、`$plan-design-review`、`$plan-eng-review`
 - `issue2task` 与 `gstack2task` 是互斥入口，且都直接产出可执行 task plan
 - 半自动路径里，用户先审核 task plan，再交给 `autodev`
+- 手动路径里，用户先审核 task plan，再进入 `$taskdev`
 - `autodev` 常吸收 `simplify`、`checkpoint`、`design-review`、`review`、`qa`
 - `automerge` 才进入 merge / 版本号 / 正式发布
 - 手动路径里，`checktask` 常先于 `$ship`
@@ -655,7 +687,7 @@ Next recommended steps: 根据复盘结果调整流程、task 拆分、测试策
 ### 半自动路径中被吸收或绕开的技能
 
 - `autodev` 路径里，`checktask`、`$ship`、`$land-and-deploy` 不再是默认直接尾步
-- `autodev` 默认消费 task 内已有的实现计划，而不是再依赖独立规划 skill
+- `autodev` 默认吸收 `$taskdev`，消费 task 内已有的实现计划，而不是再依赖独立规划 skill
 - `autodev` 会优先复用 `simplify`、`checkpoint`、`design-review`、`review`、`qa`
 - `automerge` 会接管原本需要人工串起来的 `$ship` / `$land-and-deploy` / `$document-release` 收尾语义
 
@@ -664,6 +696,7 @@ Next recommended steps: 根据复盘结果调整流程、task 拆分、测试策
 - `$plan-ceo-review`
 - `$plan-design-review`
 - `$plan-eng-review`
+- `$taskdev`
 - `$design-review`
 - `$review`
 - `$qa`

@@ -4,7 +4,7 @@ set -euo pipefail
 PROJECT_NAME="codev"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 SKILLS_DIR="${HOME}/.codex/skills"
-MANAGED_SKILLS=(memorize issue2task gstack2task autodev automerge checktask simplify checkpoint)
+MANAGED_SKILLS=(memorize issue2task gstack2task taskdev autodev automerge checktask simplify checkpoint)
 LEGACY_CODEV_SKILLS=(plantask)
 
 die() {

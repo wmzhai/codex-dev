@@ -1,0 +1,4 @@
+interface:
+  display_name: "taskdev"
+  short_description: "按 tasks 中已审核的 plan 选择最小编号任务并实施代码，默认不接管 QA、部署和发布"
+  default_prompt: "使用 $taskdev 在当前仓库的 tasks/ 中选择用户指定任务或最小编号待办任务；触发后立即用中文与用户交流，先切到与任务文件同名的 task 分支，完整读取 task 中已有的 `Implementation Plan` 与 `Validation Plan`，必要时先校准 plan 再编码；在实现过程中持续更新 task 文档，完成代码编写和最小必要本地验证，但默认不要自动做完整 QA、分支部署、归档、merge、版本号、PR、commit 或 push；最后用中文汇报当前 task、当前分支、已完成实现、已跑验证和建议的下一步。"

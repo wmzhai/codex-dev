@@ -105,12 +105,15 @@ $office-hours
 
 如果 plan 不成立，应该先回到 task 文件收敛，而不是让 `autodev` 带着错误前提直接开工。
 
+如果你只想执行编码、不想自动跑完整个闭环，应切回人工路径并使用 `$taskdev`；半自动路径本身不需要额外先跑 `$taskdev`。
+
 ## 阶段 4：`$autodev` 在 task 分支上自动闭环
 
 这是半自动路径的核心阶段。
 
 `$autodev` 接手之后，会在 task 分支内自动推进：
 
+- 内含 `$taskdev` 的任务选择、plan 校准和编码阶段
 - 先读取 task 中已有的 `Implementation Plan` / `Validation Plan`
 - 必要时按代码现状小幅校准 task plan
 - 读取并补齐 task 文档
@@ -125,7 +128,7 @@ $office-hours
 
 1. `autodev` 默认全程中文交流。
 2. 它会持续更新对应的 `tasks/T{nn}-{slug}.md`，而不是只在最后打勾。
-3. 它的起点是“已经写好并被用户审核过的 task plan”，不是从零再做一轮独立规划。
+3. 它的起点是“已经写好并被用户审核过的 task plan”，不是从零再做一轮独立规划；也不需要先显式调用 `$taskdev`。
 4. 它停在“已部署待人工确认”。
 5. 它不 merge 主干，不打版本号，不归档任务。
 

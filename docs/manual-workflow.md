@@ -24,7 +24,7 @@ $memorize
 -> $plan-eng-review
 -> $gstack2task 或 $issue2task
 -> 审核 task plan
--> 实现
+-> $taskdev
 -> $simplify
 -> 普通 commit 或 $checkpoint
 -> $design-review
@@ -82,7 +82,9 @@ $memorize
 │  （中到大改动时）$plan-eng-review 或 $autoplan                       │
 │    └─► 对当前 task 分支补齐 review；scope 漂移后可重跑               │
 │                                                                     │
-│  实现代码                                                            │
+│  $taskdev（或手动实现）                                              │
+│    └─► 选择最小编号或用户指定 task                                  │
+│         按已审核 plan 编码并补最小本地验证                           │
 │    │                                                                 │
 │    ▼                                                                 │
 │  $simplify ─── 语义不变精简，收窄 patch                              │
@@ -133,7 +135,7 @@ $memorize
 | 上游规划 | 决定问题、方向、范围、设计与工程边界 | gstack 规划类 skill | 上游设计文档、review 结果、测试计划稳定 |
 | 任务生成 | 决定 task 如何拆分，并让 task 自带可执行 plan | `$gstack2task` / `$issue2task` | `tasks/` 中有可执行任务、实现计划和对应分支 |
 | plan 审核 | 决定是否接受当前 task 的实现路径 | 人工审核 task 文件 | 可执行方案明确 |
-| 实现与收口 | 亲自控制代码演进、精简和提交节奏 | 实现 + `$simplify` + commit / `$checkpoint` | 当前 task 分支形成稳定 patch |
+| 实现与收口 | 用 `$taskdev` 落代码，并亲自控制精简和提交节奏 | `$taskdev` + `$simplify` + commit / `$checkpoint` | 当前 task 分支形成稳定 patch |
 | 设计 / 代码 / 浏览器验证 | 逐步判断是否需要继续改 | `$design-review`、`$review`、`$qa` | 验证结果明确，必要修复已完成 |
 | 验收 | 人工确认验收标准是否真的通过 | `$checktask` | task 文档更新完毕并归档或保留缺口 |
 | 发布 | 人工控制版本号、PR、合并、部署和文档同步 | `$ship`、`$document-release`、`$land-and-deploy` | 主干、部署、文档都收口完毕 |
@@ -198,7 +200,7 @@ $memorize
 - 依赖关系是否清楚
 - task 文件里的 `Implementation Plan` 和 `Validation Plan` 是否已经足够让后续直接执行
 
-## 阶段 4：审核 task plan，再开始编码
+## 阶段 4：审核 task plan，再决定是否进入 `$taskdev`
 
 现在 `$gstack2task` / `$issue2task` 产出的 task 文件，本身就应该包含可以直接执行的实现方案。
 
@@ -208,13 +210,15 @@ $memorize
 - 纠正过度设计或漏掉的边界
 - 决定是否要继续补跑 `$plan-eng-review` 或 `$autoplan`
 
-如果你不接受这个方案，就不应该进入编码。
+如果你不接受这个方案，就不应该进入编码。接受之后，人工路径的默认执行入口就是 `$taskdev`。
 
-## 阶段 5：实现、精简、提交节奏由人来控
+## 阶段 5：用 `$taskdev` 或手动方式控实现节奏
 
-这一步没有单一 skill 替你“自动到底”。你自己决定什么时候：
+如果你希望按 task plan 直接落代码，`$taskdev` 就是这一步的入口。它会默认选择 `tasks/` 中最小编号待办任务，或使用你指定的任务，切到对应 task 分支，读取已经审核过的 `Implementation Plan` / `Validation Plan`，完成代码实现和最小必要本地验证，并把实际实现路径同步回 task 文件。
 
-- 开始实现
+它不会替你接管完整 QA、分支部署、归档或发布；这些门禁仍然留在后面显式执行。你自己决定什么时候：
+
+- 进入 `$taskdev`
 - 什么时候适合先跑 `$simplify`
 - 什么时候做普通 commit
 - 什么时候只做一次 `$checkpoint`
@@ -224,6 +228,8 @@ $memorize
 - 先做一小块实现
 - 手动验证
 - 再决定是否继续扩 patch
+
+如果你不想用 skill，也可以完全手动实现；只是那样你需要自己承担 `$taskdev` 本来会帮你做的 task 选择、plan 对齐和最小本地验证记录。
 
 代价是你自己必须承担每个中间判断。
 

@@ -1,6 +1,6 @@
 ---
 name: gstack2task
-description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件读取设计、交接和测试计划，结合现有代码生成 `tasks/` 下可直接执行的任务计划文件。适用于上游已经跑过 gstack `$office-hours`、`$plan-*`，现在需要把这些工件和 repo 实现现状一起压成 repo 内执行单元的场景。
+description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件读取设计、交接和测试计划，结合现有代码生成 `tasks/` 下可直接执行的任务计划文件。适用于上游已经跑过 gstack `$office-hours`、`$plan-*`，现在需要把这些工件和 repo 实现现状一起压成 repo 内执行单元，并在审核后交给 `$taskdev` 或 `$autodev` 的场景。
 ---
 
 # Gstack2Task
@@ -136,7 +136,7 @@ Source: gstack project artifacts
 {可选：保留对实现有影响的非协商约束、测试重点或阶段说明}
 ```
 
-13. 输出简短摘要，包含使用了哪些 gstack 工件、创建了多少任务、每个任务对应的新分支名、任务依赖关系，以及“用户接下来应审核 task plan，再直接进入执行”的提示。
+13. 输出简短摘要，包含使用了哪些 gstack 工件、创建了多少任务、每个任务对应的新分支名、任务依赖关系，以及“用户接下来应审核 task plan，再进入 `$taskdev` 或 `$autodev`”的提示。
 
 ## Rules
 
