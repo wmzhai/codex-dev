@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SETUP_SCRIPT="${REPO_ROOT}/setup"
-MANAGED_SKILLS=(codev-memorize codev-issue2task codev-gstack2task codev-taskdev codev-autodev codev-automerge codev-checktask codev-simplify codev-checkpoint)
+MANAGED_SKILLS=(codev-memorize codev-issue2task codev-gstack2task codev-taskdev codev-autodev codev-quickship codev-automerge codev-checktask codev-simplify codev-checkpoint)
 LEGACY_CODEV_SKILLS=(plantask memorize issue2task gstack2task taskdev autodev automerge checktask simplify checkpoint ships)
 
 fail() {

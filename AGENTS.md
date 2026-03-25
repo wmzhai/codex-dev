@@ -25,6 +25,7 @@
 - `codev-checktask`、`codev-simplify` 围绕 repo 内部任务流工作。
 - `codev-autodev` 负责自动推进包含 `codev-taskdev` 在内的 task 分支闭环：实现、验证、分支部署与 task 文档持续维护，但不 merge 主分支，也不打版本号。
 - `codev-automerge` 负责在用户确认后，把已验证的任务分支合并到 `main/master`，处理版本号、正式发布与任务归档。
+- `codev-quickship` 负责在用户确认后，把当前工作状态快速直推到 `main/master`：在分支上就 merge 到主干，在主干上就直接 commit + push；不走 PR、版本号和正式发布链路。
 - `codev-checkpoint` 是轻量 `commit/push` fallback；需要 PR、review gate、QA 串联或全局文档同步时，优先使用 gstack `$ship` 与 `$document-release`。
 
 ## 维护规则
@@ -32,7 +33,7 @@
 - `setup` 是真实安装入口；`test/setup-smoke.sh` 是安装行为的最小验证。
 - 任何新增受管 skill，都必须同步到 `setup`、`README.md` 和 `test/setup-smoke.sh`。
 - 修改任务入口 skill 时，保持 `codev-issue2task` 与 `codev-gstack2task` 的输入边界稳定，不要把两者揉成一个大而全入口。
-- 修改 `codev-autodev` / `codev-automerge` 时，保持“分支内开发闭环”和“人工确认后的主干收尾”这条边界稳定，不要重新把 merge、版本号塞回 `codev-autodev`。
+- 修改 `codev-autodev` / `codev-automerge` / `codev-quickship` 时，保持“分支内开发闭环”和“人工确认后的主干收尾”这条边界稳定；`codev-quickship` 只做轻量直推，`codev-automerge` 才做正式发布收尾。
 - 如果仓库存在 `CLAUDE.md`，尤其已经承载 gstack section、浏览器约束或宿主代理说明，`codev-memorize` 只能收敛 repo 事实，不能把这些兼容说明删掉。
 - `README.md` 里只放用户需要看到的高层说明，不重复展开各 skill 的全部内部流程。
 - `docs/workflows/README.md` 要始终保持“从开始到结束”的最全总流程图。

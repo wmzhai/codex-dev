@@ -31,7 +31,7 @@ git pull --ff-only
 3. 如果需求来自 gstack 工件，用 `$codev-gstack2task`；如果需求来自 issue 或直接需求，用 `$codev-issue2task`。`$codev-gstack2task` 默认先产出一个总 task，只有判断必须拆成多个时才会先向用户确认拆分清单；`$codev-issue2task` 显式传多个 issue 编号时支持逗号或空格分隔，默认合并成一个总 task。
 4. 审核生成出来的 task plan。
 5. 想手动推进实现，用 `$codev-taskdev`；想自动推进到“已部署待人工确认”，用 `$codev-autodev`。
-6. 需要正式收尾时，走 `$ship -> $land-and-deploy`，或在自动链路里走 `$codev-automerge`。
+6. 小改动想直接直推主干，用 `$codev-quickship`：在分支上就先 merge 到主干，在主干上就直接 commit + push；需要正式收尾时，走 `$ship -> $land-and-deploy`，或在自动链路里走 `$codev-automerge`。
 
 ## 5. 相关文档
 

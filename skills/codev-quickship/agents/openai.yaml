@@ -1,0 +1,4 @@
+interface:
+  display_name: "codev-quickship"
+  short_description: "在用户确认后快速直推主干：分支上就 merge，主干上就 commit+push，不走 PR 或版本发布"
+  default_prompt: "使用 $codev-quickship 快速收口当前小改动：触发后立即用中文与用户交流，默认以当前 git 分支为工作起点、`main/master` 或仓库默认主干为目标，先确认用户已明确接受直接 push 主干；如果当前在分支上，就先把分支合并到主干再推送；如果已经在主干，就直接做最小提交并推送；不要调用 $ship、$land-and-deploy、$document-release，不要创建 PR，不要处理版本号、tag 或正式发布文档。"

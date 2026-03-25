@@ -43,5 +43,5 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 仍有缺口时，回到实现阶段修复
-- 通过后进入 `$ship` 或在自动链路中等待 `$codev-automerge`
+- 通过后进入 `$ship`、`$codev-quickship`，或在自动链路中等待 `$codev-automerge`
 - 发现 repo 级文档漂移时，补跑 `$document-release`

@@ -14,6 +14,7 @@
 - `skills/codev-gstack2task/`：把 `~/.gstack/projects/` 下的 gstack 工件收敛成带实现计划的任务文件
 - `skills/codev-taskdev/`：按已审核 task plan 选择目标任务、实施代码并做最小本地验证
 - `skills/codev-autodev/`：自动吸收 `codev-taskdev` 阶段，再继续推进验证、分支部署，并持续维护对应任务文档
+- `skills/codev-quickship/`：在用户确认后把当前工作状态快速直推主干；在分支上就 merge，在主干上就 commit + push，不走 PR、版本号和正式发布
 - `skills/codev-automerge/`：在用户确认后把任务分支收口到 `main/master`，处理版本号、正式发布和任务归档
 - `skills/codev-checktask/`：验收任务、同步 `memory/` 与任务相关文档、归档完成项
 - `skills/codev-simplify/`：语义不变精简 diff
@@ -34,7 +35,7 @@
 - `docs/skills/<skill>.md` 是对外的 skill 详细手册。
 - `setup` 和 `test/setup-smoke.sh` 共同定义“哪些 skill 算受管”。
 - `codev-issue2task` 与 `codev-gstack2task` 是两个平行入口：前者处理 GitHub issue 或直接需求，后者处理 `~/.gstack/projects/` 工件；两者都直接产出可执行 task plan。
-- `codev-taskdev` 是手动执行层；`codev-autodev` 吸收 `codev-taskdev` 后再继续自动验证与分支部署；`codev-automerge` 才进入主干合并与版本号。
+- `codev-taskdev` 是手动执行层；`codev-autodev` 吸收 `codev-taskdev` 后再继续自动验证与分支部署；`codev-quickship` 负责轻量直推；`codev-automerge` 才进入正式发布与版本号。
 
 ## 常见改动落点
 - 新增 skill：新增 `skills/<name>/` 目录，同时同步 `setup`、`test/setup-smoke.sh`、`README.md`

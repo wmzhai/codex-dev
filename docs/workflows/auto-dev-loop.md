@@ -16,7 +16,7 @@ $office-hours / $autoplan / $plan-*
 -> 审核 task plan
 -> $codev-autodev
 -> 人工确认部署结果
--> $codev-automerge
+-> $codev-quickship 或 $codev-automerge
 ```
 
 ## 分阶段说明
@@ -42,15 +42,15 @@ $office-hours / $autoplan / $plan-*
 - 看真实部署结果，不是只看代码 diff。
 - 如果不通过，就在当前 task 分支继续修，必要时重新跑 `$codev-autodev`。
 
-### 5. `$codev-automerge`
+### 5. `$codev-quickship` / `$codev-automerge`
 
-- 只在人工明确确认后使用。
-- 负责 merge、版本号、正式发布与任务归档。
-- 如兼容，则复用 gstack 的 `$ship`、`$land-and-deploy`、`$document-release`。
+- 两者都只在人工明确确认后使用。
+- `$codev-quickship` 负责快速直推主干：在分支上就 merge 到主干，在主干上就直接 commit + push，不走 PR、版本号或正式发布。
+- `$codev-automerge` 负责正式发布式收尾：merge、版本号、正式发布与任务归档。
 
 ## 这条旁支不负责什么
 
 - 不替代上游规划。
 - 不跳过 task plan 审核。
 - `$codev-autodev` 不 merge 主干、不打版本号。
-- `$codev-automerge` 不应提前在“用户未确认”时启动。
+- `$codev-quickship` 与 `$codev-automerge` 都不应提前在“用户未确认”时启动。

@@ -5,7 +5,7 @@ description: 在已有 task 分支上自动完成单个任务的 `$codev-taskdev
 
 # AutoDev
 
-`codev-autodev` 是 task 阶段的自动执行器。它从 repo 内已有的待办任务出发，在对应 task 分支上推进规划、编码、验证、分支部署和任务文档同步，直到用户可以直接查看已部署结果，并决定是否进入 `codev-automerge`。
+`codev-autodev` 是 task 阶段的自动执行器。它从 repo 内已有的待办任务出发，在对应 task 分支上推进规划、编码、验证、分支部署和任务文档同步，直到用户可以直接查看已部署结果，并决定是否进入 `codev-quickship` 或 `codev-automerge`。
 
 它内含 `$codev-taskdev` 的任务选择、plan 校准和编码阶段，因此不需要先显式运行 `$codev-taskdev`。
 
@@ -41,7 +41,7 @@ description: 在已有 task 分支上自动完成单个任务的 `$codev-taskdev
 - 不打 tag
 - 不把任务归档到 `tasks/done/`
 
-这些动作留给 `codev-automerge`。
+这些动作留给 `codev-quickship` 或 `codev-automerge`，其中前者是轻量直推，后者是正式发布收尾。
 
 ## Workflow
 
@@ -113,7 +113,7 @@ description: 在已有 task 分支上自动完成单个任务的 `$codev-taskdev
    - 已部署结果的访问方式
    - 已完成的验证
    - 仍存风险或确认点
-   - 下一步请在确认无误后运行 `codev-automerge`
+   - 下一步请在确认无误后按场景运行 `codev-quickship` 或 `codev-automerge`
 
 ## Task Document Rules
 
@@ -181,4 +181,4 @@ description: 在已有 task 分支上自动完成单个任务的 `$codev-taskdev
 - 已完成的重要步骤
 - 已部署环境与验证入口
 - 剩余风险或待确认项
-- 下一步应该运行 `codev-automerge`，还是先等待用户补充阻塞输入
+- 下一步应该运行 `codev-quickship`、`codev-automerge`，还是先等待用户补充阻塞输入

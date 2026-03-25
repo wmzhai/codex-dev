@@ -50,6 +50,7 @@
 - [land-and-deploy](land-and-deploy.md)
 - [document-release](document-release.md)
 - [canary](canary.md)
+- [codev-quickship](codev-quickship.md)
 - [codev-automerge](codev-automerge.md)
 - [retro](retro.md)
 

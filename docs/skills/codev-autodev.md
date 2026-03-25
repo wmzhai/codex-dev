@@ -45,5 +45,6 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 人工确认部署结果
-- 确认通过后进入 `$codev-automerge`
+- 小改动且允许直推主干时进入 `$codev-quickship`
+- 需要正式发布收尾时进入 `$codev-automerge`
 - 确认不通过则继续在当前 task 分支修复

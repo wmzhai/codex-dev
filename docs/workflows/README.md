@@ -66,10 +66,12 @@
 └─────────────────────────────┬───────────────────────────────────────┘
                               │
                               ▼
-┌──────────────────────────── 正式发布收尾 ───────────────────────────┐
+┌──────────────────────────── 合并与发布收尾 ─────────────────────────┐
+│  轻量路径：确认当前结果可直推 -> $codev-quickship                   │
+│                                                                     │
 │  人工路径：$ship -> $land-and-deploy -> $document-release -> $canary│
 │                                                                     │
-│  自动路径：人工确认 -> $codev-automerge                             │
+│  自动正式路径：人工确认 -> $codev-automerge                         │
 │    └─► 如兼容则复用 $ship / $land-and-deploy / $document-release   │
 │                                                                     │
 │  可选复盘：$retro                                                   │
@@ -103,11 +105,12 @@
 - `$codev-autodev` 是旁支自动闭环：它内含 `$codev-taskdev` 阶段，但不会 merge 主干。
 - `$design-review`、`$review`、`$qa`、`$qa-only` 是验证门禁，不应该提前偷换成发布动作。
 
-### 5. 正式发布收尾
+### 5. 合并与发布收尾
 
+- 小改动且允许直接推主干时，可走 `$codev-quickship`：在分支上就 merge 到主干，在主干上就直接 commit + push。
 - 人工路径默认是 `$ship -> $land-and-deploy`，再视需要补 `$document-release` 与 `$canary`。
-- 自动路径必须先人工确认，再运行 `$codev-automerge`。
-- 只有 `$codev-automerge` 才负责 codev 自动链路中的 merge、版本号与归档。
+- 自动正式路径必须先人工确认，再运行 `$codev-automerge`。
+- `codev-quickship` 不处理版本号和正式发布；`$codev-automerge` 才负责 codev 自动链路中的正式发布收尾。
 
 ## 旁支流程入口
 

@@ -4,7 +4,7 @@
 
 ## 职责分工
 - gstack：负责产品探索、计划评审、测试计划、QA、ship、repo 级人类文档同步。
-- codev：负责 `tasks/`、任务内实现计划、`codev-taskdev`、`codev-checktask`、`codev-memorize`、`codev-simplify`，以及把外部输入压成 repo 内任务；`codev-autodev` / `codev-automerge` 负责把下游固定流程收口成更安全的自动化编排。
+- codev：负责 `tasks/`、任务内实现计划、`codev-taskdev`、`codev-checktask`、`codev-memorize`、`codev-simplify`，以及把外部输入压成 repo 内任务；`codev-autodev` / `codev-quickship` / `codev-automerge` 负责把下游固定流程收口成更安全的自动化编排。
 
 ## 两条任务入口
 - `codev-issue2task`：输入是 GitHub issue 或用户直接需求。
@@ -29,6 +29,7 @@
 - 只有明确需要轻量 `commit/push` 时，才用 `$codev-checkpoint`。
 - `codev-autodev` 内含 `$codev-taskdev` 的任务选择、plan 校准和编码阶段；如果已经决定走 `codev-autodev`，不需要先显式运行 `$codev-taskdev`。
 - `codev-autodev` 可以复用 gstack 的 `review`、`qa` 或仓库现有部署能力，但默认停在 task 分支的“已部署待人工确认”，不 merge 主干，也不打版本号。
+- `codev-quickship` 只做当前工作状态快速直推主干；在分支上就 merge，在主干上就 commit + push，不调用 gstack 的正式发布技能。
 - `codev-automerge` 才负责进入正式发布路径；如兼容，优先复用 gstack `$ship`、`$land-and-deploy` 与 `$document-release`。
 - `codev-autodev` 的 task 文档维护是持续行为，不依赖 `codev-checktask` 的最后一次同步。
 
@@ -39,7 +40,7 @@
 4. 手动路径用 `$codev-taskdev` 先把已审核 plan 落成代码；半自动路径则直接交给 `codev-autodev`
 5. `codev-autodev` 在 task 分支上按已审核 plan 推进实现、验证、分支部署，并持续更新任务文档
 6. 用户确认部署结果
-7. `codev-automerge` 合并主干、处理版本号、正式发布并归档任务
+7. 小改动时可用 `codev-quickship` 直接并主干并推送；需要正式发布时再用 `codev-automerge`
 
 ## 手动路径仍然可用
 1. `codev-issue2task` 或 `codev-gstack2task`

@@ -16,8 +16,8 @@
 4. 用户先审核 task 文件中的 plan，再决定进入 `$codev-taskdev` 或 `codev-autodev`
 5. `$codev-taskdev` 负责按已审核 plan 选择任务、实施代码并做最小本地验证
 6. 默认更安全的自动闭环是 `codev-autodev`：它内含 `$codev-taskdev` 阶段，再继续推进实现、审查、测试、分支部署，并持续更新对应 `tasks/Txx-*.md`
-7. 用户确认分支部署结果后，用 `codev-automerge` 完成主干合并、版本号、正式发布和任务归档
-8. 如果不用 `codev-autodev` / `codev-automerge`，手动路径仍可继续使用 `codev-simplify`、`codev-checkpoint`、gstack `$review`、`$qa`、`$ship`、`$document-release` 与 `$land-and-deploy`
+7. 用户确认当前结果后，小改动可用 `codev-quickship` 快速直推主干；在分支上就 merge，在主干上就 commit + push；需要正式收尾时再用 `codev-automerge`
+8. 如果不用 `codev-autodev` / `codev-automerge` / `codev-quickship`，手动路径仍可继续使用 `codev-simplify`、`codev-checkpoint`、gstack `$review`、`$qa`、`$ship`、`$document-release` 与 `$land-and-deploy`
 9. `codev-checktask` 仍负责手动验收、更新 `memory/` 和任务直接相关的局部 `docs/`
 10. `codev-checkpoint` 只保留给显式的轻量 `commit/push` 场景
 
