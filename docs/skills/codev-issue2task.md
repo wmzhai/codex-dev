@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-把 GitHub issue 或用户直接需求结合当前代码，压成 repo 内可执行的 task 文件和 task 分支。
+把 GitHub issue 或用户直接需求结合当前代码，压成 repo 内可执行的 task 文件和 task 分支；支持把多个 issue 编号合并成一个总体 task，适合做版本级合并实现。
 
 ## Preconditions
 
@@ -14,7 +14,7 @@ Source: `codev`
 
 ## Inputs / Source Of Truth
 
-- GitHub issue、issue 列表过滤条件，或用户直接需求
+- GitHub issue、多个 issue 编号列表、issue 列表过滤条件，或用户直接需求
 - 当前代码现状
 - 现有 `tasks/` 与 `tasks/done/`
 - 现有分支与依赖任务状态
@@ -25,12 +25,21 @@ Source: `codev`
 - 对应 task 分支
 - 文件中的 `Implementation Plan`、`Validation Plan`、`Related Code`
 
+## Common Invocations
+
+- `$codev-issue2task`
+- `$codev-issue2task 42`
+- `$codev-issue2task 42 43 44`
+- `$codev-issue2task 42,43,44`
+
+显式传入多个 issue 编号时，支持逗号、空格或混合分隔，默认会为这组 issue 生成一个总体 task。
+
 ## Execution Flow
 
-1. 识别输入源：单 issue、多 issue 过滤、或直接需求文本。
+1. 识别输入源：单 issue、显式多个 issue 编号、多 issue 过滤、或直接需求文本。
 2. 深读相关代码，确认当前行为、边界条件、关键模块和约束。
 3. 收敛需求边界、验收标准、out-of-scope 和推荐实现路径。
-4. 判断是否需要拆成多个 task，默认保守拆分。
+4. 判断是否需要拆成多个 task，默认保守拆分；显式多个 issue 编号时默认合并成一个总 task。
 5. 计算新任务编号，避免与 `tasks/`、`tasks/done/` 冲突。
 6. 为每个 task 新建分支，并写入完整 task 文件。
 
