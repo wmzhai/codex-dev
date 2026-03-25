@@ -1,6 +1,6 @@
 ---
 name: codev-gstack2task
-description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件读取设计、交接和测试计划，结合现有代码生成 `tasks/` 下可直接执行的任务计划文件。适用于上游已经跑过 gstack `$office-hours`、`$plan-*`，现在需要把这些工件和 repo 实现现状一起压成 repo 内执行单元，并在审核后交给 `$codev-taskdev` 或 `$codev-autodev` 的场景。
+description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件读取设计、交接和测试计划，结合现有代码生成 `tasks/` 下可直接执行的任务计划文件；默认只生成一个 task，只有在 Codex 判断必须拆成多个 task 时才先向用户确认拆分清单。适用于上游已经跑过 gstack `$office-hours`、`$plan-*`，现在需要把这些工件和 repo 实现现状一起压成 repo 内执行单元，并在审核后交给 `$codev-taskdev` 或 `$codev-autodev` 的场景。
 ---
 
 # Gstack2Task
@@ -60,7 +60,10 @@ description: 从 `~/.gstack/projects/` 下与当前仓库相关的 gstack 工件
    - implementation handoff 明确的步骤可以继承，但必须落到当前 repo 的实际代码入口。
 7. 默认保守拆分：
    - 默认生成一个任务。
-   - 只有当 implementation handoff 或 test plan 已经清楚划分成可独立交付的子块时，才拆成多个任务。
+   - 即使 implementation handoff 或 test plan 里已经出现阶段划分，也应先尝试收敛成一个可执行总任务，不要自动跟随上游工件拆成多个 task。
+   - 只有当 Codex 依据代码边界、实施顺序、风险隔离或依赖关系判断“单个 task 已无法安全承载实现与验收”时，才可以建议拆成多个任务。
+   - 一旦判断需要多任务，必须先向用户发起一次明确确认，列出建议生成的每个 task 的标题、范围、关键文件/模块、依赖关系，以及为什么不能继续合并成一个 task。
+   - 只有在用户明确确认这份拆分清单后，才能真正创建多个 task 文件和对应分支；没有确认前，不要自动拆解生成多个 task。
    - 如果拆成多个任务，也按连续的新整数任务号分别创建，不再使用字母后缀。
 8. 创建或复用仓库根目录的 `tasks/`。
 9. 分配编号规则与 `codev-issue2task` 保持一致：
@@ -145,7 +148,10 @@ Source: gstack project artifacts
 - implementation handoff 与 test plan 的约束优先于 design doc 的宽泛表述；冲突时，在任务文件里按已读取工件显式收敛。
 - 只写已经在工件里明确确认的范围和限制；没有依据时不要脑补产品方向。
 - 不要只把 handoff 原文换个说法抄进 task；必须结合真实代码把 plan 落到具体入口和实施顺序。
+- 默认只产出一个 task，不要因为上游工件写了 phase、milestone 或 checklist 就自动拆成多个。
+- 如果判断必须拆成多个 task，先用中文向用户给出明确的拆分清单，再等待用户确认；未经确认不得创建多个 task 文件。
+- 这次确认必须包含每个 task 的内容清单，而不是只问“要不要拆分”。
 - 每个 task 文件都必须写在它自己的新分支上；不要让多个 task 共用同一条实现分支。
-- 默认直接产出任务文件，不把“等待用户二次确认”当成标准中间步骤；只有 project slug 无法确定或工件冲突严重且无法自行收敛时才提问。
+- 默认直接产出任务文件，不把“等待用户二次确认”当成标准中间步骤；只有 project slug 无法确定、工件冲突严重且无法自行收敛，或判断必须拆成多个 task 时才提问。
 - task 文件里的 `Implementation Plan` 和 `Validation Plan` 必须足够具体，使用户审核后可以直接开始实现，而不是再补一轮规划。
 - 不要提交代码。文件创建就是这个 skill 的最终副作用。

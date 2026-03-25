@@ -1,4 +1,4 @@
 interface:
   display_name: "codev-gstack2task"
   short_description: "把 ~/.gstack/projects/ 下的 gstack 工件结合代码收敛成带实现计划的任务文件"
-  default_prompt: "使用 $codev-gstack2task 读取 ~/.gstack/projects/ 下与当前仓库相关的 gstack design doc、implementation handoff 或 test plan；触发后立即用中文与用户交流，整个过程中的工件判断、阻塞说明和结果汇报默认都用中文；必须结合当前代码，把上游约束映射成带 `Related Code`、`Implementation Plan` 和 `Validation Plan` 的 tasks/Txx-*.md，使用户审核 task plan 后即可直接交给 $codev-taskdev 或 $codev-autodev；按 tasks/ 与 tasks/done/ 中现有最大任务号顺延生成任务；如果拆成多个 task，则使用连续整数任务号，并为每个 task 分别新建与该 task 文件同名的新分支，再在各自分支写入文件。"
+  default_prompt: "使用 $codev-gstack2task 读取 ~/.gstack/projects/ 下与当前仓库相关的 gstack design doc、implementation handoff 或 test plan；触发后立即用中文与用户交流，整个过程中的工件判断、阻塞说明和结果汇报默认都用中文；必须结合当前代码，把上游约束映射成带 `Related Code`、`Implementation Plan` 和 `Validation Plan` 的 tasks/Txx-*.md，使用户审核 task plan 后即可直接交给 $codev-taskdev 或 $codev-autodev；默认只生成一个 task，不能因为上游工件已有阶段划分就自动拆成多个；只有在 Codex 判断单个 task 无法安全承载实现与验收时，才先向用户列出多个 task 的明确内容清单并等待确认，确认后才允许按连续整数任务号生成多个 task 与对应分支。"
