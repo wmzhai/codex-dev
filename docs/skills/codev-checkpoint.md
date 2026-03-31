@@ -4,14 +4,14 @@ Source: `codev`
 
 ## Purpose
 
-对当前分支做一次轻量 commit + push；当用户明确要求同步版本时，可额外更新根目录 `VERSION` 并同步已有 `CHANGELOG`。如果未显式指定版本，则默认按四段版本号 `x.y.z.w -> x.y.z.(w+1)`，也就是把第 4 位加一。本仓库里标准的版本工件是根目录 `VERSION` 和 `CHANGELOG`。不接管 PR、review gate、QA 串联或 repo 级文档同步。
+对当前分支做一次轻量 commit + push，并默认更新根目录 `VERSION` 与已有 `CHANGELOG`。如果未显式指定版本，则默认按四段版本号 `x.y.z.w -> x.y.z.(w+1)`，也就是把最后一位加一。本仓库里标准的版本工件是根目录 `VERSION` 和 `CHANGELOG`。不接管 PR、review gate、QA 串联或 repo 级文档同步。
 
 ## Preconditions
 
-- 当前工作区存在可提交改动；或者用户明确要求同步版本，并且根目录 `VERSION` 与 `CHANGELOG` 条件满足。
+- 当前工作区存在可提交改动，或者本次版本号 / `CHANGELOG` 同步可以产生可提交变更。
 - 用户明确要做一次轻量 checkpoint。
 - 接受它只是 fallback，而不是正式发布入口。
-- 如果用户要求同步版本，仓库里必须已存在且只能明确识别出一个 `x.y.z.w` 四段纯数字的根目录 `VERSION`，并且已有可更新的 `CHANGELOG`。
+- 仓库里必须已存在且只能明确识别出一个 `x.y.z.w` 四段纯数字的根目录 `VERSION`，并且已有可更新的 `CHANGELOG`。
 
 ## Inputs / Source Of Truth
 
@@ -31,7 +31,7 @@ Source: `codev`
 ## Execution Flow
 
 1. 检查分支、工作区和最近提交历史。
-2. 如果用户明确要求同步版本，只处理仓库里已存在的单个四段纯数字 `VERSION`；若未显式指定版本，则默认只把第 4 位加一；若显式指定目标版本，则按指定值写入；同时最小更新已有 `CHANGELOG`；不存在、歧义或格式不符时停止。
+2. 同步仓库里已存在的单个四段纯数字 `VERSION`；若未显式指定版本，则默认只把最后一位加一；若显式指定目标版本，则按指定值写入；同时最小更新已有 `CHANGELOG`；不存在、歧义或格式不符时停止。
 3. 若工作区为空，且本次也没有成功产生版本号或 `CHANGELOG` 变更，则明确告知没有可提交内容并停止。
 4. 暂存当前改动，生成简洁的 commit message。
 5. 用非交互方式创建 commit；如 hook 改了文件，再补一次普通 commit。

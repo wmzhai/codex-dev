@@ -38,25 +38,25 @@ checkpoint_files=(
 
 for path in "${quickship_files[@]}"; do
   assert_contains "$path" "未显式指定版本"
-  assert_contains "$path" "第 3 位加一"
-  assert_contains "$path" "第 4 位重置为 0"
+  assert_contains "$path" "最后一位加一"
 done
 
 for path in "${checkpoint_files[@]}"; do
-  assert_contains "$path" "未显式指定版本"
-  assert_contains "$path" "第 4 位加一"
+  assert_contains "$path" "最后一位加一"
 done
 
-assert_contains "README.md" "quickship 默认把第 3 位加一并把第 4 位重置为 0"
-assert_contains "README.md" "checkpoint 在需要同步版本但未显式指定目标版本时默认把第 4 位加一"
-assert_contains "docs/workflows/README.md" "quickship 默认把第 3 位加一并把第 4 位重置为 0"
-assert_contains "docs/workflows/README.md" "checkpoint 在需要同步版本但未显式指定目标版本时默认把第 4 位加一"
-assert_contains "AGENTS.md" "quickship 在未显式指定版本时默认把第 3 位加一并把第 4 位重置为 0"
-assert_contains "AGENTS.md" "checkpoint 在需要同步版本但未显式指定目标版本时默认把第 4 位加一"
+assert_contains "README.md" "quickship 默认把最后一位加一"
+assert_contains "README.md" 'checkpoint 默认会同步根目录 `VERSION` 与 `CHANGELOG`'
+assert_contains "docs/workflows/README.md" "quickship 默认把最后一位加一"
+assert_contains "docs/workflows/README.md" '默认把第 4 位加一'
+assert_contains "AGENTS.md" "quickship 在未显式指定版本时默认把最后一位加一"
+assert_contains "AGENTS.md" "checkpoint 在未显式指定目标版本时默认把第 4 位加一"
 
-assert_not_contains "skills/codev-quickship/SKILL.md" "把末位递增一位"
-assert_not_contains "docs/skills/codev-quickship.md" '递增根目录 `VERSION` 的最后一位'
-assert_not_contains "skills/codev-checkpoint/SKILL.md" "只把最后一位加一"
-assert_not_contains "docs/skills/codev-checkpoint.md" "只把最后一位加一"
+assert_not_contains "skills/codev-quickship/SKILL.md" "第 3 位加一"
+assert_not_contains "skills/codev-quickship/SKILL.md" "第 4 位重置为 0"
+assert_not_contains "docs/skills/codev-quickship.md" "第 3 位加一"
+assert_not_contains "docs/skills/codev-quickship.md" "第 4 位重置为 0"
+assert_not_contains "skills/codev-checkpoint/SKILL.md" "只有用户明确要求同步版本时"
+assert_not_contains "docs/skills/codev-checkpoint.md" "如果用户明确要求同步版本"
 
 echo "version rules checks passed"

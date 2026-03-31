@@ -94,12 +94,12 @@
 
 - 默认入口是 `$codev-taskdev`，负责 task 分支内的 plan 校准、编码、任务文档持续同步和一次实现收尾精简，不自动启动服务或执行验证。
 - 功能验证默认由人工完成；`$codev-taskdev` 完成后，先人工验证，再决定是否进入 `$codev-quickship`。
-- `$codev-simplify` 仍可单独使用；`$codev-checkpoint` 只负责显式的轻量提交 fallback；checkpoint 在需要同步版本但未显式指定目标版本时默认把第 4 位加一。
+- `$codev-simplify` 仍可单独使用；`$codev-checkpoint` 负责轻量提交 fallback，并默认同步版本工件；checkpoint 在未显式指定目标版本时默认把第 4 位加一。
 - `$design-review`、`$review`、`$qa`、`$qa-only` 是验证门禁，不应该提前偷换成发布动作。
 
 ### 5. 合并与发布收尾
 
-- 人工验证通过后，默认走 `$codev-quickship`：同步最终 task、归档到 `tasks/done/`、更新任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`，并同步根目录 `VERSION` 与 `CHANGELOG`；如果未显式指定目标版本，quickship 默认把第 3 位加一并把第 4 位重置为 0，再完成 commit / merge / push；提交信息要使用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式；如果 task 明确源自 GitHub issue，则在主干 push 成功后先补一条该轮工作的评论，再用 `gh` 关闭对应 issue。
+- 人工验证通过后，默认走 `$codev-quickship`：同步最终 task、归档到 `tasks/done/`、更新任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`，并同步根目录 `VERSION` 与 `CHANGELOG`；如果未显式指定目标版本，quickship 默认把最后一位加一，再完成 commit / merge / push；提交信息要使用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式；如果 task 明确源自 GitHub issue，则在主干 push 成功后先补一条该轮工作的评论，再用 `gh` 关闭对应 issue。
 - 需要 tag、正式发布或全局发布文档时，走 gstack `$ship -> $land-and-deploy -> $document-release`，再视需要补 `$canary`。
 - `codev-quickship` 不创建 PR、不打 tag，也不接管正式发布。
 

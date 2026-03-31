@@ -22,7 +22,7 @@
 - `codev-issue2task` 与 `codev-gstack2task` 都必须直接产出包含实现计划的 task 文件，不再依赖独立 `plantask` 步骤。
 - `$codev-taskdev` 默认按 `tasks/` 中最小整数任务号选择待办任务。
 - `codev-taskdev` 负责实现、task 文档同步和一次实现收尾精简，但不做自动验证、不归档到 `tasks/done/`。
-- `codev-quickship` 负责人工验证后的 task 归档、任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md` 同步，以及 commit / merge / push；它每次都要递增根目录 `VERSION` 并同步 `CHANGELOG`；若 task 明确映射 GitHub issue，则主干 push 成功后先补一条本轮工作评论，再用 `gh` 关闭对应 issue；收尾提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式；但不打 tag、也不做正式发布。
+- `codev-quickship` 负责人工验证后的 task 归档、任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md` 同步，以及 commit / merge / push；它每次都要把四段版本号的最后一位加一并同步 `CHANGELOG`；若 task 明确映射 GitHub issue，则主干 push 成功后先补一条本轮工作评论，再用 `gh` 关闭对应 issue；收尾提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式；但不打 tag、也不做正式发布。
 - 如果 `CLAUDE.md` 承载宿主代理说明、gstack section 或工具约束，`codev-memorize` 只能收敛 repo 事实，不能删掉这些兼容块。
 - `codev-checkpoint` 是轻量 `commit/push` fallback；仓库接入 gstack 时，默认发布入口应是 gstack `$ship`。
 - `codev-quickship` 关闭 GitHub issue 前必须先评论收尾摘要，避免只有关闭动作没有上下文。

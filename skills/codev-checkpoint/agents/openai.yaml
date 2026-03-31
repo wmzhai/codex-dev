@@ -1,7 +1,7 @@
 interface:
   display_name: "codev-checkpoint"
-  short_description: "轻量提交并推送当前分支；按需同步 VERSION/CHANGELOG；未显式指定版本时默认把第 4 位加一"
-  default_prompt: "使用 $codev-checkpoint 走轻量 codev-checkpoint commit/push 流程；触发后立即用中文与用户交流，整个过程中的状态说明和结果摘要默认都用中文；如果仓库同时使用 gstack，则把它视为不接管 PR、review gate 或 repo 级文档同步的 fallback。默认只做 commit + push；只有当用户明确要求同步版本时，才允许处理仓库根目录已经存在的单个四段纯数字 `VERSION`；如果用户未显式指定版本，则默认按 `x.y.z.w -> x.y.z.(w+1)` 更新，也就是把第 4 位加一；如果用户显式指定目标版本，则按指定值写入，但该版本同样必须是四段纯数字；同时最小更新已有 CHANGELOG；不要自动新建版本文件，不要自动新建 CHANGELOG，不要打 tag，也不要进入正式发布流程。"
+  short_description: "轻量提交并推送当前分支，并默认同步 VERSION/CHANGELOG；未显式指定版本时默认把最后一位加一"
+  default_prompt: "使用 $codev-checkpoint 走轻量 codev-checkpoint commit/push 流程；触发后立即用中文与用户交流，整个过程中的状态说明和结果摘要默认都用中文；如果仓库同时使用 gstack，则把它视为不接管 PR、review gate 或 repo 级文档同步的 fallback。默认做 commit + push，并同步仓库根目录已经存在的单个四段纯数字 `VERSION` 与已有 `CHANGELOG`；如果用户未显式指定版本，则默认按 `x.y.z.w -> x.y.z.(w+1)` 更新，也就是把最后一位加一；如果用户显式指定目标版本，则按指定值写入，但该版本同样必须是四段纯数字；不要自动新建版本文件，不要自动新建 CHANGELOG，不要打 tag，也不要进入正式发布流程。"
 
 policy:
   allow_implicit_invocation: false

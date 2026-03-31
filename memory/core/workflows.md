@@ -16,9 +16,9 @@
 4. 用户先审核 task 文件中的 plan，再进入 `$codev-taskdev`
 5. `$codev-taskdev` 负责按已审核 plan 选择任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简
 6. 视需要补 gstack `$review`、`$qa`
-7. 功能默认由人工验证；人工验证通过后，再用 `codev-quickship` 完成 task 归档、任务相关文档同步、根目录 `VERSION` 递增、`CHANGELOG` 同步，以及 commit / merge / push；若 task 明确源自 GitHub issue，还要在主干 push 成功后先评论收尾摘要，再用 `gh` 关闭对应 issue；提交信息应采用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式
+7. 功能默认由人工验证；人工验证通过后，再用 `codev-quickship` 完成 task 归档、任务相关文档同步、把四段版本号最后一位加一、`CHANGELOG` 同步，以及 commit / merge / push；若 task 明确源自 GitHub issue，还要在主干 push 成功后先评论收尾摘要，再用 `gh` 关闭对应 issue；提交信息应采用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式
 8. 需要正式发布链路时，改走 gstack `$ship`、`$document-release` 与 `$land-and-deploy`
-9. `codev-checkpoint` 只保留给显式的轻量 `commit/push` 场景
+9. `codev-checkpoint` 用于轻量 `commit/push` 场景，并默认同步版本工件；未显式指定版本时默认把四段版本号最后一位加一
 
 ## 新增 skill
 1. 创建 skill 目录和 `SKILL.md`
