@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.0.6 - 2026-03-31
+
+- 调整 `setup` 默认同时安装 Claude 与 Codex，并同步安装说明与 smoke test。
+
 ## 0.0.0.5 - 2026-03-27
 
 - 同步 `codev-quickship` 说明文档，使其明确默认以当前 git 分支为起点并推送到默认主干。

@@ -125,84 +125,133 @@ trap 'rm -rf "$TMP_ROOT"' EXIT
 fake_bin="${TMP_ROOT}/fake-bin"
 make_fake_git "$fake_bin"
 
-exercise_host() {
+assert_host_installed() {
+  local home_dir="$1"
+  local host="$2"
+  local skills_dir
+
+  skills_dir="$(skills_dir_for_host "$home_dir" "$host")"
+  assert_exists "${skills_dir}/.gstack-installed"
+  assert_symlink_target "${skills_dir}/codev" "${REPO_ROOT}"
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    assert_symlink_target "${skills_dir}/${skill_name}" "codev/skills/${skill_name}"
+  done
+  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
+    assert_missing "${skills_dir}/${skill_name}"
+  done
+  for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
+    assert_missing "${skills_dir}/${skill_name}"
+  done
+}
+
+assert_host_missing() {
+  local home_dir="$1"
+  local host="$2"
+  local skills_dir
+
+  skills_dir="$(skills_dir_for_host "$home_dir" "$host")"
+  assert_missing "${skills_dir}/.gstack-installed"
+  assert_missing "${skills_dir}/codev"
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    assert_missing "${skills_dir}/${skill_name}"
+  done
+}
+
+exercise_default_dual_host() {
+  local fresh_home="${TMP_ROOT}/default-fresh-home"
+  local conflict_home="${TMP_ROOT}/default-conflict-home"
+  local non_repo_home="${TMP_ROOT}/default-non-repo-home"
+  local claude_skills
+
+  mkdir -p "$fresh_home"
+  run_setup "$fresh_home" "$fake_bin"
+
+  assert_file_contains "${fresh_home}/git.log" "clone https://github.com/garrytan/gstack.git ${fresh_home}/gstack"
+  assert_file_contains "${fresh_home}/gstack-setup.log" "setup --host claude"
+  assert_file_contains "${fresh_home}/gstack-setup.log" "setup --host codex"
+  assert_host_installed "$fresh_home" claude
+  assert_host_installed "$fresh_home" codex
+
+  run_setup "$fresh_home" "$fake_bin"
+  assert_file_contains "${fresh_home}/git.log" "-C ${fresh_home}/gstack pull --ff-only"
+  assert_file_contains "${fresh_home}/git.log" "pull --ff-only"
+  assert_host_installed "$fresh_home" claude
+  assert_host_installed "$fresh_home" codex
+
+  claude_skills="$(skills_dir_for_host "$fresh_home" claude)"
+  ln -snf "codev/skills/plantask" "${claude_skills}/plantask"
+  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
+    ln -snf "codev/skills/${skill_name}" "${claude_skills}/${skill_name}"
+  done
+  for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
+    ln -snf "codev/skills/${skill_name}" "${claude_skills}/${skill_name}"
+  done
+  run_setup "$fresh_home" "$fake_bin"
+  assert_host_installed "$fresh_home" claude
+  assert_host_installed "$fresh_home" codex
+
+  mkdir -p "$(skills_dir_for_host "$conflict_home" claude)/codev-issue2task"
+  if TEST_GIT_LOG="${conflict_home}/git.log" HOME="$conflict_home" PATH="${fake_bin}:$PATH" "$SETUP_SCRIPT" >/dev/null 2>&1; then
+    fail "setup should fail when a managed skill path is a real directory in default mode"
+  fi
+
+  assert_exists "$(skills_dir_for_host "$conflict_home" claude)/codev-issue2task"
+  assert_missing "$(skills_dir_for_host "$conflict_home" claude)/codev"
+  assert_missing "$(skills_dir_for_host "$conflict_home" codex)/codev"
+
+  mkdir -p "${non_repo_home}/gstack"
+  if TEST_GIT_LOG="${non_repo_home}/git.log" HOME="$non_repo_home" PATH="${fake_bin}:$PATH" "$SETUP_SCRIPT" >/dev/null 2>&1; then
+    fail "setup should fail when ~/gstack is not a git repository in default mode"
+  fi
+
+  assert_exists "${non_repo_home}/gstack"
+  assert_host_missing "$non_repo_home" claude
+  assert_host_missing "$non_repo_home" codex
+}
+
+exercise_single_host() {
   local host="$1"
   local fresh_home="${TMP_ROOT}/${host}-fresh-home"
   local conflict_home="${TMP_ROOT}/${host}-conflict-home"
   local non_repo_home="${TMP_ROOT}/${host}-non-repo-home"
-  local fresh_skills
-  local conflict_skills
-  local setup_args=()
+  local other_host="claude"
+  local setup_args=(--host "$host")
 
-  fresh_skills="$(skills_dir_for_host "$fresh_home" "$host")"
-  conflict_skills="$(skills_dir_for_host "$conflict_home" "$host")"
+  if [ "$host" = "claude" ]; then
+    other_host="codex"
+  fi
 
   mkdir -p "$fresh_home"
-  if [ "$host" = "claude" ]; then
-    run_setup "$fresh_home" "$fake_bin" --host=claude
-  else
-    run_setup "$fresh_home" "$fake_bin"
-  fi
+  run_setup "$fresh_home" "$fake_bin" "${setup_args[@]}"
 
   assert_file_contains "${fresh_home}/git.log" "clone https://github.com/garrytan/gstack.git ${fresh_home}/gstack"
   assert_file_contains "${fresh_home}/gstack-setup.log" "setup --host ${host}"
-  assert_exists "${fresh_skills}/.gstack-installed"
-  assert_symlink_target "${fresh_skills}/codev" "${REPO_ROOT}"
-  for skill_name in "${MANAGED_SKILLS[@]}"; do
-    assert_symlink_target "${fresh_skills}/${skill_name}" "codev/skills/${skill_name}"
-  done
-  assert_missing "${fresh_skills}/plantask"
-  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    assert_missing "${fresh_skills}/${skill_name}"
-  done
-  assert_missing "${fresh_skills}/ship"
+  assert_host_installed "$fresh_home" "$host"
+  assert_host_missing "$fresh_home" "$other_host"
 
-  if [ "$host" = "claude" ]; then
-    setup_args=(--host claude)
-  else
-    setup_args=()
-  fi
   run_setup "$fresh_home" "$fake_bin" "${setup_args[@]}"
   assert_file_contains "${fresh_home}/git.log" "-C ${fresh_home}/gstack pull --ff-only"
   assert_file_contains "${fresh_home}/git.log" "pull --ff-only"
-  assert_symlink_target "${fresh_skills}/codev" "${REPO_ROOT}"
-  for skill_name in "${MANAGED_SKILLS[@]}"; do
-    assert_symlink_target "${fresh_skills}/${skill_name}" "codev/skills/${skill_name}"
-  done
-  assert_missing "${fresh_skills}/plantask"
-  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    assert_missing "${fresh_skills}/${skill_name}"
-  done
+  assert_host_installed "$fresh_home" "$host"
+  assert_host_missing "$fresh_home" "$other_host"
 
-  ln -snf "codev/skills/plantask" "${fresh_skills}/plantask"
   for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    ln -snf "codev/skills/${skill_name}" "${fresh_skills}/${skill_name}"
+    ln -snf "codev/skills/${skill_name}" "$(skills_dir_for_host "$fresh_home" "$host")/${skill_name}"
   done
   for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
-    ln -snf "codev/skills/${skill_name}" "${fresh_skills}/${skill_name}"
+    ln -snf "codev/skills/${skill_name}" "$(skills_dir_for_host "$fresh_home" "$host")/${skill_name}"
   done
   run_setup "$fresh_home" "$fake_bin" "${setup_args[@]}"
-  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    assert_missing "${fresh_skills}/${skill_name}"
-  done
-  for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
-    assert_missing "${fresh_skills}/${skill_name}"
-  done
+  assert_host_installed "$fresh_home" "$host"
 
-  mkdir -p "${conflict_skills}/codev-issue2task"
+  mkdir -p "$(skills_dir_for_host "$conflict_home" "$host")/codev-issue2task"
   if TEST_GIT_LOG="${conflict_home}/git.log" HOME="$conflict_home" PATH="${fake_bin}:$PATH" "$SETUP_SCRIPT" "${setup_args[@]}" >/dev/null 2>&1; then
     fail "setup should fail when a managed skill path is a real directory for host ${host}"
   fi
 
-  assert_exists "${conflict_skills}/codev-issue2task"
-  assert_missing "${conflict_skills}/codev"
-  assert_missing "${conflict_skills}/codev-checkpoint"
-  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    assert_missing "${conflict_skills}/${skill_name}"
-  done
-  for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
-    assert_missing "${conflict_skills}/${skill_name}"
-  done
+  assert_exists "$(skills_dir_for_host "$conflict_home" "$host")/codev-issue2task"
+  assert_missing "$(skills_dir_for_host "$conflict_home" "$host")/codev"
+  assert_host_missing "$conflict_home" "$other_host"
 
   mkdir -p "${non_repo_home}/gstack"
   if TEST_GIT_LOG="${non_repo_home}/git.log" HOME="$non_repo_home" PATH="${fake_bin}:$PATH" "$SETUP_SCRIPT" "${setup_args[@]}" >/dev/null 2>&1; then
@@ -210,10 +259,12 @@ exercise_host() {
   fi
 
   assert_exists "${non_repo_home}/gstack"
-  assert_missing "$(skills_dir_for_host "$non_repo_home" "$host")/codev"
+  assert_host_missing "$non_repo_home" "$host"
+  assert_host_missing "$non_repo_home" "$other_host"
 }
 
-exercise_host codex
-exercise_host claude
+exercise_default_dual_host
+exercise_single_host codex
+exercise_single_host claude
 
 echo "setup smoke tests passed"

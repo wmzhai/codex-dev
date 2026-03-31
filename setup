@@ -3,7 +3,9 @@ set -euo pipefail
 
 PROJECT_NAME="codev"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-HOST="codex"
+HOST=""
+HOST_EXPLICIT=0
+TARGET_HOSTS=()
 GSTACK_DIR="${HOME}/gstack"
 GSTACK_REPO_URL="https://github.com/garrytan/gstack.git"
 MANAGED_SKILLS=(codev-memorize codev-issue2task codev-gstack2task codev-taskdev codev-quickship codev-simplify codev-checkpoint)
@@ -21,10 +23,12 @@ parse_args() {
       --host)
         [ $# -ge 2 ] || die "missing value for --host (expected claude or codex)"
         HOST="$2"
+        HOST_EXPLICIT=1
         shift 2
         ;;
       --host=*)
         HOST="${1#--host=}"
+        HOST_EXPLICIT=1
         shift
         ;;
       *)
@@ -33,10 +37,16 @@ parse_args() {
     esac
   done
 
-  case "$HOST" in
-    claude|codex) ;;
-    *) die "unknown host: ${HOST} (expected claude or codex)" ;;
-  esac
+  if [ "$HOST_EXPLICIT" -eq 1 ]; then
+    case "$HOST" in
+      claude|codex) ;;
+      *) die "unknown host: ${HOST} (expected claude or codex)" ;;
+    esac
+    TARGET_HOSTS=("$HOST")
+    return
+  fi
+
+  TARGET_HOSTS=(claude codex)
 }
 
 ensure_command() {
@@ -108,35 +118,44 @@ bootstrap_gstack() {
   "${GSTACK_DIR}/setup" --host "$host" >/dev/null || die "gstack setup failed"
 }
 
+install_for_host() {
+  local host="$1"
+  local skill_name
+
+  SKILLS_DIR="$(skills_dir_for_host "$host")"
+
+  bootstrap_gstack "$host"
+
+  mkdir -p "$SKILLS_DIR"
+
+  ensure_symlink_or_absent "${SKILLS_DIR}/${PROJECT_NAME}"
+
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    ensure_symlink_or_absent "${SKILLS_DIR}/${skill_name}"
+  done
+
+  ln -snf "$REPO_ROOT" "${SKILLS_DIR}/${PROJECT_NAME}"
+
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    ln -snf "${PROJECT_NAME}/skills/${skill_name}" "${SKILLS_DIR}/${skill_name}"
+  done
+
+  for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
+    cleanup_legacy_codev_skill "$skill_name"
+  done
+
+  for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
+    cleanup_legacy_codev_skill "$skill_name"
+  done
+
+  echo "codev ready for $(host_label "$host")."
+  echo "  repo: ${REPO_ROOT}"
+  echo "  skills: ${SKILLS_DIR}"
+  echo "  linked: ${MANAGED_SKILLS[*]}"
+}
+
 parse_args "$@"
-SKILLS_DIR="$(skills_dir_for_host "$HOST")"
 
-bootstrap_gstack "$HOST"
-
-mkdir -p "$SKILLS_DIR"
-
-ensure_symlink_or_absent "${SKILLS_DIR}/${PROJECT_NAME}"
-
-for skill_name in "${MANAGED_SKILLS[@]}"; do
-  ensure_symlink_or_absent "${SKILLS_DIR}/${skill_name}"
+for host in "${TARGET_HOSTS[@]}"; do
+  install_for_host "$host"
 done
-
-ln -snf "$REPO_ROOT" "${SKILLS_DIR}/${PROJECT_NAME}"
-
-for skill_name in "${MANAGED_SKILLS[@]}"; do
-  ln -snf "${PROJECT_NAME}/skills/${skill_name}" "${SKILLS_DIR}/${skill_name}"
-done
-
-for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
-  cleanup_legacy_codev_skill "$skill_name"
-done
-
-for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-  cleanup_legacy_codev_skill "$skill_name"
-done
-
-echo "codev ready."
-echo "  host: ${HOST}"
-echo "  repo: ${REPO_ROOT}"
-echo "  skills: ${SKILLS_DIR}"
-echo "  linked: ${MANAGED_SKILLS[*]}"

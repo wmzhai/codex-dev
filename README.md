@@ -4,9 +4,9 @@
 
 ## 1. 安装
 
-默认 `./setup` 等价于 `./setup --host codex`。
+默认 `./setup` 会同时安装到 Claude 和 Codex；只有显式传 `--host` 时才只安装单个宿主。
 
-### Codex 全局安装
+### Claude + Codex 全局安装
 
 ```bash
 git clone https://github.com/wmzhai/codev.git ~/codev
@@ -14,7 +14,15 @@ cd ~/codev
 ./setup
 ```
 
-### Claude 全局安装
+### 仅 Codex 全局安装
+
+```bash
+git clone https://github.com/wmzhai/codev.git ~/codev
+cd ~/codev
+./setup --host codex
+```
+
+### 仅 Claude 全局安装
 
 ```bash
 git clone https://github.com/wmzhai/codev.git ~/codev
@@ -22,11 +30,11 @@ cd ~/codev
 ./setup --host claude
 ```
 
-当前只支持全局安装到 `~/.codex/skills/` 或 `~/.claude/skills/`，暂不支持项目内 `.agents/skills/` / `.claude/skills/` vendored 安装。
+当前只支持全局安装到 `~/.codex/skills/` 和/或 `~/.claude/skills/`，暂不支持项目内 `.agents/skills/` / `.claude/skills/` vendored 安装。
 
 ## 2. 升级
 
-### Codex
+### Claude + Codex
 
 ```bash
 cd ~/codev
@@ -34,7 +42,15 @@ git pull --ff-only
 ./setup
 ```
 
-### Claude
+### 仅 Codex
+
+```bash
+cd ~/codev
+git pull --ff-only
+./setup --host codex
+```
+
+### 仅 Claude
 
 ```bash
 cd ~/codev

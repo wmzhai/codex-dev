@@ -9,8 +9,9 @@
 
 ## 安装
 
-- Claude 全局安装：`./setup --host claude`
-- 默认 `./setup` 仍安装到 Codex：`~/.codex/skills/`
+- 默认 `./setup` 会同时安装到 `~/.claude/skills/` 和 `~/.codex/skills/`
+- 仅安装 Claude：`./setup --host claude`
+- 仅安装 Codex：`./setup --host codex`
 - 当前仓库暂不支持项目内 `.claude/skills/` 或 `.agents/skills/` vendored 安装
 
 ## 兼容约束
