@@ -12,7 +12,7 @@
 - 仓库结构边界：`memory/core/system-map.md`
 - 稳定约束：`memory/core/invariants.md`
 - 默认动作与验证：`memory/core/workflows.md`
-- 与 gstack 的协同边界：`memory/core/gstack-interoperability.md`
+- 仓库职责边界：`memory/core/scope.md`
 
 ## 范围
 - `core/`：仓库总图、症状路由、稳定约束、默认工作流

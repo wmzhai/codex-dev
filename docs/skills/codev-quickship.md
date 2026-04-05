@@ -53,4 +53,4 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 收尾完成后继续开发下一个任务
-- 如果仓库还需要 tag、正式发布或全局发布文档，改走 gstack 发布链路
+- 如果仓库还需要 tag 或正式发布，改走仓库外部发布流程

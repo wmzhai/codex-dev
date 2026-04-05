@@ -7,11 +7,6 @@
 - `AGENTS.md`
 - `docs/workflows.md`
 
-## 想知道 codev 和 gstack 怎么配合
-- `memory/core/gstack-interoperability.md`
-- `README.md`
-- `AGENTS.md`
-
 ## 想新增或修改一个 skill
 - 对应 skill 的 `SKILL.md`
 - `docs/skills/<skill>.md`
@@ -36,15 +31,9 @@
 - 根目录 `AGENTS.md`
 - 根目录 `CLAUDE.md`
 
-## 想把 gstack 工件落成 task
-- `docs/skills/codev-gstack2task.md`
-- `skills/codev-gstack2task/SKILL.md`
-- `memory/core/gstack-interoperability.md`
-
 ## 想走任务流
 - `docs/workflows.md`
 - `docs/skills/codev-issue2task.md`
-- `docs/skills/codev-gstack2task.md`
 - `docs/skills/codev-taskdev.md`
 - `docs/skills/codev-quickship.md`
 
@@ -53,7 +42,6 @@
 - `docs/skills/codev-quickship.md`
 - `skills/codev-checkpoint/SKILL.md`
 - `skills/codev-quickship/SKILL.md`
-- `memory/core/gstack-interoperability.md`
 
 ## 想做语义不变精简
 - `docs/skills/codev-simplify.md`

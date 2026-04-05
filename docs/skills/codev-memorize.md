@@ -35,8 +35,8 @@ Source: `codev`
 2. 如果这是全新项目、代码与目录尚未长成，则用 `README.md` 和用户明确输入的项目信息先建立最小记忆骨架。
 3. 提炼高优先级规则，收敛到 `AGENTS.md`，保持短而硬。
 4. 重写或刷新 `memory/README.md`，把热路径、冷路径和默认读法说清楚。
-5. 更新 `memory/core/` 中的系统图、工作流、稳定约束和 gstack 协作边界。
-6. 若 `CLAUDE.md` 存在，只提取 repo 事实进入 `AGENTS.md`，保留宿主代理或 gstack 兼容块。
+5. 更新 `memory/core/` 中的系统图、工作流、稳定约束和仓库职责边界。
+6. 若 `CLAUDE.md` 存在，只提取 repo 事实进入 `AGENTS.md`，保留宿主代理兼容块。
 7. 删除已经失效的旧路由、旧目录名和过期流程说明。
 
 ## Stops / Failure Modes
@@ -50,4 +50,4 @@ Source: `codev`
 
 - 需要总流程时：读 `docs/workflows.md`
 - 需要具体 skill：读 `docs/skills/README.md`
-- 要进入任务流：继续 `$codev-issue2task` 或 `$codev-gstack2task`
+- 要进入任务流：继续 `$codev-issue2task`

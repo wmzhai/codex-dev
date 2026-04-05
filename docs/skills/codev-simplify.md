@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-在保持行为不变的前提下收窄当前 diff，降低嵌套和重复，让 patch 更易审查、更容易进入 checkpoint 或后续 QA。
+在保持行为不变的前提下收窄当前 diff，降低嵌套和重复，让 patch 更易审查，也更容易进入 checkpoint 或任务收尾。
 
 ## Preconditions
 
@@ -40,5 +40,5 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 普通 commit 或 `$codev-checkpoint`
-- 后续的 `$design-review`、`$review`、`$qa`
 - 在 `$codev-taskdev` 内作为实现收尾精简步骤被调用
+- 人工验证通过后进入 `$codev-quickship`

@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-对当前分支做一次轻量 commit + push，并默认更新根目录 `VERSION` 与已有 `CHANGELOG`。如果未显式指定版本，则默认按四段版本号 `x.y.z.w -> x.y.z.(w+1)`，也就是把最后一位加一。本仓库里标准的版本工件是根目录 `VERSION` 和 `CHANGELOG`。不接管 PR、review gate、QA 串联或 repo 级文档同步。
+对当前分支做一次轻量 commit + push，并默认更新根目录 `VERSION` 与已有 `CHANGELOG`。如果未显式指定版本，则默认按四段版本号 `x.y.z.w -> x.y.z.(w+1)`，也就是把最后一位加一。本仓库里标准的版本工件是根目录 `VERSION` 和 `CHANGELOG`。它只负责轻量提交，不接管更大的发布或审查流程。
 
 ## Preconditions
 
@@ -47,5 +47,5 @@ Source: `codev`
 
 ## Next Recommended Steps
 
-- 继续 `$design-review`、`$review`、`$qa`
-- 正式发布仍应进入 `$ship`
+- 继续本仓库的人工验证流程
+- 需要归档和主干收尾时，进入 `$codev-quickship`

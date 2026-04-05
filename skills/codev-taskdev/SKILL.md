@@ -1,6 +1,6 @@
 ---
 name: codev-taskdev
-description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编号待办任务，在对应 task 分支上按 `Implementation Plan` 实施代码、持续同步任务文档，并在实现收尾自动做一次语义不变精简；适用于 `codev-gstack2task` / `codev-issue2task` 产出 plan 后，需要先完成编码、把功能验证交给人工、再由 `codev-quickship` 做收尾的场景。
+description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编号待办任务，在对应 task 分支上按 `Implementation Plan` 实施代码、持续同步任务文档，并在实现收尾自动做一次语义不变精简；适用于 `codev-issue2task` 产出 plan 后，需要先完成编码、把功能验证交给人工、再由 `codev-quickship` 做收尾的场景。
 ---
 
 # TaskDev
