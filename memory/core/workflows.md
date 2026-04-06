@@ -13,8 +13,8 @@
 2. 任务入口要结合代码直接写出带实现计划的 `tasks/Txx-*.md`
 3. 用户先审核 task 文件中的 plan，再进入 `$codev-taskdev`
 4. `$codev-taskdev` 负责按已审核 plan 选择任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简
-5. 功能默认由人工验证；人工验证通过后，再用 `codev-quickship` 完成 task 归档、任务相关文档同步、版本工件同步，以及 commit / merge / push
-6. `codev-checkpoint` 用于轻量 `commit/push` 场景，并默认同步版本工件
+5. 功能默认由人工验证；人工验证通过后，再用 `codev-quickship` 先主动跑一次默认 build / 最小编译校验，再完成 task 归档、任务相关文档同步、版本工件同步，以及 commit / merge / push
+6. `codev-checkpoint` 用于轻量 `commit/push` 场景，并默认不同步版本工件
 
 ## 新增 skill
 1. 创建 skill 目录和 `SKILL.md`

@@ -20,12 +20,12 @@
 - `codev-issue2task` 必须直接产出包含实现计划的 task 文件，不再依赖独立 `plantask` 步骤。
 - `$codev-taskdev` 默认按 `tasks/` 中最小整数任务号选择待办任务。
 - `codev-taskdev` 负责实现、task 文档同步和一次实现收尾精简，但不做自动验证、不归档到 `tasks/done/`。
-- `codev-quickship` 负责人工验证后的 task 归档、任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md` 同步，以及 commit / merge / push；它每次都要把四段版本号的最后一位加一并同步 `CHANGELOG`；若 task 明确映射 GitHub issue，则主干 push 成功后先补一条本轮工作评论，再用 `gh` 关闭对应 issue；收尾提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式；但不打 tag、也不做正式发布。
+- `codev-quickship` 负责人工验证后的 task 归档、任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md` 同步，以及 commit / merge / push；在版本同步与主干收尾前，它默认要主动跑一次仓库约定的 build / 最小编译校验；若 task 明确映射 GitHub issue，则主干 push 成功后先补一条本轮工作评论，再用 `gh` 关闭对应 issue；收尾提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z)` 形式；但不打 tag、也不做正式发布。
 - 如果 `CLAUDE.md` 承载宿主代理说明或工具约束，`codev-memorize` 只能收敛 repo 事实，不能删掉这些兼容块。
 - `codev-checkpoint` 是轻量 `commit/push` fallback。
 - `codev-quickship` 关闭 GitHub issue 前必须先评论收尾摘要，避免只有关闭动作没有上下文。
-- `codev-quickship` 的提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z.W)` 形式，版本号放在最后的括号里。
-- `VERSION` 采用单一四段纯数字格式；`CHANGELOG` 是与之配套的唯一版本变更记录源。
+- `codev-quickship` 的提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z)` 形式，版本号放在最后的括号里。
+- `VERSION` 默认采用单一 `X.Y.Z` 格式；需要同步版本工件时，若格式不符必须停止并明确说明原因。
 
 ## 验证基线
 - 修改安装链路后，优先跑 `./test/setup-smoke.sh`。

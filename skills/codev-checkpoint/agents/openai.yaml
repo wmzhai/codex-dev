@@ -1,7 +1,7 @@
 interface:
   display_name: "codev-checkpoint"
-  short_description: "轻量提交并推送当前分支，不默认同步 VERSION/CHANGELOG，也不默认升级版本号"
-  default_prompt: "使用 $codev-checkpoint 走轻量 codev-checkpoint commit/push 流程；触发后立即用中文与用户交流，整个过程中的状态说明和结果摘要默认都用中文；如果仓库同时使用 gstack，则把它视为不接管 PR、review gate 或 repo 级文档同步的 fallback。默认只做 commit + push，不默认同步根目录 `VERSION`，也不默认同步已有 `CHANGELOG`；只有当用户明确要求同步版本工件时，才处理仓库里已经存在的 `VERSION` 与 `CHANGELOG`，且显式目标版本必须是 3 位纯数字；不要自动新建版本文件，不要自动新建 CHANGELOG，不要打 tag，也不要进入正式发布流程。"
+  short_description: "轻量提交并推送当前分支，默认不改 VERSION/CHANGELOG"
+  default_prompt: "使用 $codev-checkpoint 走轻量 codev-checkpoint commit/push 流程；触发后立即用中文与用户交流，整个过程中的状态说明和结果摘要默认都用中文；如果仓库同时使用 gstack，则把它视为不接管 PR、review gate 或 repo 级文档同步的 fallback。默认只做 commit + push，不默认同步根目录 `VERSION`，也不默认同步已有 `CHANGELOG`；只有当用户明确要求同步版本工件时，才处理仓库里已经存在的 `VERSION` 与 `CHANGELOG`，且显式目标版本必须符合 `X.Y.Z`；不要自动新建版本文件，不要自动新建 CHANGELOG，不要打 tag，也不要进入正式发布流程。"
 
 policy:
   allow_implicit_invocation: false

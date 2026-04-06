@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-对当前分支做一次轻量 commit + push，不默认升级版本号，不默认更新根目录 `VERSION`，也不默认同步已有 `CHANGELOG`。它只负责轻量提交，不接管更大的发布或审查流程；只有当用户明确要求同步版本工件时，才处理仓库里现有的 `VERSION` 和 `CHANGELOG`。
+对当前分支做一次轻量 commit + push，默认不更新根目录 `VERSION`，也不默认同步已有 `CHANGELOG`。它只负责轻量提交，不接管更大的发布或审查流程；只有当用户明确要求同步版本工件时，才处理仓库里现有的 `VERSION` 和 `CHANGELOG`。
 
 ## Preconditions
 
@@ -31,7 +31,7 @@ Source: `codev`
 ## Execution Flow
 
 1. 检查分支、工作区和最近提交历史。
-2. 仅当用户明确要求同步版本工件时，才同步仓库里已存在的 `VERSION` 与 `CHANGELOG`；若显式指定目标版本，则按指定值写入，且该值必须是 3 位纯数字版本号；不存在、歧义或格式不符时停止。
+2. 仅当用户明确要求同步版本工件时，才同步仓库里已存在的 `VERSION` 与 `CHANGELOG`；若显式指定目标版本，则按指定值写入，且该值必须符合 `X.Y.Z`；不存在、歧义或格式不符时停止。
 3. 若工作区为空，且本次也没有成功产生可提交变更，则明确告知没有可提交内容并停止。
 4. 暂存当前改动，生成简洁的 commit message。
 5. 用非交互方式创建 commit；如 hook 改了文件，再补一次普通 commit。
@@ -43,7 +43,7 @@ Source: `codev`
 - 工作区为空，且本次也没有成功产生版本号或 `CHANGELOG` 变更。
 - push 失败或权限不足。
 - hook 失败，导致 commit 无法完成。
-- 用户要求同步版本，但版本工件不存在、候选不唯一、不是 3 位格式，或仓库缺少可更新的 `CHANGELOG`。
+- 用户要求同步版本，但版本工件不存在、候选不唯一、不是 `X.Y.Z` 格式，或仓库缺少可更新的 `CHANGELOG`。
 
 ## Next Recommended Steps
 
