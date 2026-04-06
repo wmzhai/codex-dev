@@ -3,7 +3,8 @@ name: codev-quickship
 description: >-
   在用户完成人工验证并确认当前结果满足预期后，完成统一收尾：若存在 task，则同步最终 task、归档到
   `tasks/done/` 并更新任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；若不存在 task，则按无 task
-  收尾模式继续，并在 `CHANGELOG` 中记录本轮相关改动摘要；随后先主动跑一次仓库约定的 build / 最小编译校验，再把根目录
+  收尾模式继续，并在 `CHANGELOG` 中记录本轮相关改动摘要；若存在 task，则默认沿用 `codev-taskdev`
+  收尾阶段已完成的 build / 最小编译校验，不再重复执行；若无 task，则在 quickship 内补跑一次默认 build / 最小编译校验；随后再把根目录
   `VERSION` 同步到收尾版本、同步已有 `CHANGELOG`，再把当前工作状态提交、合并并推送到 `main/master`；如果 task
   明确源自 GitHub issue，则在主干 push 成功后先把本轮实际完成的工作写到对应 issue 下，再关闭对应 issue；收尾提交信息必须采用
   `type: 具体工作摘要 (vX.Y.Z)` 形式，不走 PR、不打 tag，也不做正式发布。
@@ -11,7 +12,7 @@ description: >-
 
 # QuickShip
 
-`codev-quickship` 是人工验证通过后的统一收尾 skill。它优先基于当前 task 的已确认结果补齐最终 task 记录、归档任务并同步任务相关文档；如果本次仓库里没有可定位的 task，它也允许进入无 task 收尾模式，跳过 task 归档与 issue 关闭，但仍要求在 `CHANGELOG` 中写清本轮相关改动摘要，并继续同步根目录 `VERSION` 与已有 `CHANGELOG`。在真正进入版本同步与主干收尾前，它还要主动跑一次仓库约定的 build / 最小编译校验，作为 quickship 的默认代码门禁；这一步不替代人工功能验证。如果用户未显式指定版本，则默认把 `VERSION` 的补丁位加一（`z+1`）；如果用户显式指定目标版本，则按指定版本写入，且该版本必须符合 `X.Y.Z`。随后它完成“提交并推主干”：如果当前在分支上，就先把分支收成稳定状态再合并进主干；如果已经在主干上，就直接在主干上提交并推送。若 task 明确映射到 GitHub issue，它还要在主干 push 成功后先向对应 issue 追加一条本轮实际工作摘要，再关闭对应 issue。它不走标准 PR / release 链路，也不调用 `$ship`、`$land-and-deploy`、`$document-release`。
+`codev-quickship` 是人工验证通过后的统一收尾 skill。它优先基于当前 task 的已确认结果补齐最终 task 记录、归档任务并同步任务相关文档；如果本次仓库里没有可定位的 task，它也允许进入无 task 收尾模式，跳过 task 归档与 issue 关闭，但仍要求在 `CHANGELOG` 中写清本轮相关改动摘要，并继续同步根目录 `VERSION` 与已有 `CHANGELOG`。有 task 时，它默认沿用 `codev-taskdev` 收尾阶段已经完成的 build / 最小编译校验，不再重复跑同一门禁；无 task 时，由于不存在 `codev-taskdev` 阶段，quickship 仍需自行补跑一次仓库约定的 build / 最小编译校验。这一步不替代人工功能验证。如果用户未显式指定版本，则默认把 `VERSION` 的补丁位加一（`z+1`）；如果用户显式指定目标版本，则按指定版本写入，且该版本必须符合 `X.Y.Z`。随后它完成“提交并推主干”：如果当前在分支上，就先把分支收成稳定状态再合并进主干；如果已经在主干上，就直接在主干上提交并推送。若 task 明确映射到 GitHub issue，它还要在主干 push 成功后先向对应 issue 追加一条本轮实际工作摘要，再关闭对应 issue。它不走标准 PR / release 链路，也不调用 `$ship`、`$land-and-deploy`、`$document-release`。
 
 ## 第一规则：先用中文交流
 
@@ -29,7 +30,7 @@ description: >-
 - 如果当前不在主干，当前分支必须处于可合并状态；如果存在未解决冲突或明显未收敛的工作区，先处理后再继续。
 - 如果 task 明确映射到 GitHub issue，必须能从 task 文件稳定解析出 issue 编号；并且本地 `gh` 要可用且有权限先评论再关闭对应 issue。
 - 根目录 `VERSION` 已初始化且为单个可稳定解析的 `X.Y.Z` 版本号。
-- 仓库里必须存在可稳定定位的默认 build / 最小编译校验入口；如果仓库没有默认 build 入口、入口不唯一、或 build 明显依赖当前不可用环境，要明确说明并停止。
+- 如果本次是无 task 收尾模式，仓库里必须存在可稳定定位的默认 build / 最小编译校验入口；如果仓库没有默认 build 入口、入口不唯一、或 build 明显依赖当前不可用环境，要明确说明并停止。
 
 如果这些前提不成立，要明确说明原因并停止，不要擅自收尾或直推主干。
 
@@ -66,11 +67,12 @@ description: >-
    - 无 task 时，只做与本轮实际改动直接相关、且已被人工验证确认的最小同步。
    - 如本任务或本轮改动改变了 repo 的稳定工作流、约束或默认动作，最小范围更新 `AGENTS.md`。
    - 如果没有需要更新的内容，要明确记录“任务相关 docs/memory/AGENTS 无需更新”。
-7. 主动跑一次仓库默认 build / 最小编译校验：
-   - 先根据仓库已有说明和入口定位默认 build 命令，优先读根 `AGENTS.md`、`README.md`、`memory/`、已有脚本或 manifest，不要凭空发明命令。
-   - 优先使用仓库已经稳定存在的单一入口，例如 `cargo build --workspace`、`pnpm build`、`npm run build`、`turbo build`、`just build`、`make build` 等同类默认命令。
-   - 这一步是 quickship 的默认代码门禁，不替代人工功能验证，也不扩展成完整测试矩阵、浏览器 QA 或部署前验收。
-   - 如果 build 失败、命令不可稳定判定、或明显依赖当前不可用环境，要明确报告并停止，不要假装 quickship 已完成。
+7. 处理默认 build / 最小编译校验责任：
+   - 如果存在 task，默认沿用 `codev-taskdev` 收尾阶段已经完成的 build / 最小编译校验，不在 quickship 内重复执行；只有用户明确要求复验时才补跑。
+   - 如果本次是无 task 收尾模式，则需要由 quickship 主动跑一次仓库默认 build / 最小编译校验。
+   - 无 task 场景下定位 build 命令时，优先读根 `AGENTS.md`、`README.md`、`memory/`、已有脚本或 manifest，不要凭空发明命令。
+   - 无 task 场景下优先使用仓库已经稳定存在的单一入口，例如 `cargo build --workspace`、`pnpm build`、`npm run build`、`turbo build`、`just build`、`make build` 等同类默认命令。
+   - 如果无 task quickship 需要补跑 build 且 build 失败、命令不可稳定判定、或明显依赖当前不可用环境，要明确报告并停止，不要假装 quickship 已完成。
 8. 同步仓库里的版本工件：
    - 在收尾前先读取根目录 `VERSION`，并同步已有 `CHANGELOG`。
    - 如果用户未显式指定版本，则默认把 `VERSION` 的补丁位加一（`z+1`）。
@@ -94,7 +96,7 @@ description: >-
    - 目标 task 与归档位置；若无 task，要明确说明这是无 task 收尾
    - 起始分支
    - 目标主干
-   - 主动 build 的命令与结果
+   - 默认 build 是否沿用 taskdev、在 quickship 中跳过，还是在无 task / 用户要求复验时实际执行；如有实际执行，再汇报命令与结果
    - 走的是“branch merge”还是“main commit + push”
    - 是否已完成 task 归档
    - docs / memory / AGENTS 的更新结果
@@ -115,8 +117,8 @@ description: >-
 - 如果用户显式指定目标版本，只接受 `X.Y.Z` 版本号，并按指定值写入。
 - quickship 的提交信息必须采用 `type: 具体工作摘要 (vX.Y.Z)` 形式，版本号放在最后的括号里。
 - 不打 tag，也不做正式发布。
-- 不做自动化功能验证，但要主动跑一次仓库约定的 build / 最小编译校验；功能验证仍以用户明确完成的人工验证为准。
-- 如果找不到稳定 build 入口、build 命令依赖当前不可用环境、或 build 执行失败，要明确报告并停止。
+- 不做自动化功能验证；有 task 时默认信任 `codev-taskdev` 收尾阶段已完成的 build / 最小编译校验，不在 quickship 内重复执行；无 task 时才由 quickship 补跑一次默认 build。
+- 如果无 task quickship 需要补跑 build，但找不到稳定 build 入口、build 命令依赖当前不可用环境、或 build 执行失败，要明确报告并停止。
 - 只有当 task 文件里有明确的 GitHub issue 映射时，才关闭 issue；不要根据分支名、提交信息或任务标题模糊猜测。
 - 无 task 收尾时必须跳过 issue 评论与关闭，但要在 `CHANGELOG` 中描述本轮相关改动。
 - 如果 task 映射了多个 issue，要逐个关闭，而不是只关第一个。
@@ -135,7 +137,7 @@ description: >-
 - 起始分支
 - 目标分支
 - 本次走的是 branch merge 还是 main commit + push
-- 主动 build 的命令与结果
+- 默认 build 是沿用 `codev-taskdev` 结果、还是在 quickship 中实际执行；如有实际执行，再汇报命令与结果
 - docs / memory / AGENTS 的更新结果
 - 版本号 / `CHANGELOG` 的同步结果
 - 是否已成功完成 commit / merge
