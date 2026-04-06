@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-按已审核的 task plan 在 task 分支上落代码，持续同步实现记录与待人工验证项，并在实现收尾自动做一次语义不变精简。
+按已审核的 task plan 在 task 分支上落代码，持续同步实现记录与待人工验证项，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验。
 
 ## Preconditions
 
@@ -25,6 +25,7 @@ Source: `codev`
 - 更新后的 `tasks/Txx-*.md`
 - task 文档中的执行记录、实现说明、待人工验证项说明
 - 一次内置的 `codev-simplify` 式语义不变精简结果
+- 一次默认 build / 最小编译校验结果
 
 ## Execution Flow
 
@@ -34,7 +35,8 @@ Source: `codev`
 4. 在编码前先校准 `Implementation Plan` 与 `Validation Plan`，避免 plan 已经漂移。
 5. 分阶段实现代码，优先做容易收敛的小步修改。
 6. 持续把实际采用路径、待执行人工验证和剩余缺口同步回 task 文档，不主动启动服务或运行验证。
-7. 在实现收尾自动做一次语义不变精简，再把精简结果和当前状态同步回 task 文档。
+7. 在实现收尾自动做一次语义不变精简。
+8. 精简后主动跑一次仓库默认 build / 最小编译校验，并把结果同步回 task 文档。
 
 ## Stops / Failure Modes
 
@@ -42,6 +44,7 @@ Source: `codev`
 - 当前工作区无法安全切换分支。
 - plan 与代码现状冲突严重，已经不是“轻微校准”能解决。
 - 实现过程中暴露出必须人工判断的高影响路径选择。
+- 默认 build / 最小编译校验入口不可稳定判定，或执行失败。
 
 ## Next Recommended Steps
 

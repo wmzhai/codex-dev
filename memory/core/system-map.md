@@ -10,8 +10,8 @@
 - `test/setup-smoke.sh`：验证安装、幂等性和冲突处理
 - `skills/codev-memorize/`：为项目建立或刷新以 `AGENTS.md + memory/` 为核心、兼容 `CLAUDE.md` 的记忆体系
 - `skills/codev-issue2task/`：把 issue 或直接需求收敛成带实现计划的任务文件
-- `skills/codev-taskdev/`：按已审核 task plan 选择目标任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简
-- `skills/codev-quickship/`：在用户完成人工验证后归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`，主动跑一次默认 build / 最小编译校验，再同步根目录 `VERSION` 与 `CHANGELOG`，然后提交、合并、推送主干
+- `skills/codev-taskdev/`：按已审核 task plan 选择目标任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验
+- `skills/codev-quickship/`：在用户完成人工验证后归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时补跑，再同步根目录 `VERSION` 与 `CHANGELOG`，然后提交、合并、推送主干
 - `skills/codev-simplify/`：语义不变精简 diff
 - `skills/codev-checkpoint/`：轻量提交、推送 fallback
 - `VERSION` / `CHANGELOG`：仓库的版本工件，供 `codev-checkpoint` 与 `codev-quickship` 读取和最小同步

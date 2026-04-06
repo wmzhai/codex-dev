@@ -20,9 +20,9 @@
 - `docs/skills/` 只为当前受管的 codev skill 提供详细手册；用户级说明优先看这里，运行规则优先回到对应 `SKILL.md`。
 - `codev-memorize` 负责为项目建立或刷新 `AGENTS.md` 与 `memory/` 记忆体系，同时保留宿主代理说明。
 - `codev-issue2task` 保留 GitHub issue 或直接需求到 `tasks/` 的路径，并直接产出可执行 plan。
-- `codev-taskdev` 负责从 `tasks/` 中选择目标 plan，在 task 分支上按已审核 `Implementation Plan` 实施代码、持续同步任务文档，并在实现收尾自动做一次语义不变精简，但不接管验证、QA、部署、归档和发布。
+- `codev-taskdev` 负责从 `tasks/` 中选择目标 plan，在 task 分支上按已审核 `Implementation Plan` 实施代码、持续同步任务文档，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验，但不接管自动化功能验证、QA、部署、归档和发布。
 - `codev-simplify` 是可单独调用的语义不变精简工具，也可作为 `codev-taskdev` 的内部收尾步骤。
-- `codev-quickship` 负责在用户完成人工验证后，优先按 task 归档并同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`，并在版本同步与主干收尾前主动跑一次仓库默认 build / 最小编译校验；随后再同步根目录 `VERSION` 与 `CHANGELOG`，并把当前工作状态提交、合并并推送到 `main/master`；如果仓库里没有可定位 task，则 quickship 仍可按无 task 模式收尾，跳过 task 归档与 issue 关闭，但必须在 `CHANGELOG` 里记录本轮相关改动摘要；quickship 在未显式指定版本时默认把 `VERSION` 的补丁位加一；如果 task 明确源自 GitHub issue，还要在主干 push 成功后先补一条该轮工作的评论，再通过 `gh` 关闭对应 issue；收尾提交信息应采用 `type: 具体工作摘要 (vX.Y.Z)` 形式；不走 PR、不打 tag。
+- `codev-quickship` 负责在用户完成人工验证后，优先按 task 归档并同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；若存在 task，则默认沿用 `codev-taskdev` 收尾阶段已完成的默认 build / 最小编译校验，不在 quickship 内重复执行；若仓库里没有可定位 task，则 quickship 按无 task 模式收尾，并在版本同步与主干收尾前补跑一次仓库默认 build / 最小编译校验，跳过 task 归档与 issue 关闭，但必须在 `CHANGELOG` 里记录本轮相关改动摘要；随后再同步根目录 `VERSION` 与 `CHANGELOG`，并把当前工作状态提交、合并并推送到 `main/master`；quickship 在未显式指定版本时默认把 `VERSION` 的补丁位加一；如果 task 明确源自 GitHub issue，还要在主干 push 成功后先补一条该轮工作的评论，再通过 `gh` 关闭对应 issue；收尾提交信息应采用 `type: 具体工作摘要 (vX.Y.Z)` 形式；不走 PR、不打 tag。
 - `codev-checkpoint` 是轻量 `commit/push` fallback，默认不同步根目录 `VERSION` / `CHANGELOG`，仅在用户显式要求时才处理版本工件。
 
 ## 维护规则
@@ -30,7 +30,7 @@
 - `setup` 是真实安装入口；`test/setup-smoke.sh` 是安装行为的最小验证。
 - 任何新增受管 skill，都必须同步到 `setup`、`README.md` 和 `test/setup-smoke.sh`。
 - 修改任务入口 skill 时，保持 `codev-issue2task` 作为唯一任务生成入口，不要把任务规划、实现、收尾揉成一个大而全入口。
-- 修改 `codev-taskdev` / `codev-quickship` 时，保持“task 分支实现”和“人工验证后的主干收尾”这条边界稳定；`codev-quickship` 只负责人工验证后的归档、一次默认 build / 最小编译校验、版本同步、`CHANGELOG` 同步、主干收尾，以及对明确映射 issue 的 task 先评论再关闭；若仓库中没有可定位 task，则 quickship 允许按无 task 模式收尾，但必须在 `CHANGELOG` 里补本轮改动摘要；其中 quickship 在未显式指定版本时默认把 `VERSION` 的补丁位加一，并把收尾提交信息写成 `type: 具体工作摘要 (vX.Y.Z)`。
+- 修改 `codev-taskdev` / `codev-quickship` 时，保持“task 分支实现”和“人工验证后的主干收尾”这条边界稳定；`codev-taskdev` 负责实现收尾阶段的一次默认 build / 最小编译校验；`codev-quickship` 只负责人工验证后的归档、无 task 或用户明确要求复验时的默认 build、版本同步、`CHANGELOG` 同步、主干收尾，以及对明确映射 issue 的 task 先评论再关闭；若仓库中没有可定位 task，则 quickship 允许按无 task 模式收尾，但必须在 `CHANGELOG` 里补本轮改动摘要；其中 quickship 在未显式指定版本时默认把 `VERSION` 的补丁位加一，并把收尾提交信息写成 `type: 具体工作摘要 (vX.Y.Z)`。
 - 如果仓库存在 `CLAUDE.md`，`codev-memorize` 只能收敛 repo 事实，不能把宿主兼容说明删掉。
 - `README.md` 里只放用户需要看到的高层说明，不重复展开各 skill 的全部内部流程。
 - `docs/workflows.md` 要始终保持从开始到结束的 codev 主流程说明。

@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-在用户完成人工验证并确认结果后，完成统一收尾：默认以当前 git 分支为起点；如果存在 task，就归档到 `tasks/done/`、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；如果不存在 task，也允许继续收尾，但要在 `CHANGELOG` 里写明本轮相关改动摘要。在进入版本同步与主干收尾前，`codev-quickship` 还会主动跑一次仓库约定的默认 build / 最小编译校验，作为 quickship 的默认代码门禁，但这一步不替代人工功能验证。随后同步根目录 `VERSION` 与已有 `CHANGELOG`；如果用户未显式指定版本，则默认把 `VERSION` 的补丁位加一（`z+1`）；如果用户显式指定目标版本，则按指定值写入，且该值必须符合 `X.Y.Z`；然后再把当前工作状态提交、合并并推送到默认主干；如果 task 明确源自 GitHub issue，则在主干 push 成功后先在对应 issue 下追加一条本轮实际工作的摘要，再关闭对应 issue；提交时要使用 `type: 具体工作摘要 (vX.Y.Z)` 形式，工作摘要先写清具体工作，版本号放在最后括号里；不走 PR、不打 tag，也不接管正式发布流程。
+在用户完成人工验证并确认结果后，完成统一收尾：默认以当前 git 分支为起点；如果存在 task，就归档到 `tasks/done/`、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；如果不存在 task，也允许继续收尾，但要在 `CHANGELOG` 里写明本轮相关改动摘要。有 task 时，`codev-quickship` 默认沿用 `codev-taskdev` 收尾阶段已经完成的默认 build / 最小编译校验，不再重复跑同一门禁；无 task 时，才在 quickship 内补跑一次仓库约定的默认 build / 最小编译校验。这一步不替代人工功能验证。随后同步根目录 `VERSION` 与已有 `CHANGELOG`；如果用户未显式指定版本，则默认把 `VERSION` 的补丁位加一（`z+1`）；如果用户显式指定目标版本，则按指定值写入，且该值必须符合 `X.Y.Z`；然后再把当前工作状态提交、合并并推送到默认主干；如果 task 明确源自 GitHub issue，则在主干 push 成功后先在对应 issue 下追加一条本轮实际工作的摘要，再关闭对应 issue；提交时要使用 `type: 具体工作摘要 (vX.Y.Z)` 形式，工作摘要先写清具体工作，版本号放在最后括号里；不走 PR、不打 tag，也不接管正式发布流程。
 
 ## Preconditions
 
@@ -13,7 +13,7 @@ Source: `codev`
 - 当前仓库允许直接推送 `main/master` 或默认主干。
 - 若 task 明确映射到 GitHub issue，则本地 `gh` 可用且有权限先评论再关闭对应 issue。
 - 根目录 `VERSION` 已初始化且为单个可稳定识别的 `X.Y.Z` 版本号。
-- 仓库里存在可稳定定位的默认 build / 最小编译校验入口；如果入口不明确或当前环境显然无法执行，应停止并说明。
+- 如果本次是无 task 收尾模式，仓库里存在可稳定定位的默认 build / 最小编译校验入口；如果入口不明确或当前环境显然无法执行，应停止并说明。
 
 ## Inputs / Source Of Truth
 
@@ -37,7 +37,7 @@ Source: `codev`
 1. 以当前 git 分支为起点，把用户显式调用 `$codev-quickship` 视为已经确认人工验证通过并允许收尾；只有用户同轮明确否定时才停止。
 2. 优先定位对应 task；如果找到了 task，就读取并解析其中的 issue 映射，再同步最终 task 文档与验收结论；如果仓库中不存在 task，则进入无 task 收尾模式。
 3. 有 task 时归档到 `tasks/done/`，并最小范围同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；无 task 时跳过 task 归档，并只做与本轮相关改动直接对应的最小文档同步。
-4. 在版本同步前，主动根据仓库已有的 `AGENTS.md`、`README.md`、`memory/`、脚本或 manifest 定位默认 build 命令，并执行一次默认 build / 最小编译校验；优先使用仓库已稳定存在的单一入口；如果 build 入口无法稳定判定、依赖当前不可用环境或执行失败，直接停止并说明。
+4. 处理默认 build / 最小编译校验责任：有 task 时默认沿用 `codev-taskdev` 收尾阶段已经完成的默认 build / 最小编译校验，不在 quickship 内重复执行；只有用户明确要求复验时才补跑。无 task 时，主动根据仓库已有的 `AGENTS.md`、`README.md`、`memory/`、脚本或 manifest 定位默认 build 命令，并执行一次默认 build / 最小编译校验；优先使用仓库已稳定存在的单一入口；如果 build 入口无法稳定判定、依赖当前不可用环境或执行失败，直接停止并说明。
 5. 同步根目录 `VERSION` 与 `CHANGELOG`；如果用户未显式指定版本，则默认把 `VERSION` 的补丁位加一（`z+1`）；如果用户显式指定目标版本，则按指定值写入，且该值必须符合 `X.Y.Z`；根目录 `VERSION` 缺失或格式不符时直接停止并说明仓库尚未初始化版本工件；无 task 时，`CHANGELOG` 里仍必须补一条本轮相关改动摘要。
 6. 检查工作区与主干权限，必要时先在当前分支做最小提交。
 7. 如果当前在分支上，同步远端主干并在本地完成 merge；如果已经在主干上，直接在主干提交这次收尾改动。
@@ -48,8 +48,8 @@ Source: `codev`
 ## Stops / Failure Modes
 
 - 用户在同轮明确表示尚未人工验证，或明确表示不要 push 主干。
-- 仓库没有可稳定判定的 build 入口，或默认 build 明显依赖当前不可用环境。
-- 主动 build 失败。
+- 无 task quickship 没有可稳定判定的 build 入口，或默认 build 明显依赖当前不可用环境。
+- 无 task quickship 补跑的默认 build 失败。
 - 主干受保护、权限不足或必须走 PR。
 - 合并冲突无法安全收敛。
 - task 明确映射 issue，但 `gh` 不可用、未登录或无权限先评论再关闭 issue。

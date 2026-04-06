@@ -35,12 +35,12 @@ README.md
 
 - 先人工审核 task 文件里的 `Implementation Plan` / `Validation Plan`。
 - 审核通过后，用 `$codev-taskdev` 在 task 分支推进实现。
-- `codev-taskdev` 负责代码实现、任务文档同步，以及一次实现收尾精简。
+- `codev-taskdev` 负责代码实现、任务文档同步，以及一次实现收尾精简和默认 build / 最小编译校验。
 
 ### 4. 验证与收尾
 
 - 功能验证默认由人工完成。
-- 人工确认通过后，用 `$codev-quickship` 先主动跑仓库默认 build，再做 task 归档、相关文档同步和主干收尾。
+- 人工确认通过后，用 `$codev-quickship` 做 task 归档、相关文档同步和主干收尾；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时才在 quickship 内补跑。
 - 如果仓库没有 task，也可按无 task 模式收尾，但要在 `CHANGELOG` 记录本轮改动摘要。
 - 只想做一次轻量 `commit / push` 时，用 `$codev-checkpoint`。
 

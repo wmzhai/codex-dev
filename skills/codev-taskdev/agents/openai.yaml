@@ -1,4 +1,4 @@
 interface:
   display_name: "codev-taskdev"
-  short_description: "按 tasks 中已审核的 plan 选择最小编号任务并实施代码、持续同步 task 文档，并在收尾自动做一次语义不变精简"
-  default_prompt: "使用 $codev-taskdev 在当前仓库的 tasks/ 中选择用户指定任务或最小编号待办任务；触发后立即用中文与用户交流，先切到与任务文件同名的 task 分支，完整读取 task 中已有的 `Implementation Plan` 与 `Validation Plan`，必要时先校准 plan 再编码；在实现过程中持续更新 task 文档，只负责代码编写、task 同步和实现收尾时的一次语义不变精简；不要自动启动本地服务，也不要自动运行测试、lint、build、脚本检查、浏览器验证或其他验证动作；默认不要自动更新 `docs/`、`memory/` 或 `AGENTS.md`，也不要自动做完整 QA、分支部署、归档、merge、版本号、PR、commit 或 push；最后用中文汇报当前 task、当前分支、已完成实现、本次精简结果、尚未执行的人工验证和建议的下一步。"
+  short_description: "按 tasks 中已审核的 plan 选择最小编号任务并实施代码、持续同步 task 文档，并在收尾自动做一次语义不变精简和默认 build 校验"
+  default_prompt: "使用 $codev-taskdev 在当前仓库的 tasks/ 中选择用户指定任务或最小编号待办任务；触发后立即用中文与用户交流，先切到与任务文件同名的 task 分支，完整读取 task 中已有的 `Implementation Plan` 与 `Validation Plan`，必要时先校准 plan 再编码；在实现过程中持续更新 task 文档，只负责代码编写、task 同步，以及实现收尾时的一次语义不变精简和一次默认 build / 最小编译校验；不要自动启动本地服务，也不要自动运行测试、lint、脚本检查、浏览器验证或其他扩展验证动作；默认不要自动更新 `docs/`、`memory/` 或 `AGENTS.md`，也不要自动做完整 QA、分支部署、归档、merge、版本号、PR、commit 或 push；最后用中文汇报当前 task、当前分支、已完成实现、本次精简结果、默认 build / 最小编译校验结果、尚未执行的人工验证和建议的下一步。"

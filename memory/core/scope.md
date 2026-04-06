@@ -19,9 +19,9 @@
 
 ## 不冲突规则
 - `codev-memorize` 可以把 `CLAUDE.md` 里的 repo 事实并入 `AGENTS.md`，但必须保留宿主兼容块。
-- `$codev-taskdev` 只负责按已审核 plan 实施代码、同步任务文档并在实现收尾做一次语义不变精简。
+- `$codev-taskdev` 只负责按已审核 plan 实施代码、同步任务文档，并在实现收尾做一次语义不变精简和一次默认 build / 最小编译校验。
 - 只有明确需要轻量 `commit/push` 时，才用 `$codev-checkpoint`。
-- `$codev-quickship` 负责人工验证后的收尾：归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`，主动跑一次默认 build / 最小编译校验，并同步根目录 `VERSION`、`CHANGELOG`，再提交、合并并推送主干。
+- `$codev-quickship` 负责人工验证后的收尾：归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时才补跑，并同步根目录 `VERSION`、`CHANGELOG`，再提交、合并并推送主干。
 
 ## 推荐组合方式
 1. 输入来自 GitHub issue 或直接需求时，用 `codev-issue2task`
