@@ -24,6 +24,7 @@
 - `codev-simplify` 是可单独调用的语义不变精简工具，也可作为 `codev-taskdev` 的内部收尾步骤。
 - `codev-quickship` 负责在用户完成人工验证后，优先按 task 归档并同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；若存在 task，则默认沿用 `codev-taskdev` 收尾阶段已完成的默认 build / 最小编译校验，不在 quickship 内重复执行；若仓库里没有可定位 task，则 quickship 按无 task 模式收尾，并在版本同步与主干收尾前补跑一次仓库默认 build / 最小编译校验，跳过 task 归档与 issue 关闭，但必须在 `CHANGELOG` 里记录本轮相关改动摘要；随后再同步根目录 `VERSION` 与 `CHANGELOG`，并把当前工作状态提交、合并并推送到 `main/master`；quickship 在未显式指定版本时默认把 `VERSION` 的补丁位加一；如果 task 明确源自 GitHub issue，还要在主干 push 成功后先补一条该轮工作的评论，再通过 `gh` 关闭对应 issue；收尾提交信息应采用 `type: 具体工作摘要 (vX.Y.Z)` 形式；不走 PR、不打 tag。
 - `codev-checkpoint` 是轻量 `commit/push` fallback，默认不同步根目录 `VERSION` / `CHANGELOG`，仅在用户显式要求时才处理版本工件。
+- `codev-syncpatch` 负责在不提交、不 push、不默认创建分支的前提下，同步开源 upstream 并按原意重放本地运行补丁；如果同步前无法高置信度判断可完整补回本地逻辑，必须先停下和用户确认。
 
 ## 维护规则
 - 新增或修改 skill 时，先改 `SKILL.md`，再同步 `agents/openai.yaml` 与 `docs/skills/<skill>.md`，最后回看 `README.md`、`setup` 和 `test/setup-smoke.sh` 是否需要更新。

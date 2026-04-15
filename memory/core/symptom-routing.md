@@ -43,6 +43,10 @@
 - `skills/codev-checkpoint/SKILL.md`
 - `skills/codev-quickship/SKILL.md`
 
+## 想同步开源上游且保留本地补丁
+- `docs/skills/codev-syncpatch.md`
+- `skills/codev-syncpatch/SKILL.md`
+
 ## 想做语义不变精简
 - `docs/skills/codev-simplify.md`
 - `skills/codev-simplify/SKILL.md`

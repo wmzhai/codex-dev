@@ -1,0 +1,7 @@
+interface:
+  display_name: "codev-syncpatch"
+  short_description: "同步 upstream 并按原意重放本地补丁"
+  default_prompt: "使用 $codev-syncpatch 在不提交、不推送、不默认创建分支的前提下，先评估本地补丁能否安全重放，再同步 upstream 并把本地补丁补回最新代码。"
+
+policy:
+  allow_implicit_invocation: false

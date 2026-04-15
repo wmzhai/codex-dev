@@ -20,3 +20,7 @@
 - [codev-quickship](codev-quickship.md)：人工验证通过后的统一收尾；有 task 时沿用 taskdev 的默认 build，无 task 时补跑，支持有 task 和无 task 两种模式。
 - [codev-simplify](codev-simplify.md)：做语义不变的精简，可单独调用。
 - [codev-checkpoint](codev-checkpoint.md)：做一次轻量 `commit / push`；默认不升级版本号。
+
+## 4. 开源上游同步
+
+- [codev-syncpatch](codev-syncpatch.md)：同步 upstream 最新代码，并按原意重放本地运行补丁；默认不提交、不 push、不默认创建分支。

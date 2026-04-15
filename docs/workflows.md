@@ -15,6 +15,7 @@ README.md
 -> 人工验证
 -> $codev-quickship
 
+同步开源上游且保留本地补丁：$codev-syncpatch
 轻量提交 fallback：$codev-checkpoint
 ```
 
@@ -43,6 +44,12 @@ README.md
 - 人工确认通过后，用 `$codev-quickship` 做 task 归档、相关文档同步和主干收尾；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时才在 quickship 内补跑。
 - 如果仓库没有 task，也可按无 task 模式收尾，但要在 `CHANGELOG` 记录本轮改动摘要。
 - 只想做一次轻量 `commit / push` 时，用 `$codev-checkpoint`。
+
+### 5. 开源上游同步与本地补丁
+
+- 长期跟踪开源项目、但需要保留本地运行补丁时，用 `$codev-syncpatch`。
+- syncpatch 默认不提交、不 push、不默认创建分支。
+- 它必须先分析本地补丁意图和 upstream 改动风险；如果不能高置信度补回本地逻辑，会先停下和用户确认，而不是继续高风险合并。
 
 ## 相关文档
 

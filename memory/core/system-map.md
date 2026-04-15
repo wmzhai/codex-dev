@@ -14,6 +14,7 @@
 - `skills/codev-quickship/`：在用户完成人工验证后归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时补跑，再同步根目录 `VERSION` 与 `CHANGELOG`，然后提交、合并、推送主干
 - `skills/codev-simplify/`：语义不变精简 diff
 - `skills/codev-checkpoint/`：轻量提交、推送 fallback
+- `skills/codev-syncpatch/`：同步开源 upstream 并按原意重放本地运行补丁；默认不提交、不推送、不默认创建分支
 - `VERSION` / `CHANGELOG`：仓库的版本工件，供 `codev-checkpoint` 与 `codev-quickship` 读取和最小同步
 
 ## 维护边界

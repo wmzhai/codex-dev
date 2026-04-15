@@ -64,8 +64,9 @@ git pull --ff-only
 2. 新仓库或记忆体系过期时，用 `$codev-memorize`。
 3. 需求进入任务流时，用 `$codev-issue2task` 生成 `tasks/` 下的 task plan。
 4. 人工审核 task plan 后，用 `$codev-taskdev` 在 task 分支推进实现；它会在收尾自动做一次语义不变精简和默认 build / 最小编译校验。
-5. 只想做一次轻量 `commit / push` 时，用 `$codev-checkpoint`；checkpoint 不再默认同步根目录 `VERSION` 与 `CHANGELOG`。
-6. 人工验证通过后，用 `$codev-quickship` 做归档、版本同步和主干收尾；有 task 时默认沿用 `codev-taskdev` 已完成的默认 build，无 task 时才在 quickship 内补跑；如果仓库没有 task，也可以按无 task 模式收尾，但要在 `CHANGELOG` 记录本轮改动摘要；quickship 默认递增 `VERSION` 的补丁位。
+5. 跟踪开源上游但需要保留本地运行补丁时，用 `$codev-syncpatch`；它默认不提交、不 push、不默认创建分支，会先评估本地补丁能否安全重放。
+6. 只想做一次轻量 `commit / push` 时，用 `$codev-checkpoint`；checkpoint 不再默认同步根目录 `VERSION` 与 `CHANGELOG`。
+7. 人工验证通过后，用 `$codev-quickship` 做归档、版本同步和主干收尾；有 task 时默认沿用 `codev-taskdev` 已完成的默认 build，无 task 时才在 quickship 内补跑；如果仓库没有 task，也可以按无 task 模式收尾，但要在 `CHANGELOG` 记录本轮改动摘要；quickship 默认递增 `VERSION` 的补丁位。
 
 ## 4. 文档导航
 

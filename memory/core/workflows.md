@@ -15,6 +15,7 @@
 4. `$codev-taskdev` 负责按已审核 plan 选择任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验
 5. 功能默认由人工验证；人工验证通过后，再用 `codev-quickship` 完成 task 归档、任务相关文档同步、版本工件同步，以及 commit / merge / push；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时才在 quickship 内补跑
 6. `codev-checkpoint` 用于轻量 `commit/push` 场景，并默认不同步版本工件
+7. `codev-syncpatch` 用于同步开源 upstream 并保留本地运行补丁；它独立于 task 主线，默认不提交、不 push、不默认创建分支
 
 ## 新增 skill
 1. 创建 skill 目录和 `SKILL.md`
