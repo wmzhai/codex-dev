@@ -15,10 +15,10 @@
 - 机器记忆：`AGENTS.md` + `memory/`
 - 对外流程导航：`docs/workflows.md`
 - 对外 skill 手册：`docs/skills/README.md`
-- repo 级人类文档：`README.md`、`CHANGELOG`、`CLAUDE.md`
+- repo 级人类文档：`README.md`、`CHANGELOG`
 
 ## 不冲突规则
-- `codev-memorize` 可以把 `CLAUDE.md` 里的 repo 事实并入 `AGENTS.md`，但必须保留宿主兼容块。
+- `codev-memorize` 以 `AGENTS.md + memory/` 统一收敛 repo 事实，不再维护额外入口文件。
 - `$codev-taskdev` 只负责按已审核 plan 实施代码、同步任务文档，并在实现收尾做一次语义不变精简和一次默认 build / 最小编译校验。
 - 只有明确需要轻量 `commit/push` 时，才用 `$codev-checkpoint`。
 - `$codev-quickship` 负责人工验证后的收尾：归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；有 task 时沿用 `codev-taskdev` 已完成的默认 build，无 task 时才补跑，并同步根目录 `VERSION`、`CHANGELOG`，再提交、合并并推送主干。

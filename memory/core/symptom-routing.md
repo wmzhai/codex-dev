@@ -24,12 +24,11 @@
 - 再看 `docs/skills/README.md`
 - 最后看对应 skill 的 `SKILL.md`
 
-## 想给项目建立 AGENTS / CLAUDE 记忆入口
+## 想给项目建立 AGENTS / memory 记忆入口
 - `docs/skills/codev-memorize.md`
 - `skills/codev-memorize/SKILL.md`
 - 当前仓库的 `README.md`
 - 根目录 `AGENTS.md`
-- 根目录 `CLAUDE.md`
 
 ## 想走任务流
 - `docs/workflows.md`

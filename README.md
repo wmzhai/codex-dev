@@ -1,12 +1,12 @@
 # codev DevFlow
 
-`codev` 是一套面向 Claude / Codex 的 codev skills 集合。默认工作环境是 macOS；暂不支持 Windows。
+`codev` 是一套面向 Codex 的 codev skills 集合。默认工作环境是 macOS；暂不支持 Windows。
 
 ## 1. 安装
 
-默认执行 `./setup` 时，会同时安装到 Claude 和 Codex。只有显式传 `--host` 时，才只安装单个宿主。`setup` 只安装本仓库当前受管的 skills。
+默认执行 `./setup` 时，会安装到 Codex 的全局目录。`setup` 只安装本仓库当前受管的 skills。
 
-### Claude + Codex 全局安装
+### Codex 全局安装
 
 ```bash
 git clone https://github.com/wmzhai/codev.git ~/codev
@@ -14,48 +14,16 @@ cd ~/codev
 ./setup
 ```
 
-### 仅 Codex 全局安装
-
-```bash
-git clone https://github.com/wmzhai/codev.git ~/codev
-cd ~/codev
-./setup --host codex
-```
-
-### 仅 Claude 全局安装
-
-```bash
-git clone https://github.com/wmzhai/codev.git ~/codev
-cd ~/codev
-./setup --host claude
-```
-
-当前只支持全局安装到 `~/.codex/skills/` 和/或 `~/.claude/skills/`。暂不支持项目内 vendored 安装。
+当前只支持全局安装到 `~/.codex/skills/`。暂不支持项目内 vendored 安装。
 
 ## 2. 升级
 
-### Claude + Codex
+### Codex 升级
 
 ```bash
 cd ~/codev
 git pull --ff-only
 ./setup
-```
-
-### 仅 Codex
-
-```bash
-cd ~/codev
-git pull --ff-only
-./setup --host codex
-```
-
-### 仅 Claude
-
-```bash
-cd ~/codev
-git pull --ff-only
-./setup --host claude
 ```
 
 ## 3. 使用流程
@@ -73,5 +41,4 @@ git pull --ff-only
 - 总流程：[`docs/workflows.md`](docs/workflows.md)
 - skill 索引：[`docs/skills/README.md`](docs/skills/README.md)
 - Codex 入口：`AGENTS.md`
-- Claude 入口：`CLAUDE.md`
 - 底层运行规则：`skills/<name>/SKILL.md`

@@ -1,7 +1,7 @@
 interface:
   display_name: "codev-memorize"
   short_description: "为项目构建并持续刷新以 AGENTS.md + memory/ 为核心的记忆体系"
-  default_prompt: "使用 $codev-memorize 审查当前仓库；触发后立即用中文与用户交流，整个过程中的进度说明、阻塞说明和结果汇报默认都用中文；并以简体中文构建或刷新它的 AGENTS.md 与 memory/ 记忆体系；如果这是全新项目、代码结构尚未成型，则允许根据 README.md 与用户明确提供的项目信息先建立最小记忆骨架，但不要把尚未落地的内容伪装成已存在代码事实；如果存在 CLAUDE.md，则把 repo 事实并入 AGENTS.md，但保留仍然服务宿主代理或 gstack 的兼容说明。"
+  default_prompt: "使用 $codev-memorize 审查当前仓库；触发后立即用中文与用户交流，整个过程中的进度说明、阻塞说明和结果汇报默认都用中文；并以简体中文构建或刷新它的 AGENTS.md 与 memory/ 记忆体系；如果这是全新项目、代码结构尚未成型，则允许根据 README.md 与用户明确提供的项目信息先建立最小记忆骨架，但不要把尚未落地的内容伪装成已存在代码事实。"
 
 policy:
   allow_implicit_invocation: true

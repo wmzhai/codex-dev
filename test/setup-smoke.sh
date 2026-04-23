@@ -38,7 +38,6 @@ skills_dir_for_host() {
 
   case "$host" in
     codex) printf '%s\n' "${home_dir}/.codex/skills" ;;
-    claude) printf '%s\n' "${home_dir}/.claude/skills" ;;
     *) fail "unknown host: ${host}" ;;
   esac
 }
@@ -79,39 +78,35 @@ assert_host_missing() {
   done
 }
 
-exercise_default_dual_host() {
+exercise_default_codex_host() {
   local fresh_home="${TMP_ROOT}/default-fresh-home"
   local conflict_home="${TMP_ROOT}/default-conflict-home"
-  local claude_skills
+  local codex_skills
 
   mkdir -p "$fresh_home"
   run_setup "$fresh_home"
-  assert_host_installed "$fresh_home" claude
   assert_host_installed "$fresh_home" codex
 
   run_setup "$fresh_home"
-  assert_host_installed "$fresh_home" claude
   assert_host_installed "$fresh_home" codex
 
-  claude_skills="$(skills_dir_for_host "$fresh_home" claude)"
-  ln -snf "codev/skills/plantask" "${claude_skills}/plantask"
+  codex_skills="$(skills_dir_for_host "$fresh_home" codex)"
+  ln -snf "codev/skills/plantask" "${codex_skills}/plantask"
   for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    ln -snf "codev/skills/${skill_name}" "${claude_skills}/${skill_name}"
+    ln -snf "codev/skills/${skill_name}" "${codex_skills}/${skill_name}"
   done
   for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
-    ln -snf "codev/skills/${skill_name}" "${claude_skills}/${skill_name}"
+    ln -snf "codev/skills/${skill_name}" "${codex_skills}/${skill_name}"
   done
   run_setup "$fresh_home"
-  assert_host_installed "$fresh_home" claude
   assert_host_installed "$fresh_home" codex
 
-  mkdir -p "$(skills_dir_for_host "$conflict_home" claude)/codev-issue2task"
+  mkdir -p "$(skills_dir_for_host "$conflict_home" codex)/codev-issue2task"
   if HOME="$conflict_home" "$SETUP_SCRIPT" >/dev/null 2>&1; then
     fail "setup should fail when a managed skill path is a real directory in default mode"
   fi
 
-  assert_exists "$(skills_dir_for_host "$conflict_home" claude)/codev-issue2task"
-  assert_missing "$(skills_dir_for_host "$conflict_home" claude)/codev"
+  assert_exists "$(skills_dir_for_host "$conflict_home" codex)/codev-issue2task"
   assert_missing "$(skills_dir_for_host "$conflict_home" codex)/codev"
 }
 
@@ -119,21 +114,14 @@ exercise_single_host() {
   local host="$1"
   local fresh_home="${TMP_ROOT}/${host}-fresh-home"
   local conflict_home="${TMP_ROOT}/${host}-conflict-home"
-  local other_host="claude"
   local setup_args=(--host "$host")
-
-  if [ "$host" = "claude" ]; then
-    other_host="codex"
-  fi
 
   mkdir -p "$fresh_home"
   run_setup "$fresh_home" "${setup_args[@]}"
   assert_host_installed "$fresh_home" "$host"
-  assert_host_missing "$fresh_home" "$other_host"
 
   run_setup "$fresh_home" "${setup_args[@]}"
   assert_host_installed "$fresh_home" "$host"
-  assert_host_missing "$fresh_home" "$other_host"
 
   for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
     ln -snf "codev/skills/${skill_name}" "$(skills_dir_for_host "$fresh_home" "$host")/${skill_name}"
@@ -151,14 +139,12 @@ exercise_single_host() {
 
   assert_exists "$(skills_dir_for_host "$conflict_home" "$host")/codev-issue2task"
   assert_missing "$(skills_dir_for_host "$conflict_home" "$host")/codev"
-  assert_host_missing "$conflict_home" "$other_host"
 }
 
 TMP_ROOT="$(mktemp -d)"
 trap 'rm -rf "$TMP_ROOT"' EXIT
 
-exercise_default_dual_host
 exercise_single_host codex
-exercise_single_host claude
+exercise_default_codex_host
 
 echo "setup smoke tests passed"

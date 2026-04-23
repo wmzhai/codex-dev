@@ -19,7 +19,7 @@ parse_args() {
   while [ $# -gt 0 ]; do
     case "$1" in
       --host)
-        [ $# -ge 2 ] || die "missing value for --host (expected claude or codex)"
+        [ $# -ge 2 ] || die "missing value for --host (expected codex)"
         HOST="$2"
         HOST_EXPLICIT=1
         shift 2
@@ -37,19 +37,18 @@ parse_args() {
 
   if [ "$HOST_EXPLICIT" -eq 1 ]; then
     case "$HOST" in
-      claude|codex) ;;
-      *) die "unknown host: ${HOST} (expected claude or codex)" ;;
+      codex) ;;
+      *) die "unknown host: ${HOST} (expected codex)" ;;
     esac
     TARGET_HOSTS=("$HOST")
     return
   fi
 
-  TARGET_HOSTS=(claude codex)
+  TARGET_HOSTS=(codex)
 }
 
 skills_dir_for_host() {
   case "$1" in
-    claude) printf '%s\n' "${HOME}/.claude/skills" ;;
     codex) printf '%s\n' "${HOME}/.codex/skills" ;;
     *) die "unsupported host: $1" ;;
   esac
@@ -57,7 +56,6 @@ skills_dir_for_host() {
 
 host_label() {
   case "$1" in
-    claude) printf '%s\n' "Claude" ;;
     codex) printf '%s\n' "Codex" ;;
     *) die "unsupported host: $1" ;;
   esac
