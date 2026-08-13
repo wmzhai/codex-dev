@@ -17,7 +17,7 @@ Source: `codev`
 
 ## Execution（阶段一）
 
-- 按 `codev-checkpoint` 的工作区范围收口根仓库与可见子仓未提交改动。
+- 从当前工作目录定位 git 仓库根，再按该仓库本地规则纳入可见子仓；不使用其他项目路径。
 - 有 task：归档到 `tasks/done/`、补充验收结论与 `Acceptance Criteria`。
 - 同步本轮直接相关 `docs`、`memory`；必要时更新 `AGENTS.md`。
 - 记录收口前置条件已经由用户触发确认，不运行自动验证。

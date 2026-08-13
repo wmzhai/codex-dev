@@ -1,11 +1,14 @@
 # Invariants
 
 ## 安装与发现
-- `setup` 必须把 `codev` 本身链接到 `~/.codex/skills/codev`；默认即安装到 Codex 全局目录。
+- `setup` 必须同时刷新 Codex（`~/.codex/skills`）和 Grok（`~/.grok/skills`）。
+- Codex 必须把 `codev` 本身链接到 `~/.codex/skills/codev`。
+- Grok 只链接受管 skill 目录到 `~/.grok/skills/<name>`，不把整个仓库挂到 `~/.grok/skills/codev`。
 - 受管 skills 必须通过 `setup` 一次性链接，不手工散装维护。
-- `test/setup-smoke.sh` 必须覆盖受管 skills 的链接列表。
+- `test/setup-smoke.sh` 必须覆盖受管 skills 在 Codex 和 Grok 上的链接列表。
 
 ## 目录约束
+- 受管 skill 不得写死某个项目的绝对路径或仓库名作为默认工作区；路径一律从当前工作目录、当前 git 根和该仓库本地规则解析。
 - `skills/<name>/` 目录名必须和 `SKILL.md` 的 `name` 一致。
 - `SKILL.md` 负责工作流；`agents/openai.yaml` 负责 UI 元数据。
 - `README.md` 是仓库级导航，不替代 `SKILL.md`。

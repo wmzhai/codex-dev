@@ -21,9 +21,9 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 
 - 如果用户没有输入任何参数，先在当前仓库的 open issues 里找编号最小的一条，只处理这一条。
 - 如果用户指定了单个 issue，如 `42` 或 `#42`，只处理该 issue。
-- 如果用户指定了 `optworks#70` 这样的参数，把 `optworks` 解析为当前目录下的子目录，并把目标仓库切换为该子目录里的 Git 仓库；随后读取这个目标仓库的 GitHub issue `#70`，并在该目标仓库内完成代码阅读、任务查重和 `tasks/` 写入。
+- 如果用户指定了 `<subdir>#70` 这样的参数，把 `<subdir>` 解析为当前目录下的子目录，并把目标仓库切换为该子目录里的 Git 仓库；随后读取这个目标仓库的 GitHub issue `#70`，并在该目标仓库内完成代码阅读、任务查重和 `tasks/` 写入。
 - 如果用户显式输入了多个 issue 编号，如 `42 43 44`、`42,43,44`、`42, 43 44` 或混写 `#42 #43,44`，把它们视为同一组 issue 集合；默认为这组 issue 创建一个总体 task，适合合并多个 issue 做一个版本。
-- 如果用户显式输入了多个带子目录前缀的 issue 引用，如 `optworks#70 optworks#71`，把它们视为同一目标仓库的一组 issue；所有带子目录前缀的 issue 引用必须指向同一个子目录，不要在一次 task 生成里混合多个子仓库。
+- 如果用户显式输入了多个带子目录前缀的 issue 引用，如 `<subdir>#70 <subdir>#71`，把它们视为同一目标仓库的一组 issue；所有带子目录前缀的 issue 引用必须指向同一个子目录，不要在一次 task 生成里混合多个子仓库。
 - 如果用户带了 `gh issue list` 可接受的过滤条件，如 `--label`、`--milestone`、`--assignee`，按这些条件取 issue。
 - 如果用户在 `$codev-issue2task` 后面直接给了一段自然语言需求，而不是 issue 编号或 `gh issue list` 过滤参数，把这段文字当作直接输入，不查 issue 列表。
 
@@ -31,13 +31,13 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 
 1. 先解析目标仓库：
    - 普通 issue 编号、无参数、过滤条件和直接文本默认以当前目录作为目标仓库。
-   - `子目录#编号` 形式先解析子目录前缀；例如 `optworks#70` 表示当前目录下 `optworks/` 这个目标仓库的 issue `#70`。
+   - `子目录#编号` 形式先解析子目录前缀；例如 `<subdir>#70` 表示当前目录下 `<subdir>/` 这个目标仓库的 issue `#70`。
    - 如果出现多个带子目录前缀的 issue 引用，所有前缀必须相同；否则停止并要求用户拆成多次调用。
    - 确认目标仓库是 git 仓库；如果这次请求需要读取 GitHub issue，再额外确认 `gh` 可用，并在目标仓库目录内执行后续 `gh issue` 命令。缺少任一必需前提时明确报告阻塞并停止。
 2. 读取输入源：
    - 直接文本模式：把用户附带的自然语言需求当作输入源，不查询 issue。
    - 无参数模式：先列出当前仓库 open issues，选编号最小的一条，再用 `gh issue view` 读取。
-   - 单个 issue 用 `gh issue view`；如果原始输入是 `optworks#70`，先进入 `optworks/` 这个目标仓库，再读取 `#70`。
+   - 单个 issue 用 `gh issue view`；如果原始输入是 `<subdir>#70`，先进入 `<subdir>/` 这个目标仓库，再读取 `#70`。
    - 用户显式输入多个 issue 编号时，按逗号或空白分隔解析，去掉可选的 `#` 前缀和相同的子目录前缀、去重并按编号升序规范化；然后对每个 issue 用 `gh issue view` 读取，并把这组 issue 作为一个组合输入源继续分析。
    - issue 过滤条件模式用 `gh issue list --state open --json number,title,body,labels,comments,milestone,assignees --limit 200`。
 3. 仔细阅读输入源，然后大量阅读相关代码建立上下文：
@@ -81,7 +81,7 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 ```markdown
 # T{nn}: {任务标题}
 
-{若源自单个 issue，紧跟标题写 `Issue: #123`；若源自多个 issue，写规范化后的 `Issues: #123, #124`；若源自直接文本，写 `Source: User prompt`。如果原始输入是 `optworks#70` 这样的子目录 issue，task 已经写在目标仓库内，因此映射仍写 `Issue: #70`，并可在 Source Context 中保留原始引用。}
+{若源自单个 issue，紧跟标题写 `Issue: #123`；若源自多个 issue，写规范化后的 `Issues: #123, #124`；若源自直接文本，写 `Source: User prompt`。如果原始输入是 `<subdir>#70` 这样的子目录 issue，task 已经写在目标仓库内，因此映射仍写 `Issue: #70`，并可在 Source Context 中保留原始引用。}
 
 ## Source Context
 
@@ -146,7 +146,7 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 - 任务文件必须同时能服务“需求对齐”和“后续直接执行”，不要把实现计划再外包给另一个 skill。
 - 基础任务号始终按 `tasks/` 和 `tasks/done/` 的最大现有编号顺延，而不是复用 issue 编号。
 - 显式 issue 编号列表支持逗号、空格或混合分隔，并兼容 `#123` / `123` 混写。
-- `optworks#70` 这样的 `子目录#编号` 参数表示当前目录下 `optworks/` 子仓库的 GitHub issue `#70`；后续 issue 读取、代码阅读、任务查重和 task 写入都以该子目录作为目标仓库。
+- `<subdir>#70` 这样的 `子目录#编号` 参数表示当前目录下 `<subdir>/` 子仓库的 GitHub issue `#70`；后续 issue 读取、代码阅读、任务查重和 task 写入都以该子目录作为目标仓库。子目录名由用户参数和当前工作目录决定，不写死某个项目。
 - 所有带子目录前缀的 issue 引用必须指向同一个子目录；不要把多个子仓库的 issue 合并进同一个 task 文件。
 - 用户显式输入多个 issue 编号时，默认产出一个总体 task；只有用户明确要求拆开，或代码分析证明合并后无法安全实施时，才拆成多个任务。
 - 同一个输入源如果拆成多个任务，也必须拆成连续的不同整数任务号，不再使用字母后缀。

@@ -29,7 +29,7 @@
 
 ## 维护规则
 - 新增或修改 skill 时，先改 `SKILL.md`，再同步 `agents/openai.yaml` 与 `docs/skills/<skill>.md`，最后回看 `README.md`、`setup` 和 `test/setup-smoke.sh` 是否需要更新。
-- `setup` 是真实安装入口；`test/setup-smoke.sh` 是安装行为的最小验证。
+- `setup` 是真实安装入口，必须同时刷新 Codex（`~/.codex/skills`）和 Grok（`~/.grok/skills`）；`test/setup-smoke.sh` 是安装行为的最小验证。
 - 任何新增受管 skill，都必须同步到 `setup`、`README.md` 和 `test/setup-smoke.sh`。
 - 修改任务入口 skill 时，保持 `codev-issue2task` 作为唯一任务生成入口，不要把任务规划、实现、收尾揉成一个大而全入口。
 - 修改 `codev-taskdev` / `codev-quickship` / `codev-checkpoint` 时，保持“task 分支实现”和“人工验证后的主干收尾”这条边界稳定；`codev-taskdev` 负责实现收尾阶段的一次默认 build / 最小编译校验；`codev-quickship` 与 `codev-checkpoint` 主流程一致，唯一差异是 quickship 额外处理版本 bump 与 tag 推送，checkpoint 不处理版本与 tag；收口 skill 不补做 build/test/lint/typecheck 或脚本验证；若仓库里没有可定位 task，仍可按无 task 模式继续流程。

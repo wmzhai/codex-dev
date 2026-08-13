@@ -4,7 +4,7 @@ Source: `codev`
 
 ## Purpose
 
-把 GitHub issue 或用户直接需求结合当前代码，先通过中文讨论把需求边界、实现方向和验证方式确认清楚，再压成 repo 内可执行的 task 文件；支持把多个 issue 编号合并成一个总体 task，适合做版本级合并实现。也支持 `optworks#70` 这种 `子目录#编号` 参数，用来从当前目录定位子目录里的目标仓库 issue。
+把 GitHub issue 或用户直接需求结合当前代码，先通过中文讨论把需求边界、实现方向和验证方式确认清楚，再压成 repo 内可执行的 task 文件；支持把多个 issue 编号合并成一个总体 task，适合做版本级合并实现。也支持 `<subdir>#70` 这种 `子目录#编号` 参数，用来从当前目录定位子目录里的目标仓库 issue。
 
 ## Preconditions
 
@@ -15,7 +15,7 @@ Source: `codev`
 ## Inputs / Source Of Truth
 
 - GitHub issue、多个 issue 编号列表、issue 列表过滤条件，或用户直接需求
-- `optworks#70` 这样的子目录 issue 引用，其中 `optworks` 是当前目录下的目标仓库子目录，`70` 是该仓库的 GitHub issue 编号
+- `<subdir>#70` 这样的子目录 issue 引用，其中 `<subdir>` 是当前目录下的目标仓库子目录，`70` 是该仓库的 GitHub issue 编号
 - 目标仓库的当前代码现状
 - 现有 `tasks/` 与 `tasks/done/`
 - 现有分支与依赖任务状态
@@ -29,17 +29,17 @@ Source: `codev`
 
 - `$codev-issue2task`
 - `$codev-issue2task 42`
-- `$codev-issue2task optworks#70`
+- `$codev-issue2task <subdir>#70`
 - `$codev-issue2task 42 43 44`
 - `$codev-issue2task 42,43,44`
-- `$codev-issue2task optworks#70 optworks#71`
+- `$codev-issue2task <subdir>#70 <subdir>#71`
 
 显式传入多个 issue 编号时，支持逗号、空格或混合分隔，默认会为这组 issue 生成一个总体 task。
-传入 `optworks#70` 时，`optworks/` 会成为目标仓库；后续 issue 读取、代码阅读、任务查重和 `tasks/` 写入都在该子目录内完成。多个带子目录前缀的 issue 引用必须指向同一个子目录，不要把多个子仓库的 issue 合并到同一个 task。
+传入 `<subdir>#70` 时，当前目录下的 `<subdir>/` 会成为目标仓库；后续 issue 读取、代码阅读、任务查重和 `tasks/` 写入都在该子目录内完成。子目录名由用户参数决定，不写死某个项目。多个带子目录前缀的 issue 引用必须指向同一个子目录，不要把多个子仓库的 issue 合并到同一个 task。
 
 ## Execution Flow
 
-1. 识别目标仓库和输入源：当前仓库单 issue、显式多个 issue 编号、`optworks#70` 这样的子目录 issue、多 issue 过滤、或直接需求文本。
+1. 识别目标仓库和输入源：当前仓库单 issue、显式多个 issue 编号、`<subdir>#70` 这样的子目录 issue、多 issue 过滤、或直接需求文本。
 2. 如果输入是 `子目录#编号`，先进入该子目录目标仓库，再读取对应 issue；如果多个子目录前缀不一致，停止并要求拆成多次调用。
 3. 深读目标仓库相关代码，确认当前行为、边界条件、关键模块和约束。
 4. 先输出一轮需求理解、关键假设、待确认点和推荐实现方向，按固定提纲和用户完成讨论确认。

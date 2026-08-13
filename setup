@@ -13,11 +13,15 @@ die() {
 }
 
 if [ $# -ne 0 ]; then
-  die "no arguments supported; run setup without args to install to ~/.codex/skills"
+  die "no arguments supported; run setup without args to install to ~/.codex/skills and ~/.grok/skills"
 fi
 
 codex_skills_dir() {
   printf '%s\n' "${HOME}/.codex/skills"
+}
+
+grok_skills_dir() {
+  printf '%s\n' "${HOME}/.grok/skills"
 }
 
 ensure_symlink_or_absent() {
@@ -28,9 +32,19 @@ ensure_symlink_or_absent() {
   fi
 }
 
+is_repo_owned_link() {
+  local actual="$1"
+  local skill_name="$2"
+
+  [ "$actual" = "codev/skills/${skill_name}" ] \
+    || [ "$actual" = "${REPO_ROOT}/skills/${skill_name}" ] \
+    || [ "$actual" = "${REPO_ROOT}" ]
+}
+
 cleanup_legacy_codev_skill() {
-  local skill_name="$1"
-  local path="${SKILLS_DIR}/${skill_name}"
+  local skills_dir="$1"
+  local skill_name="$2"
+  local path="${skills_dir}/${skill_name}"
   local actual
 
   if [ ! -L "$path" ]; then
@@ -39,42 +53,74 @@ cleanup_legacy_codev_skill() {
 
   actual="$(readlink "$path")"
 
-  if [ "$actual" = "codev/skills/${skill_name}" ] || [ "$actual" = "${REPO_ROOT}/skills/${skill_name}" ]; then
+  if is_repo_owned_link "$actual" "$skill_name"; then
     rm -f "$path"
   fi
 }
 
-install_for_codex() {
+cleanup_host_legacy_skills() {
+  local skills_dir="$1"
   local skill_name
 
-  SKILLS_DIR="$(codex_skills_dir)"
-
-  mkdir -p "$SKILLS_DIR"
-
-  ensure_symlink_or_absent "${SKILLS_DIR}/${PROJECT_NAME}"
-
-  for skill_name in "${MANAGED_SKILLS[@]}"; do
-    ensure_symlink_or_absent "${SKILLS_DIR}/${skill_name}"
-  done
-
-  ln -snf "$REPO_ROOT" "${SKILLS_DIR}/${PROJECT_NAME}"
-
-  for skill_name in "${MANAGED_SKILLS[@]}"; do
-    ln -snf "${PROJECT_NAME}/skills/${skill_name}" "${SKILLS_DIR}/${skill_name}"
-  done
-
   for skill_name in "${LEGACY_CODEV_SKILLS[@]}"; do
-    cleanup_legacy_codev_skill "$skill_name"
+    cleanup_legacy_codev_skill "$skills_dir" "$skill_name"
   done
 
   for skill_name in "${REMOVED_MANAGED_SKILLS[@]}"; do
-    cleanup_legacy_codev_skill "$skill_name"
+    cleanup_legacy_codev_skill "$skills_dir" "$skill_name"
   done
+}
+
+install_for_codex() {
+  local skills_dir skill_name
+
+  skills_dir="$(codex_skills_dir)"
+
+  mkdir -p "$skills_dir"
+
+  ensure_symlink_or_absent "${skills_dir}/${PROJECT_NAME}"
+
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    ensure_symlink_or_absent "${skills_dir}/${skill_name}"
+  done
+
+  ln -snf "$REPO_ROOT" "${skills_dir}/${PROJECT_NAME}"
+
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    ln -snf "${PROJECT_NAME}/skills/${skill_name}" "${skills_dir}/${skill_name}"
+  done
+
+  cleanup_host_legacy_skills "$skills_dir"
 
   echo "codev ready for Codex."
   echo "  repo: ${REPO_ROOT}"
-  echo "  skills: ${SKILLS_DIR}"
+  echo "  skills: ${skills_dir}"
+  echo "  linked: ${MANAGED_SKILLS[*]}"
+}
+
+install_for_grok() {
+  local skills_dir skill_name
+
+  skills_dir="$(grok_skills_dir)"
+
+  mkdir -p "$skills_dir"
+
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    ensure_symlink_or_absent "${skills_dir}/${skill_name}"
+  done
+
+  for skill_name in "${MANAGED_SKILLS[@]}"; do
+    ln -snf "${REPO_ROOT}/skills/${skill_name}" "${skills_dir}/${skill_name}"
+  done
+
+  cleanup_host_legacy_skills "$skills_dir"
+  cleanup_legacy_codev_skill "$skills_dir" "$PROJECT_NAME"
+
+  echo "codev ready for Grok."
+  echo "  repo: ${REPO_ROOT}"
+  echo "  skills: ${skills_dir}"
   echo "  linked: ${MANAGED_SKILLS[*]}"
 }
 
 install_for_codex
+install_for_grok

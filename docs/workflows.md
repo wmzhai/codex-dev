@@ -25,7 +25,7 @@ README.md
 
 - 默认先读 `README.md`、本文和 `docs/skills/README.md`。
 - 需要刷新仓库记忆入口时，用 `$codev-memorize`。
-- `setup` 只安装本仓库当前受管的 codev skills。
+- `setup` 只安装本仓库当前受管的 codev skills，并同时刷新 Codex（`~/.codex/skills`）和 Grok（`~/.grok/skills`）。
 
 ### 2. 任务入口
 

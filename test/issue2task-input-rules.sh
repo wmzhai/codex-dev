@@ -22,13 +22,13 @@ issue2task_files=(
 )
 
 for path in "${issue2task_files[@]}"; do
-  assert_contains "$path" "optworks#70"
+  assert_contains "$path" "<subdir>#70"
   assert_contains "$path" "子目录"
   assert_contains "$path" "目标仓库"
 done
 
 assert_contains "skills/codev-issue2task/SKILL.md" "所有带子目录前缀的 issue 引用必须指向同一个子目录"
-assert_contains "docs/skills/codev-issue2task.md" '$codev-issue2task optworks#70'
-assert_contains "skills/codev-issue2task/agents/openai.yaml" "optworks#70"
+assert_contains "docs/skills/codev-issue2task.md" '$codev-issue2task <subdir>#70'
+assert_contains "skills/codev-issue2task/agents/openai.yaml" "<subdir>#70"
 
 echo "issue2task input rules checks passed"

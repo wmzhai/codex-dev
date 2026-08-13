@@ -16,6 +16,7 @@ Source: `codev`
 - 人工验收结果与任务归档（有 task 时归档到 `tasks/done/`，补齐验收与 AC）；
 - 任务相关 `docs` / `memory` / 必要时 `AGENTS.md` 同步；
 - `CHANGELOG` 未发布区同步；
+- 收口范围从当前工作目录解析，与 `codev-checkpoint` 相同，不使用其他项目路径；
 - 收口范围与阻塞条件确认，不运行自动验证；
 - 本阶段先不提交，不 push，issue 在第二阶段在收口提交后再处理；
 - 明确返回“本阶段不做版本 bump 与 tag”。

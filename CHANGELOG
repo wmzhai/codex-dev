@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.1.5 - 2026-08-13
+
+- 受管 skill 的工作区改为从当前目录、当前 git 根和仓库本地规则解析，不再写死 `optdev` 或其他项目路径。
+- 将 `codev-issue2task` 的 `optworks#70` 示例改为通用 `<subdir>#70`。
+- 调整 `setup` 默认同时刷新 Codex 与 Grok 全局 skills，并同步安装说明与 smoke test。
 - 精简 `codev-quickship` / `codev-checkpoint` 的收口职责：用户触发即表示 taskdev 收尾校验和人工验证已完成，收口阶段不再运行 build/test/lint/typecheck 或脚本验证。
 - 明确 `codev-checkpoint` 仍需在本阶段形成并推送收口提交（与版本/Tag 无关）。
 - 细化 `codev-quickship` 执行顺序：quickship 的第一阶段不提交，改为版本 bump 后统一最终提交（供用户确认）。
