@@ -21,7 +21,7 @@ description: 人工验证通过后的统一收口；先执行 `codev-checkpoint`
 - 用户触发即表示 `codev-taskdev` 收尾编译责任与人工功能验证已经完成；无 task 模式也表示用户已在外部完成确认。
 - 收口范围与 `codev-checkpoint` 相同：当前工作目录对应的仓库及其本地规则中的可见子仓，不使用其他项目路径。
 - 第一阶段前置条件通过；本 skill 不负责补做 build/test/lint/typecheck 或脚本验证。
-- 用户触发 `quickship`（或 `$codev-quickship`）即执行两阶段收口，不额外询问是否进入版本阶段。
+- 用户触发 `quickship` / `codev-quickship`（Codex 为 `$...`，Grok 为 `/...`）即执行两阶段收口，不额外询问是否进入版本阶段。
 - `VERSION` 与 tag 规则可解析（若仓库规则不存在，允许默认规则）。
 - 本地可判断远端 tag 状态。
 

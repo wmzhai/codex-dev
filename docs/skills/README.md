@@ -5,6 +5,7 @@
 ## 命名约定
 
 - codev 自定义 skill：使用 `codev-*` 前缀。
+- 用户对话里的调用前缀：Codex 用 `$codev-*`，Grok 用 `/codev-*`。
 
 ## 1. 仓库初始化与记忆
 

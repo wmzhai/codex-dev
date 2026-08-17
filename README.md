@@ -31,6 +31,8 @@ git pull --ff-only
 
 ## 3. 使用流程
 
+下面用 Codex 的 `$` 写法；Grok 把 `$` 换成 `/`，例如 `/codev-taskdev`。
+
 1. 先读 [docs/workflows.md](docs/workflows.md)。
 2. 新仓库或记忆体系过期时，用 `$codev-memorize`。
 3. 需求进入任务流时，用 `$codev-issue2task` 生成 `tasks/` 下的 task plan；在工作区根目录也可以用 `$codev-issue2task <subdir>#70` 指向当前目录下某个子仓库的 GitHub issue。

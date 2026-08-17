@@ -28,6 +28,6 @@
 ## 推荐组合方式
 1. 输入来自 GitHub issue 或直接需求时，用 `codev-issue2task`
 2. 用户先审核 task 文件中的实现计划
-3. 用 `$codev-taskdev` 落成代码，并持续维护任务文档
+3. 用当前宿主对应的 `codev-taskdev` 入口落成代码，并持续维护任务文档
 4. 人工验证功能
 5. 人工确认通过后用 `codev-quickship` 或 `codev-checkpoint` 做收尾

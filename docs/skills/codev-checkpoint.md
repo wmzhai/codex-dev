@@ -10,7 +10,7 @@ Source: `codev`
 
 ## Preconditions
 
-- 用户触发 `$checkpoint` / `$codev-checkpoint` 且同轮已人工验证通过。
+- 用户触发 `checkpoint` / `codev-checkpoint`（Codex 为 `$...`，Grok 为 `/...`）且同轮已人工验证通过。
 - 当前允许直接 push 主干，`CHANGELOG` 更新路径可定位。
 - task 有可定位性；无 task 时以无 task 模式收口。
 - task 映射 issue 时 `gh` 可用且 issue 号可解析。

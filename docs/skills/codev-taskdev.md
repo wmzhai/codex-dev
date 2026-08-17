@@ -5,7 +5,7 @@ Source: `codev`
 ## Purpose
 
 按已审核的 task plan 在 task 分支上落代码，持续同步实现记录与待人工验证项，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验。
-这是进入 `$codev-quickship` / `$codev-checkpoint` 之前唯一由 codev 自动承担的编译校验责任点；后续收口 skill 不再补做 build/test/lint/typecheck 或脚本验证。
+这是进入 `codev-quickship` / `codev-checkpoint` 之前唯一由 codev 自动承担的编译校验责任点；后续收口 skill 不再补做 build/test/lint/typecheck 或脚本验证。
 
 ## Preconditions
 
@@ -50,4 +50,4 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 人工验证功能
-- 验证通过后进入 `$codev-quickship` 或 `$codev-checkpoint` 收口；触发收口即表示人工验证已经完成
+- 验证通过后进入 `codev-quickship` 或 `codev-checkpoint` 收口（Codex：`$codev-quickship` / `$codev-checkpoint`，Grok：`/codev-quickship` / `/codev-checkpoint`）；触发收口即表示人工验证已经完成

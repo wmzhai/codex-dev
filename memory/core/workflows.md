@@ -11,8 +11,8 @@
 ## 默认主线
 1. GitHub issue 或直接需求走 `codev-issue2task`
 2. 任务入口要结合代码直接写出带实现计划的 `tasks/Txx-*.md`
-3. 用户先审核 task 文件中的 plan，再进入 `$codev-taskdev`
-4. `$codev-taskdev` 负责按已审核 plan 选择任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验；这是 quickship/checkpoint 前唯一由 codev 自动承担的编译校验责任点
+3. 用户先审核 task 文件中的 plan，再进入当前宿主对应的 `codev-taskdev` 入口（Codex：`$codev-taskdev`，Grok：`/codev-taskdev`）
+4. `codev-taskdev` 负责按已审核 plan 选择任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验；这是 quickship/checkpoint 前唯一由 codev 自动承担的编译校验责任点
 5. 功能默认由人工验证；人工验证通过后，再用 `codev-quickship` 完成 task 归档、任务相关文档同步、版本工件同步，以及 commit / merge / push / tag；用户触发即表示 taskdev 收尾校验和人工验证已完成，无 task 模式也依赖用户外部确认
 6. `codev-checkpoint` 用于轻量 `commit/push` 场景，并默认不同步版本工件；checkpoint 与 quickship 收口阶段都不运行 build/test/lint/typecheck 或脚本验证
 7. `codev-syncpatch` 用于同步开源 upstream 并保留本地运行补丁；它独立于 task 主线，默认不提交、不 push、不默认创建分支
@@ -38,6 +38,7 @@
 2. 同步 `docs/skills/<skill>.md`
 3. 必要时同步 `agents/openai.yaml`
 4. 如果影响触发、安装或导航，再改 `README.md`、`docs/workflows.md`、`setup` 或 smoke test
+5. 如果改了面向用户的 skill 调用提示，跑 `./test/skill-invocation-prefix.sh`
 
 ## 维护原则
 - 先让记忆系统追上真实代码，再考虑增加解释。

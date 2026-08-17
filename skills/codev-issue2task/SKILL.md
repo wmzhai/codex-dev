@@ -1,6 +1,6 @@
 ---
 name: codev-issue2task
-description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或直接根据用户给出的任务描述，结合现有代码理解需求；先通过中文讨论把需求边界、实现方向和验证方式和用户确认清楚，再生成 `tasks/` 下可直接执行的任务计划文件；支持把多个 issue 编号合并成一个总体 task，适用于用户要先完成需求对话、再把确认后的结果压成 repo 内执行单元，随后进入 `$codev-taskdev` 的场景。
+description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或直接根据用户给出的任务描述，结合现有代码理解需求；先通过中文讨论把需求边界、实现方向和验证方式和用户确认清楚，再生成 `tasks/` 下可直接执行的任务计划文件；支持把多个 issue 编号合并成一个总体 task，适用于用户要先完成需求对话、再把确认后的结果压成 repo 内执行单元，随后进入 `codev-taskdev` 的场景。
 ---
 
 # Issue2Task
@@ -15,6 +15,18 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 - 整个执行过程中的需求判断、阻塞说明、计划摘要和结果汇报默认都用中文。
 - 只有用户明确要求英文或双语时，才切换语言。
 
+## 调用前缀
+
+面向用户写出下一步 skill 入口时，必须使用当前宿主的调用前缀，不要把另一套宿主的前缀写进用户提示：
+
+- Codex：`$<skill-name>`，例如 `$codev-taskdev`
+- Grok / Grok Build TUI：`/<skill-name>`，例如 `/codev-taskdev`
+
+判断依据：
+
+- 当前会话身份是 Grok，或用户是用 `/skill` 触发的，用 `/`
+- 当前会话身份是 Codex，或用户是用 `$skill` 触发的，用 `$`
+
 ## Inputs
 
 从用户请求推断范围：
@@ -25,7 +37,7 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 - 如果用户显式输入了多个 issue 编号，如 `42 43 44`、`42,43,44`、`42, 43 44` 或混写 `#42 #43,44`，把它们视为同一组 issue 集合；默认为这组 issue 创建一个总体 task，适合合并多个 issue 做一个版本。
 - 如果用户显式输入了多个带子目录前缀的 issue 引用，如 `<subdir>#70 <subdir>#71`，把它们视为同一目标仓库的一组 issue；所有带子目录前缀的 issue 引用必须指向同一个子目录，不要在一次 task 生成里混合多个子仓库。
 - 如果用户带了 `gh issue list` 可接受的过滤条件，如 `--label`、`--milestone`、`--assignee`，按这些条件取 issue。
-- 如果用户在 `$codev-issue2task` 后面直接给了一段自然语言需求，而不是 issue 编号或 `gh issue list` 过滤参数，把这段文字当作直接输入，不查 issue 列表。
+- 如果用户在 skill 调用后面直接给了一段自然语言需求，而不是 issue 编号或 `gh issue list` 过滤参数，把这段文字当作直接输入，不查 issue 列表。
 
 ## Workflow
 
@@ -136,7 +148,7 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 {可选：评论中的技术约束、需求细节、取舍说明}
 ```
 
-13. 输出简短摘要，包含分析了多少 issue 或直接输入源、经过了哪些确认点、创建了多少任务、任务文件路径、当前分支、结果依赖链，以及“用户接下来应审核 task plan，再进入 `$codev-taskdev`”的提示。
+13. 输出简短摘要，包含分析了多少 issue 或直接输入源、经过了哪些确认点、创建了多少任务、任务文件路径、当前分支、结果依赖链，以及“用户接下来应审核 task plan，再进入当前宿主对应的 `codev-taskdev` 入口”的提示。这句提示必须按上面的调用前缀规则写，例如 Grok 写 `/codev-taskdev`，Codex 写 `$codev-taskdev`；不要把错误宿主的前缀写进用户提示。
 
 ## Rules
 
@@ -160,6 +172,7 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 - 默认先完成确认回合，不把“直接写入任务文件”当成起始步骤；没有用户明确确认前，不落盘任务文件。
 - task 文件里的 `Implementation Plan` 和 `Validation Plan` 必须足够具体，使用户审核后可以直接开始实现，而不是再补一轮规划。
 - 不要提交代码。文件创建就是这个 skill 的最终副作用。
+- 面向用户提示下一步 `codev-taskdev` 入口时，必须按当前宿主写调用前缀，不要照抄文档里的 `$` 示例。
 
 ## 标准讨论提纲
 

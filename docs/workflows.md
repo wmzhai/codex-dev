@@ -2,6 +2,8 @@
 
 `docs/workflows.md` 是 codev 的唯一工作流导航。默认先读这里，再按需要进入对应的 skill 手册。
 
+文档里的 `$codev-*` 是 Codex 写法；Grok 把 `$` 换成 `/`，例如 `/codev-taskdev`。
+
 ## 默认主线
 
 ```text

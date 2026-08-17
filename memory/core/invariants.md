@@ -21,7 +21,8 @@
 - `codev-memorize` 的职责是建立或刷新 `AGENTS.md` 与 `memory/`，不负责业务逻辑。
 - `codev-issue2task` 只处理 GitHub issue 或用户直接需求。
 - `codev-issue2task` 必须直接产出包含实现计划的 task 文件，不再依赖独立 `plantask` 步骤。
-- `$codev-taskdev` 默认按 `tasks/` 中最小整数任务号选择待办任务。
+- `codev-taskdev` 默认按 `tasks/` 中最小整数任务号选择待办任务。
+- 面向用户写出 skill 调用时，Codex 用 `$name`，Grok 用 `/name`；`SKILL.md` 不得把 Codex 的 `$` 写法写成用户提示的唯一模板。
 - `codev-taskdev` 负责实现、task 文档同步、一次实现收尾精简和一次默认 build / 最小编译校验；这是 quickship/checkpoint 之前唯一由 codev 自动承担的编译校验责任点，但不做自动化功能验证、不归档到 `tasks/done/`。
 - `codev-quickship` 与 `codev-checkpoint` 的主流程一致；quickship 在此基础上额外做 `VERSION` 同步与 tag 推送。quickship 收尾提交信息必须采用 `type: 具体工作摘要 (v<VERSION>)` 形式，checkpoint 不带版本后缀。
 - `codev-memorize` 不再维护额外入口文件，记忆入口统一归并到 `AGENTS.md + memory/`。
@@ -35,4 +36,5 @@
 ## 验证基线
 - 修改安装链路后，优先跑 `./test/setup-smoke.sh`。
 - 修改单个 skill 的元数据后，至少检查对应 `docs/skills/<skill>.md`、`README.md` 与受管技能列表是否同步。
+- 修改面向用户的 skill 调用前缀后，优先跑 `./test/skill-invocation-prefix.sh`。
 - README 变更以仓库现状为准，不保留过期 skill 列表。

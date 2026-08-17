@@ -36,3 +36,4 @@
 - `codev-memorize` 统一将仓库事实与约束收敛到 `AGENTS.md + memory/`，不再维护额外入口文件。
 - `README.md` 里只放用户需要看到的高层说明，不重复展开各 skill 的全部内部流程。
 - `docs/workflows.md` 要始终保持从开始到结束的 codev 主流程说明。
+- 面向用户提示下一步 skill 入口时，必须按当前宿主写调用前缀：Codex 用 `$name`，Grok 用 `/name`。不要在 Grok 对话里写 `$codev-*`，也不要把文档里的 `$` 示例原样复述给 Grok 用户。

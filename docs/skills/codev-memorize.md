@@ -49,4 +49,4 @@ Source: `codev`
 
 - 需要总流程时：读 `docs/workflows.md`
 - 需要具体 skill：读 `docs/skills/README.md`
-- 要进入任务流：继续 `$codev-issue2task`
+- 要进入任务流：继续 `codev-issue2task`（Codex：`$codev-issue2task`，Grok：`/codev-issue2task`）

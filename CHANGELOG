@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 面向用户提示下一步 skill 入口时，按宿主写调用前缀：Codex 用 `$name`，Grok 用 `/name`，避免 Grok 对话里再出现 `$codev-taskdev` 这类提示。
+
 ## 0.1.5 - 2026-08-13
 
 - 受管 skill 的工作区改为从当前目录、当前 git 根和仓库本地规则解析，不再写死 `optdev` 或其他项目路径。

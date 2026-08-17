@@ -15,6 +15,18 @@ description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编
 - 整个执行过程中的进度更新、阻塞说明、实现摘要和结果汇报默认都用中文。
 - 只有用户明确要求英文或双语时，才切换语言。
 
+## 调用前缀
+
+面向用户写出下一步 skill 入口时，必须使用当前宿主的调用前缀，不要把另一套宿主的前缀写进用户提示：
+
+- Codex：`$<skill-name>`，例如 `$codev-quickship`
+- Grok / Grok Build TUI：`/<skill-name>`，例如 `/codev-quickship`
+
+判断依据：
+
+- 当前会话身份是 Grok，或用户是用 `/skill` 触发的，用 `/`
+- 当前会话身份是 Codex，或用户是用 `$skill` 触发的，用 `$`
+
 ## Inputs
 
 从用户请求推断目标任务：
@@ -30,7 +42,7 @@ description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编
 - 对应 `tasks/Txx-*.md` 已同步实际采用的实现路径、重要代码改动、待执行人工验证和剩余缺口。
 - 已在收尾阶段自动执行过一次 `codev-simplify` 式语义不变精简；如果没有安全可做的精简，也已明确记录。
 - 已在收尾阶段主动执行过一次仓库约定的 build / 最小编译校验；如果入口不可稳定判定或执行失败，应明确停在阻塞态而不是假装可以直接人工验收。
-- 当前结果已经适合进入人工验证；人工验证通过后，再进入 `$codev-quickship`。
+- 当前结果已经适合进入人工验证；人工验证通过后，再进入当前宿主对应的 `codev-quickship` 入口。
 
 `codev-taskdev` 默认不负责以下动作：
 
@@ -40,7 +52,7 @@ description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编
 - 不归档到 `tasks/done/`
 - 不 merge 到 `main/master`
 - 不 bump 版本号、打 tag、创建 PR
-- 不默认 commit 或 push；需要稳定中间点时，后续单独使用 `$codev-checkpoint`
+- 不默认 commit 或 push；需要稳定中间点时，后续单独使用当前宿主对应的 `codev-checkpoint` 入口
 
 ## Workflow
 
@@ -65,14 +77,14 @@ description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编
 6. 在开始编码前先校准 task plan：
    - 优先完整读取任务文件中已有的 `## Implementation Plan` 与 `## Validation Plan`。
    - 如果代码现状与原计划有轻微漂移，先在任务文件里直接更新这些小节，再开始编码。
-   - 如果漂移已经上升到产品范围或架构路径冲突，明确说明并停止；必要时建议用户回到 task 文件继续收敛，或补跑 `$plan-eng-review` / `$autoplan`。
+   - 如果漂移已经上升到产品范围或架构路径冲突，明确说明并停止；必要时建议用户回到 task 文件继续收敛，或补跑 `plan-eng-review` / `autoplan`。
 7. 分阶段实现代码：
    - 优先按容易收敛的小块推进，而不是一次性铺开。
    - 优先复用当前 repo 已有模式，而不是凭空设计新结构。
    - 每完成一个重要里程碑，就更新一次任务文件中的执行记录和实现说明。
 8. 不主动执行除默认 build 之外的其他验证动作：
    - 不自动启动本地服务，不自动跑测试、lint、脚本检查或浏览器验证。
-   - 不默认触发 `$design-review`、`$review`、`$qa` 或部署；这些属于后续独立门禁。
+   - 不默认触发 `design-review`、`review`、`qa` 或部署；这些属于后续独立门禁。
    - `Validation Plan` 继续保留给后续人工验证或独立验证门禁使用。
 9. 在实现收尾时自动执行一次语义不变精简：
    - 优先沿用 `codev-simplify` 的约束：不改行为、不改公共 API、不引入新依赖、不无故扩大范围。
@@ -100,14 +112,15 @@ description: 读取 `tasks/` 下已审核的任务计划，默认选择最小编
    - 本次自动精简的结果
    - 默认 build / 最小编译校验的命令与结果
    - 尚未执行的人工验证和下游门禁
-   - 下一步建议先人工验证，确认通过后再用 `$codev-quickship`
+   - 下一步建议先人工验证，确认通过后再用当前宿主对应的 `codev-quickship` 入口；Grok 写 `/codev-quickship`，Codex 写 `$codev-quickship`
 
 ## Rules
 
 - 默认一次只处理一个 task。
 - 默认按最小整数任务号选择待办任务，不扫描 `tasks/done/`。
 - 任务文件不是只读输入；实际实现路径变化时，必须按事实同步 task。
-- 自动精简是 `codev-taskdev` 的内置收尾步骤，不需要在同一轮实现结束后再额外显式调用一次 `$codev-simplify`。
+- 自动精简是 `codev-taskdev` 的内置收尾步骤，不需要在同一轮实现结束后再额外显式调用一次 `codev-simplify`。
+- 面向用户提示下一步 `codev-quickship` / `codev-checkpoint` 入口时，必须按当前宿主写调用前缀，不要照抄文档里的 `$` 示例。
 - 默认 build / 最小编译校验是 `codev-taskdev` 的内置收尾步骤，也是后续 `codev-quickship` / `codev-checkpoint` 之前唯一由 codev 自动承担的编译校验责任点；收口 skill 不再补做 build/test/lint/typecheck 或脚本验证。
 - 不要为了“顺手收口”而替用户执行验证、QA、部署、归档或发布。
 - 不要为了默认 build 之外的验证而额外启动本地服务或补搭环境。

@@ -27,6 +27,8 @@ Source: `codev`
 
 ## Common Invocations
 
+Codex 用 `$` 前缀；Grok 把 `$` 换成 `/`，例如 `/codev-issue2task <subdir>#70`。
+
 - `$codev-issue2task`
 - `$codev-issue2task 42`
 - `$codev-issue2task <subdir>#70`
@@ -91,4 +93,4 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 人工审核 task plan
-- 认可后进入 `$codev-taskdev`
+- 认可后进入 `codev-taskdev`（Codex：`$codev-taskdev`，Grok：`/codev-taskdev`）
