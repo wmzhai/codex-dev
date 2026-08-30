@@ -50,4 +50,4 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 人工验证功能
-- 验证通过后进入 `codev-quickship` 或 `codev-checkpoint` 收口（Codex：`$codev-quickship` / `$codev-checkpoint`，Grok：`/codev-quickship` / `/codev-checkpoint`）；触发收口即表示人工验证已经完成
+- 验证通过后进入 `codev-quickship` 或 `codev-checkpoint` 收口（Codex：`$codev-quickship` / `$codev-checkpoint`，Grok：`/codev-quickship` / `/codev-checkpoint`，Claude Code：`/codev-quickship` / `/codev-checkpoint`）；触发收口即表示人工验证已经完成

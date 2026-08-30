@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-- 面向用户提示下一步 skill 入口时，按宿主写调用前缀：Codex 用 `$name`，Grok 用 `/name`，避免 Grok 对话里再出现 `$codev-taskdev` 这类提示。
+## 0.1.6 - 2026-08-30
+
+- `setup` 按 PATH 中的 `codex` / `grok` / `claude` 探测客户端，只为已安装宿主刷新全局 skills；补上 Claude Code，布局与 Grok 相同。
+- 项目记忆改为公共 `memory/` 加三份短入口：`AGENTS.md`、`CLAUDE.md`、`.grok/rules/memory.md`。`codev-memorize` 无论当前宿主是谁都写齐三份，保证换工具能接手。
+- 面向用户提示下一步 skill 入口时，对话按当前宿主写前缀：Codex 用 `$name`，Grok 与 Claude Code 用 `/name`；落盘文档同时列出三家。
 
 ## 0.1.5 - 2026-08-13
 

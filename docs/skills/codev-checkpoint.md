@@ -10,7 +10,7 @@ Source: `codev`
 
 ## Preconditions
 
-- 用户触发 `checkpoint` / `codev-checkpoint`（Codex 为 `$...`，Grok 为 `/...`）且同轮已人工验证通过。
+- 用户触发 `checkpoint` / `codev-checkpoint`（Codex 为 `$...`，Grok 与 Claude Code 为 `/...`）且同轮已人工验证通过。
 - 当前允许直接 push 主干，`CHANGELOG` 更新路径可定位。
 - task 有可定位性；无 task 时以无 task 模式收口。
 - task 映射 issue 时 `gh` 可用且 issue 号可解析。
@@ -19,7 +19,7 @@ Source: `codev`
 
 - 从当前工作目录定位 git 仓库根，再按该仓库本地规则纳入可见子仓；不使用其他项目路径。
 - 有 task：归档到 `tasks/done/`、补充验收结论与 `Acceptance Criteria`。
-- 同步本轮直接相关 `docs`、`memory`；必要时更新 `AGENTS.md`。
+- 同步本轮直接相关 `docs`、`memory`；必要时更新宿主入口（`AGENTS.md` / `CLAUDE.md` / `.grok/rules/memory.md`）。
 - 记录收口前置条件已经由用户触发确认，不运行自动验证。
 - 更新 `CHANGELOG` 的未发布记录；不改写历史发布段。
 - 提交并推送主干，完成后按 task 映射执行 `gh issue comment` 与 `gh issue close`。

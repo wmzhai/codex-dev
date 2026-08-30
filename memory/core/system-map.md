@@ -6,12 +6,16 @@
 - `README.md`：面向用户的总说明、安装方式、调用示例、skills 列表
 - `docs/workflows.md`：从开始到结束的唯一工作流导航
 - `docs/skills/*.md`：当前受管 codev skills 的详细手册
-- `setup`：同时安装到 `~/.codex/skills` 和 `~/.grok/skills`，并链接受管 skills。
-- `test/setup-smoke.sh`：验证 Codex / Grok 安装、幂等性和冲突处理
-- `skills/codev-memorize/`：为项目建立或刷新以 `AGENTS.md + memory/` 为核心的记忆体系
+- `setup`：探测 PATH 中的 `codex` / `grok` / `claude`，只为已安装客户端刷新全局 skills
+- `test/setup-smoke.sh`：验证客户端探测、跳过、混装、冲突和链接
+- `AGENTS.md`：Codex 短入口
+- `CLAUDE.md`：Claude Code 短入口
+- `.grok/rules/memory.md`：Grok 短入口
+- `memory/`：三家共用的仓库事实、流程和约束
+- `skills/codev-memorize/`：为项目建立或刷新 `memory/` 与三份宿主入口
 - `skills/codev-issue2task/`：把 issue 或直接需求收敛成带实现计划的任务文件
 - `skills/codev-taskdev/`：按已审核 task plan 选择目标任务、实施代码、同步任务文档，并在实现收尾自动做一次语义不变精简和一次默认 build / 最小编译校验；这是 quickship/checkpoint 前唯一由 codev 自动承担的编译校验责任点
-- `skills/codev-quickship/`：在用户完成人工验证后归档 task、同步任务相关 `docs/` / `memory/` / 必要时 `AGENTS.md`；用户触发即表示 taskdev 收尾校验和人工验证已完成，无 task 模式也依赖用户外部确认；再同步根目录 `VERSION` 与 `CHANGELOG`，然后提交、合并、推送主干和 tag
+- `skills/codev-quickship/`：在用户完成人工验证后归档 task、同步任务相关 `docs/` / `memory/` / 必要时宿主入口；用户触发即表示 taskdev 收尾校验和人工验证已完成，无 task 模式也依赖用户外部确认；再同步根目录 `VERSION` 与 `CHANGELOG`，然后提交、合并、推送主干和 tag
 - `skills/codev-simplify/`：语义不变精简 diff
 - `skills/codev-checkpoint/`：轻量提交、推送 fallback
 - `skills/codev-syncpatch/`：同步开源 upstream 并按原意重放本地运行补丁；默认不提交、不推送、不默认创建分支
@@ -19,7 +23,7 @@
 
 ## 维护边界
 - `SKILL.md` 是每个 skill 的主说明和工作流。
-- `agents/openai.yaml` 只放 UI 元数据和调用策略。
+- `agents/openai.yaml` 只放 Codex UI 元数据和调用策略。
 - `README.md` 只放仓库级说明与技能导航。
 - `docs/workflows.md` 保留唯一工作流导航。
 - `docs/skills/<skill>.md` 是对外的 skill 详细手册。
@@ -33,3 +37,4 @@
 - 修改 skill 触发或行为：改对应 `SKILL.md` 和 `agents/openai.yaml`
 - 修改安装链路：改 `setup` 和 `test/setup-smoke.sh`
 - 修改外部说明：改 `README.md`、`docs/workflows.md`、`docs/skills/*.md`
+- 修改公共约束：改 `memory/core/invariants.md`，不要把长文写进三份入口

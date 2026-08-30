@@ -1,6 +1,6 @@
-# Codex 入口
+# Claude Code 入口
 
-本文件只服务 Codex / GPT。若当前宿主不是 Codex，忽略下面的宿主专用规则，只遵循 `memory/`。
+本文件只服务 Claude Code。若当前宿主不是 Claude Code，忽略下面的宿主专用规则，只遵循 `memory/`。
 
 ## 必须先遵守
 
@@ -8,11 +8,11 @@
 - 仓库事实与约束只写在 `memory/`，不要把公共正文再抄进本文件。
 - 新会话先读 `memory/README.md` 和 `memory/core/invariants.md`。
 
-## Codex 专用
+## Claude Code 专用
 
-- 面向用户提示下一步 skill 时用 `$name`，例如 `$codev-taskdev`。
-- 本机 skills 目录：`~/.codex/skills/`。
-- `setup` 仅在 PATH 中有 `codex` 时刷新该目录。
+- 面向用户提示下一步 skill 时用 `/name`，例如 `/codev-taskdev`。
+- 本机 skills 目录：`~/.claude/skills/`。
+- `setup` 仅在 PATH 中有 `claude` 时刷新该目录。
 
 ## 公共导航
 

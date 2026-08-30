@@ -2,12 +2,13 @@
 
 `docs/workflows.md` 是 codev 的唯一工作流导航。默认先读这里，再按需要进入对应的 skill 手册。
 
-文档里的 `$codev-*` 是 Codex 写法；Grok 把 `$` 换成 `/`，例如 `/codev-taskdev`。
+文档里的 `$codev-*` 是 Codex 写法；Grok 与 Claude Code 把 `$` 换成 `/`，例如 `/codev-taskdev`。
 
 ## 默认主线
 
 ```text
 README.md
+-> 当前宿主入口
 -> docs/workflows.md
 -> docs/skills/README.md
 -> 选择任务入口
@@ -25,9 +26,9 @@ README.md
 
 ### 1. 仓库准备
 
-- 默认先读 `README.md`、本文和 `docs/skills/README.md`。
-- 需要刷新仓库记忆入口时，用 `$codev-memorize`。
-- `setup` 只安装本仓库当前受管的 codev skills，并同时刷新 Codex（`~/.codex/skills`）和 Grok（`~/.grok/skills`）。
+- 默认先读 `README.md`、当前宿主入口、本文和 `docs/skills/README.md`。
+- 需要刷新仓库记忆入口时，用 `$codev-memorize`；它会写齐公共 `memory/` 以及 `AGENTS.md`、`CLAUDE.md`、`.grok/rules/memory.md`。
+- `setup` 只安装本仓库当前受管的 codev skills，并按 PATH 中的 `codex` / `grok` / `claude` 刷新对应全局目录。
 
 ### 2. 任务入口
 
@@ -57,4 +58,7 @@ README.md
 ## 相关文档
 
 - skill 索引：`docs/skills/README.md`
-- 仓库级事实与维护规则：`AGENTS.md`
+- 公共记忆：`memory/`
+- Codex 入口：`AGENTS.md`
+- Claude Code 入口：`CLAUDE.md`
+- Grok 入口：`.grok/rules/memory.md`

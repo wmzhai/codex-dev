@@ -21,10 +21,11 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 
 - Codex：`$<skill-name>`，例如 `$codev-taskdev`
 - Grok / Grok Build TUI：`/<skill-name>`，例如 `/codev-taskdev`
+- Claude Code：`/<skill-name>`，例如 `/codev-taskdev`
 
 判断依据：
 
-- 当前会话身份是 Grok，或用户是用 `/skill` 触发的，用 `/`
+- 当前会话身份是 Grok 或 Claude Code，或用户是用 `/skill` 触发的，用 `/`
 - 当前会话身份是 Codex，或用户是用 `$skill` 触发的，用 `$`
 
 ## Inputs
@@ -148,7 +149,7 @@ description: 分析当前仓库或当前目录子仓库的 GitHub Issues，或�
 {可选：评论中的技术约束、需求细节、取舍说明}
 ```
 
-13. 输出简短摘要，包含分析了多少 issue 或直接输入源、经过了哪些确认点、创建了多少任务、任务文件路径、当前分支、结果依赖链，以及“用户接下来应审核 task plan，再进入当前宿主对应的 `codev-taskdev` 入口”的提示。这句提示必须按上面的调用前缀规则写，例如 Grok 写 `/codev-taskdev`，Codex 写 `$codev-taskdev`；不要把错误宿主的前缀写进用户提示。
+13. 输出简短摘要，包含分析了多少 issue 或直接输入源、经过了哪些确认点、创建了多少任务、任务文件路径、当前分支、结果依赖链，以及“用户接下来应审核 task plan，再进入当前宿主对应的 `codev-taskdev` 入口”的提示。这句提示必须按上面的调用前缀规则写，例如 Grok 或 Claude Code 写 `/codev-taskdev`，Codex 写 `$codev-taskdev`；不要把错误宿主的前缀写进用户提示。
 
 ## Rules
 

@@ -39,6 +39,6 @@ Source: `codev`
 
 ## Next Recommended Steps
 
-- 普通 commit 或 `codev-checkpoint`（Codex：`$codev-checkpoint`，Grok：`/codev-checkpoint`）
+- 普通 commit 或 `codev-checkpoint`（Codex：`$codev-checkpoint`，Grok：`/codev-checkpoint`，Claude Code：`/codev-checkpoint`）
 - 在 `codev-taskdev` 内作为实现收尾精简步骤被调用
-- 人工验证通过后进入 `codev-quickship`（Codex：`$codev-quickship`，Grok：`/codev-quickship`）
+- 人工验证通过后进入 `codev-quickship`（Codex：`$codev-quickship`，Grok：`/codev-quickship`，Claude Code：`/codev-quickship`）

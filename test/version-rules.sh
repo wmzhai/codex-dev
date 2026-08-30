@@ -63,6 +63,8 @@ closure_files=(
 version_surface_files=(
   "README.md"
   "AGENTS.md"
+  "CLAUDE.md"
+  ".grok/rules/memory.md"
   "memory/core/invariants.md"
   "CHANGELOG"
   "${quickship_files[@]}"
@@ -111,13 +113,13 @@ assert_contains "docs/workflows.md" "codev-quickship"
 assert_contains "docs/workflows.md" "codev-checkpoint"
 assert_contains "docs/workflows.md" "如果仓库没有 task，也可按无 task 模式收尾"
 assert_contains "docs/workflows.md" '`codev-taskdev` 负责代码实现、任务文档同步，以及一次实现收尾精简和默认 build / 最小编译校验'
-assert_contains "AGENTS.md" "递增版本号最后一段"
-assert_contains "AGENTS.md" "v<VERSION>"
-assert_contains "AGENTS.md" "若仓库里没有可定位 task，则 quickship 按无 task 模式收尾"
-assert_contains "AGENTS.md" '`codev-taskdev` 负责从 `tasks/` 中选择目标 plan'
-assert_contains "AGENTS.md" "默认 build / 最小编译校验"
-assert_contains "AGENTS.md" '默认同步已有 `CHANGELOG`'
-assert_contains "AGENTS.md" "用户触发 quickship/checkpoint 即表示"
+assert_contains "memory/core/invariants.md" "递增版本号最后一段"
+assert_contains "memory/core/invariants.md" "v<VERSION>"
+assert_contains "memory/core/invariants.md" "若仓库里没有可定位 task，则 quickship 按无 task 模式收尾"
+assert_contains "memory/core/invariants.md" '`codev-taskdev` 负责从 `tasks/` 中选择目标 plan'
+assert_contains "memory/core/invariants.md" "默认 build / 最小编译校验"
+assert_contains "memory/core/invariants.md" '默认同步已有 `CHANGELOG`'
+assert_contains "memory/core/invariants.md" "用户触发 quickship/checkpoint 即表示"
 
 for path in "${version_surface_files[@]}"; do
   assert_not_contains "$path" "$legacy_digit_label"

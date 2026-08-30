@@ -52,5 +52,5 @@ Source: `codev`
 ## Next Recommended Steps
 
 - 人工确认本地补丁在最新代码上运行正常。
-- 如果补丁稳定且需要长期保留，继续用 `codev-syncpatch` 维护（Codex：`$codev-syncpatch`，Grok：`/codev-syncpatch`）。
-- 如果要提交本地补丁到自己的分支，再明确进入 `codev-checkpoint` 或其他发布流程（Codex：`$codev-checkpoint`，Grok：`/codev-checkpoint`）。
+- 如果补丁稳定且需要长期保留，继续用 `codev-syncpatch` 维护（Codex：`$codev-syncpatch`，Grok：`/codev-syncpatch`，Claude Code：`/codev-syncpatch`）。
+- 如果要提交本地补丁到自己的分支，再明确进入 `codev-checkpoint` 或其他发布流程（Codex：`$codev-checkpoint`，Grok：`/codev-checkpoint`，Claude Code：`/codev-checkpoint`）。

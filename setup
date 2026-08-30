@@ -13,8 +13,12 @@ die() {
 }
 
 if [ $# -ne 0 ]; then
-  die "no arguments supported; run setup without args to install to ~/.codex/skills and ~/.grok/skills"
+  die "no arguments supported; run setup without args to install skills for clients found in PATH (codex, grok, claude)"
 fi
+
+host_client_installed() {
+  command -v "$1" >/dev/null 2>&1
+}
 
 codex_skills_dir() {
   printf '%s\n' "${HOME}/.codex/skills"
@@ -22,6 +26,10 @@ codex_skills_dir() {
 
 grok_skills_dir() {
   printf '%s\n' "${HOME}/.grok/skills"
+}
+
+claude_skills_dir() {
+  printf '%s\n' "${HOME}/.claude/skills"
 }
 
 ensure_symlink_or_absent() {
@@ -98,10 +106,10 @@ install_for_codex() {
   echo "  linked: ${MANAGED_SKILLS[*]}"
 }
 
-install_for_grok() {
-  local skills_dir skill_name
-
-  skills_dir="$(grok_skills_dir)"
+install_direct_skill_links() {
+  local skills_dir="$1"
+  local host_label="$2"
+  local skill_name
 
   mkdir -p "$skills_dir"
 
@@ -116,11 +124,47 @@ install_for_grok() {
   cleanup_host_legacy_skills "$skills_dir"
   cleanup_legacy_codev_skill "$skills_dir" "$PROJECT_NAME"
 
-  echo "codev ready for Grok."
+  echo "codev ready for ${host_label}."
   echo "  repo: ${REPO_ROOT}"
   echo "  skills: ${skills_dir}"
   echo "  linked: ${MANAGED_SKILLS[*]}"
 }
 
-install_for_codex
-install_for_grok
+install_for_grok() {
+  install_direct_skill_links "$(grok_skills_dir)" "Grok"
+}
+
+install_for_claude() {
+  install_direct_skill_links "$(claude_skills_dir)" "Claude Code"
+}
+
+skip_host() {
+  echo "skipping $1: '$2' not found in PATH"
+}
+
+installed_any=0
+
+if host_client_installed codex; then
+  install_for_codex
+  installed_any=1
+else
+  skip_host Codex codex
+fi
+
+if host_client_installed grok; then
+  install_for_grok
+  installed_any=1
+else
+  skip_host Grok grok
+fi
+
+if host_client_installed claude; then
+  install_for_claude
+  installed_any=1
+else
+  skip_host "Claude Code" claude
+fi
+
+if [ "$installed_any" -eq 0 ]; then
+  die "no supported client found in PATH (need one of: codex, grok, claude)"
+fi
